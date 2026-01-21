@@ -26,9 +26,15 @@ With AI memories, every interaction feels personal. The system:
 ## How It Works
 
 ### 1. Memory Creation
-Memories can be created in two ways:
-- **Manual Addition**: Explicitly add specific memories using the [Add User Memory](/api-reference/endpoint/add-user-memory) endpoint
+Memories can be created in multiple ways:
+- **Unified API**: Use the [Add Memory](/api-reference/endpoint/add-memories) endpoint to add text, markdown, or conversation pairs with optional inference
 - **Automatic Generation**: Use the [Generate User Memory](/api-reference/endpoint/generate-user-memory) endpoint to automatically create multiple memories from user queries or conversations
+
+The **Add Memory** API supports:
+- Raw text and markdown content
+- User/assistant conversation pairs
+- **Inference mode** (`infer=true`): Extracts additional insights and implicit information from content
+- **Direct mode** (`infer=false`): Content is indexed as-is for faster processing
 
 ### 2. Memory Storage
 All memories are stored in a vector database that enables:
@@ -42,9 +48,9 @@ Use the [Retrieve User Memory](/api-reference/endpoint/retrieve-user-memory) end
 - **Access user preferences** for personalized interactions
 
 ### 4. Memory Management
-- **List all memories** using the [List User Memories](/api-reference/endpoint/list-user-memories) endpoint
-- **Remove outdated memories** with the [Delete User Memory](/api-reference/endpoint/delete-user-memory) endpoint
+- **Remove outdated memories** with the [Delete Memory](/api-reference/endpoint/delete-memory) endpoint
 - **Maintain data quality** through regular memory audits
+- **Track processing status** using the [Verify Processing](/api-reference/endpoint/verify-processing) endpoint
 
 ## Tenant Provisioning
 
@@ -70,10 +76,29 @@ A project management tool that remembers each team member's role, expertise area
 
 ## Getting Started
 
-1. **Add your first memory** using the [Add User Memory](/api-reference/endpoint/add-user-memory) endpoint
+1. **Add your first memory** using the [Add Memory](/api-reference/endpoint/add-memories) endpoint
 2. **Generate memories from conversations** using the [Generate User Memory](/api-reference/endpoint/generate-user-memory) endpoint  
 3. **Retrieve relevant context** using the [Retrieve User Memory](/api-reference/endpoint/retrieve-user-memory) endpoint
-4. **Manage your memory profile** using the [List User Memories](/api-reference/endpoint/list-user-memories) and [Delete User Memory](/api-reference/endpoint/delete-user-memory) endpoints
+4. **Delete memories** using the [Delete Memory](/api-reference/endpoint/delete-memory) endpoint
+
+### Quick Example
+
+```bash
+curl -X POST 'https://api.usecortex.ai/memories/add_memory' \
+  -H 'Authorization: Bearer <token>' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "memories": [
+    {
+      "text": "User prefers dark mode and detailed explanations",
+      "infer": true,
+      "user_name": "John"
+    }
+  ],
+  "tenant_id": "tenant-01",
+  "sub_tenant_id": ""
+}'
+```
 
 ## Best Practices
 

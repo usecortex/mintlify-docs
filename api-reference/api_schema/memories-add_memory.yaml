@@ -1,0 +1,173 @@
+# Endpoint: /memories/add_memory
+# Method: POST
+
+"/memories/add_memory":
+  post:
+    summary: Add Memory
+    description: |
+      Add memories for indexing and retrieval. This unified API supports multiple content types:
+      - Raw text content
+      - Markdown formatted content
+      - User/assistant conversation pairs
+      
+      Use `infer=true` to extract additional insights from content, or `infer=false` for direct indexing.
+    tags:
+      - Memories
+    # --- Parameters (Headers) ---
+    parameters:
+    - name: Authorization
+      in: header
+      required: true
+      description: Bearer token (your API key)
+      schema:
+        type: string
+      example: Bearer {API_KEY}
+    - name: Content-Type
+      in: header
+      required: true
+      description: Request content type
+      schema:
+        type: string
+        default: application/json
+    - name: accept
+      in: header
+      required: true
+      description: Response content type
+      schema:
+        type: string
+        default: application/json
+    # --- Request Body ---
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - memories
+              - tenant_id
+            properties:
+              memories:
+                type: array
+                minItems: 1
+                description: List of memory items to ingest
+                items:
+                  type: object
+                  properties:
+                    text:
+                      type: string
+                      description: Raw text or markdown content to be indexed
+                      example: "User prefers dark mode and detailed explanations"
+                    user_assistant_pairs:
+                      type: array
+                      description: Array of user/assistant conversation pairs
+                      items:
+                        type: object
+                        required:
+                          - user
+                          - assistant
+                        properties:
+                          user:
+                            type: string
+                            description: User's message in the conversation
+                          assistant:
+                            type: string
+                            description: Assistant's response to the user message
+                    is_markdown:
+                      type: boolean
+                      default: false
+                      description: Whether the text is markdown formatted
+                    infer:
+                      type: boolean
+                      default: false
+                      description: If true, extract additional insights from the content before indexing
+                    custom_instructions:
+                      type: string
+                      description: Custom instructions to guide inference processing
+                    user_name:
+                      type: string
+                      default: "User"
+                      description: User's name for personalization in conversation pairs
+                    source_id:
+                      type: string
+                      description: Optional unique identifier. Auto-generated if not provided
+                    title:
+                      type: string
+                      description: Display title for this memory item
+                    expiry_time:
+                      type: integer
+                      description: Optional TTL in seconds for this memory
+                    tenant_metadata:
+                      type: string
+                      description: JSON string of tenant-level metadata
+                    document_metadata:
+                      type: string
+                      description: JSON string of document-level metadata
+              tenant_id:
+                type: string
+                description: Primary organizational identifier for multi-tenant data isolation
+                example: "tenant-01"
+              sub_tenant_id:
+                type: string
+                default: ""
+                description: Secondary organizational identifier within a tenant
+                example: ""
+              upsert:
+                type: boolean
+                default: true
+                description: If true, update existing sources with the same source_id
+    # --- Responses ---
+    responses:
+      '200':
+        description: Memories queued successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                  description: Whether the operation was successful
+                  example: true
+                message:
+                  type: string
+                  description: Status message
+                  example: "Memories queued for ingestion successfully"
+                results:
+                  type: array
+                  description: Results for each memory item
+                  items:
+                    type: object
+                    properties:
+                      source_id:
+                        type: string
+                        description: Unique identifier for the ingested source
+                      title:
+                        type: string
+                        nullable: true
+                        description: Title of the memory if provided
+                      status:
+                        type: string
+                        enum: [queued, processing, completed, errored]
+                        description: Processing status
+                      infer:
+                        type: boolean
+                        description: Whether inference was requested
+                      error:
+                        type: string
+                        nullable: true
+                        description: Error message if ingestion failed
+                success_count:
+                  type: integer
+                  description: Number of items successfully queued
+                  example: 1
+                failed_count:
+                  type: integer
+                  description: Number of items that failed to queue
+                  example: 0
+      '422':
+        description: Validation error - invalid request body
+      '401':
+        description: Invalid or missing API key
+      '5XX':
+        description: Internal server error

@@ -1,6 +1,6 @@
 ---
-title: 'Add User Memory'
-openapi: 'POST /memories/add-memories'
+title: 'Add Memory'
+openapi: 'POST /memories/add_memory'
 ---
 
 import { TableOfContents } from '/snippets/table-of-contents.jsx'
@@ -10,135 +10,241 @@ import TryIt from '/snippets/try-it.mdx'
   <TableOfContents />
 </Panel>
 <TryIt />
+
 ### Sample Request
 ```bash
 curl -X 'POST' \
-  'https://api.usecortex.ai/memories/add-memories' \
+  'https://api.usecortex.ai/memories/add_memory' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer <token>' \
   -d '{
-  "tenant_id": "string",
-  "sub_tenant_id": "string",
-  "raw_text": "string",
-  "user_assistant_pairs": [
+  "memories": [
     {
-      "user": "string",
-      "assistant": "string"
+      "text": "User prefers dark mode and detailed explanations",
+      "infer": true,
+      "user_name": "John"
     }
   ],
-  "expiry_time": 0,
-  "infer": false,
-  "custom_instructions": "string",
-  "user_name": "string",
-  "memory_id": "string"
+  "tenant_id": "tenant-01",
+  "sub_tenant_id": "",
+  "upsert": true
 }'
-  ```
+```
 
 ### Examples
 <Tabs>
   <Tab title="API Request">
     ```bash expandable
-    # Using raw_text
+    # Simple text memory (no inference)
     curl --request POST \
-      --url https://api.usecortex.ai/user_memory/add_user_memory \
+      --url https://api.usecortex.ai/memories/add_memory \
       --header 'Authorization: Bearer <token>' \
       --header 'Content-Type: application/json' \
       --data '{
-      "tenant_id": "tenant_123",
-      "sub_tenant_id": "sub_tenant_123",
-      "raw_text": "I wakes up early in the morning and enjoys jogging before work",
-      "expiry_time": 600,
-      "infer": true,
-      "custom_instructions": "John is being referred in this context."
-    }'
-    
-    # Or with user-assistant pairs:
-    curl --request POST \
-      --url https://api.usecortex.ai/user_memory/add_user_memory \
-      --header 'Authorization: Bearer <token>' \
-      --header 'Content-Type: application/json' \
-      --data '{
-      "tenant_id": "tenant_123",
-      "sub_tenant_id": "sub_tenant_123",
-      "user_assistant_pairs": [
+      "memories": [
         {
-          "user": "What are general work preferences at startups?",
-          "assistant": "People prefer working in the morning and enjoy collaborative projects with clear deadlines."
-        },
-        {
-          "user": "How to handle stress at work?",
-          "assistant": "Take regular breaks and practice mindfulness to stay focused and productive."
+          "text": "Company policy document v2.0 - All employees must...",
+          "infer": false,
+          "title": "Company Policy"
         }
       ],
-      "expiry_time": 600,
-      "infer": true,
-      "custom_instructions": "User's name is John."
+      "tenant_id": "tenant-01",
+      "sub_tenant_id": "",
+      "upsert": true
     }'
-      ```
+    
+    # Text with inference enabled
+    curl --request POST \
+      --url https://api.usecortex.ai/memories/add_memory \
+      --header 'Authorization: Bearer <token>' \
+      --header 'Content-Type: application/json' \
+      --data '{
+      "memories": [
+        {
+          "text": "User wakes up early and enjoys jogging before work",
+          "infer": true,
+          "user_name": "John",
+          "custom_instructions": "Extract user preferences and habits"
+        }
+      ],
+      "tenant_id": "tenant-01",
+      "sub_tenant_id": "",
+      "upsert": true
+    }'
+    
+    # Markdown content
+    curl --request POST \
+      --url https://api.usecortex.ai/memories/add_memory \
+      --header 'Authorization: Bearer <token>' \
+      --header 'Content-Type: application/json' \
+      --data '{
+      "memories": [
+        {
+          "text": "# Meeting Notes\n\n## Attendees\n- John\n- Jane\n\n## Action Items\n1. Review Q3 budget\n2. Prepare presentation",
+          "is_markdown": true,
+          "infer": false,
+          "title": "Q3 Planning Meeting"
+        }
+      ],
+      "tenant_id": "tenant-01",
+      "sub_tenant_id": "",
+      "upsert": true
+    }'
+    
+    # User-assistant conversation pairs
+    curl --request POST \
+      --url https://api.usecortex.ai/memories/add_memory \
+      --header 'Authorization: Bearer <token>' \
+      --header 'Content-Type: application/json' \
+      --data '{
+      "memories": [
+        {
+          "user_assistant_pairs": [
+            {"user": "What is my favorite color?", "assistant": "Based on our previous conversations, you prefer blue."},
+            {"user": "Remember that I like dark mode", "assistant": "Noted! I will remember that you prefer dark mode interfaces."}
+          ],
+          "infer": true,
+          "user_name": "John"
+        }
+      ],
+      "tenant_id": "tenant-01",
+      "sub_tenant_id": "",
+      "upsert": true
+    }'
+    
+    # Batch upload - multiple items with mixed settings
+    curl --request POST \
+      --url https://api.usecortex.ai/memories/add_memory \
+      --header 'Authorization: Bearer <token>' \
+      --header 'Content-Type: application/json' \
+      --data '{
+      "memories": [
+        {
+          "text": "User prefers detailed explanations",
+          "infer": true,
+          "user_name": "John"
+        },
+        {
+          "text": "Company policy document - version 2.0",
+          "infer": false,
+          "title": "Policy Doc"
+        },
+        {
+          "user_assistant_pairs": [
+            {"user": "What are my settings?", "assistant": "You have dark mode enabled."}
+          ],
+          "infer": true,
+          "user_name": "John"
+        }
+      ],
+      "tenant_id": "tenant-01",
+      "sub_tenant_id": "",
+      "upsert": true
+    }'
+    ```
   </Tab>
   <Tab title="TypeScript">
     ```ts expandable
-    // Using raw_text
-    const result = await client.userMemory.addUserMemory({
-      tenant_id: "tenant_123",
-      sub_tenant_id: "sub_tenant_123",
-      raw_text: "John wakes up early in the morning and enjoys jogging before work",
-      expiry_time: 600,
-      infer: true,
-      custom_instructions: ""
-    });
-    
-    // Or with user-assistant pairs:
-    const result = await client.userMemory.addUserMemory({
-      tenant_id: "tenant_123",
-      sub_tenant_id: "sub_tenant_123",
-      user_assistant_pairs: [
+    // Simple text memory
+    const result = await client.memories.addMemory({
+      memories: [
         {
-          user: "What are general work preferences at startups?",
-          assistant: "People prefer working in the morning and enjoy collaborative projects with clear deadlines."
-        },
-        {
-          user: "How to handle stress at work?",
-          assistant: "Take regular breaks and practice mindfulness to stay focused and productive."
+          text: "User prefers detailed explanations and dark mode",
+          infer: true,
+          user_name: "John"
         }
       ],
-      expiry_time: 600,
-      infer: true,
-      custom_instructions: "User's name is John."
+      tenant_id: "tenant-01",
+      sub_tenant_id: "",
+      upsert: true
+    });
+    
+    // Markdown content
+    const markdownResult = await client.memories.addMemory({
+      memories: [
+        {
+          text: "# Meeting Notes\n\n## Key Points\n- Budget approved\n- Launch date: Q2",
+          is_markdown: true,
+          infer: false,
+          title: "Meeting Notes"
+        }
+      ],
+      tenant_id: "tenant-01",
+      sub_tenant_id: "",
+      upsert: true
+    });
+    
+    // User-assistant pairs with inference
+    const conversationResult = await client.memories.addMemory({
+      memories: [
+        {
+          user_assistant_pairs: [
+            { user: "What are my preferences?", assistant: "You prefer dark mode and detailed explanations." },
+            { user: "How do I like my reports?", assistant: "You prefer weekly summary reports with charts." }
+          ],
+          infer: true,
+          user_name: "John",
+          custom_instructions: "Extract user preferences"
+        }
+      ],
+      tenant_id: "tenant-01",
+      sub_tenant_id: "",
+      upsert: true
     });
     ```
   </Tab>
   <Tab title="Python (Sync)">
     ```python expandable
-    # Using raw_text
-    # Async usage is similar, just use async_client and await
-    add_memory = client.user_memory.add_user_memory(
-        tenant_id="tenant_123",
-        sub_tenant_id="sub_tenant_123",
-        raw_text="He wakes up early in the morning and enjoys jogging before work",
-        custom_instructions="User's name is John.",
-        infer=True,
-        expiry_time=10*60,  # Memory will expire after 600 seconds
-    )
+    from cortex import CortexClient
     
-    # Or with user-assistant pairs:
-    # Async usage is similar, just use async_client and await
-    add_conversation = client.user_memory.add_user_memory(
-        tenant_id="tenant_123",
-        sub_tenant_id="sub_tenant_123",
-        user_assistant_pairs=[
+    client = CortexClient(api_key="your_api_key")
+    
+    # Simple text memory
+    result = client.memories.add_memory(
+        memories=[
             {
-                UserAssistantPair(
-                    user="What are general work preferences at startups?",
-                    assistant="People prefer working in the morning and enjoy collaborative projects with clear deadlines.",
-                ),
-                UserAssistantPair(
-                    user="How to handle stress at work?",
-                    assistant="Take regular breaks and practice mindfulness to stay focused and productive.",
-                )
+                "text": "User prefers detailed explanations and dark mode",
+                "infer": True,
+                "user_name": "John"
             }
         ],
-        custom_instructions="",
-        infer=True,
-        expiry_time=10*60,  # Memory will expire after 600 seconds
+        tenant_id="tenant-01",
+        sub_tenant_id="",
+        upsert=True
+    )
+    
+    # Markdown content
+    markdown_result = client.memories.add_memory(
+        memories=[
+            {
+                "text": "# Meeting Notes\n\n## Key Points\n- Budget approved",
+                "is_markdown": True,
+                "infer": False,
+                "title": "Meeting Notes"
+            }
+        ],
+        tenant_id="tenant-01",
+        sub_tenant_id="",
+        upsert=True
+    )
+    
+    # User-assistant pairs with inference
+    conversation_result = client.memories.add_memory(
+        memories=[
+            {
+                "user_assistant_pairs": [
+                    {"user": "What are my preferences?", "assistant": "You prefer dark mode."},
+                    {"user": "How do I like reports?", "assistant": "Weekly summaries with charts."}
+                ],
+                "infer": True,
+                "user_name": "John",
+                "custom_instructions": "Extract user preferences"
+            }
+        ],
+        tenant_id="tenant-01",
+        sub_tenant_id="",
+        upsert=True
     )
     ```
   </Tab>
@@ -146,60 +252,178 @@ curl -X 'POST' \
 
 ## Overview
 
-Store personal memories for a specific user to enhance personalization and provide context-aware responses in your AI applications.
+The **Add Memory** API is a unified endpoint for ingesting various types of content into Cortex. It combines the functionality of content upload and user memory storage into a single, flexible API.
 
-## What are User Memories?
+## Content Types
 
-User memories are personal, contextual information stored for individual users that help your AI system:
-- Remember user preferences and past interactions
-- Provide personalized responses based on user history
-- Enhance user experience through adaptive behavior
+The API supports three types of content input:
 
-### Memory Types
+### 1. Raw Text (`text`)
+Plain text content that will be chunked, embedded, and indexed for retrieval.
 
-**Raw Text**: Textual content that you want to save in Cortex as a memory. This can be any descriptive information about a user, such as their preferences, habits, background information, or important context that should be remembered for future interactions.
+```json
+{
+  "text": "Your text content here",
+  "infer": false
+}
+```
 
-**User-Assistant Pairs**: Conversational exchanges between a user and an AI assistant (or any similar interaction pattern). These are structured as question-response or prompt-answer pairs that capture the flow of conversations, including responses from an LLM or any similar system.
+### 2. Markdown Content (`text` + `is_markdown`)
+Markdown-formatted documents that preserve structure during processing.
 
-### Additional Parameters
+```json
+{
+  "text": "# Title\n\n## Section\nContent here...",
+  "is_markdown": true,
+  "infer": false
+}
+```
 
-**Custom Instructions**: Contextual information you provide about the text being indexed that Cortex needs to know. This helps guide how the memory should be interpreted, categorized, or retrieved later. For example, you might specify that certain information is particularly important, should be weighted more heavily, or relates to specific topics.
+### 3. User-Assistant Pairs (`user_assistant_pairs`)
+Conversation exchanges between users and AI assistants, ideal for storing chat history and extracting user preferences.
 
-**Infer**: When set to `true`, Cortex will process and analyze the memory content to improve its indexing and retrieval capabilities. This includes extracting key concepts, understanding context, and optimizing how the memory is stored for better semantic search and recall.
+```json
+{
+  "user_assistant_pairs": [
+    {"user": "Question", "assistant": "Answer"}
+  ],
+  "infer": true
+}
+```
 
-## Functionality
+## Key Parameters
 
-- **Manual Memory Addition**: Allows you to explicitly add specific memories for a user
-- **Vector Store Integration**: Stores memories in a searchable vector database for semantic retrieval
-- **Tenant Isolation**: Ensures memories are properly isolated by tenant and sub-tenant
-- **Automatic Provisioning**: If the tenant/sub-tenant combination doesn't exist for user memory, it will be automatically provisioned on first use
+### `infer` (boolean)
 
-## Use Cases
+Controls whether Cortex extracts additional insights from the content:
 
-- **Preference Storage**: Store user preferences like preferred communication style, timezone, or language
-- **Context Preservation**: Remember important details from previous conversations
-- **Personalization Data**: Store information that helps tailor responses to individual users
+| Value | Behavior |
+|-------|----------|
+| `false` | Content is chunked and indexed as-is (faster processing) |
+| `true` | Content is analyzed to extract implicit information, preferences, and insights |
 
-## Important Notes
+<Info>
+**When to use `infer=true`:**
+- Storing user conversations to extract preferences
+- Processing feedback or reviews
+- Extracting insights from unstructured text
+
+**When to use `infer=false`:**
+- Uploading documents, policies, or factual content
+- Storing structured data that doesn't need interpretation
+- Performance-critical bulk uploads
+</Info>
+
+### `upsert` (boolean)
+
+Controls behavior when a `source_id` already exists:
+
+| Value | Behavior |
+|-------|----------|
+| `true` | Replace existing content with the same `source_id` |
+| `false` | Fail if `source_id` already exists |
+
+### `source_id` (optional)
+
+Provide your own unique identifier, or let Cortex auto-generate one.
+
+### `expiry_time` (optional)
+
+Time-to-live in seconds. Content will be automatically deleted after this duration.
+
+## Memory Item Fields
+
+Each item in the `memories` array can have the following fields:
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `text` | string | * | Raw text or markdown content |
+| `user_assistant_pairs` | array | * | Array of conversation pairs |
+| `is_markdown` | boolean | No | Whether text is markdown formatted |
+| `infer` | boolean | No | Enable inference processing (default: false) |
+| `custom_instructions` | string | No | Guide inference processing |
+| `user_name` | string | No | User's name for personalization |
+| `source_id` | string | No | Custom unique identifier |
+| `title` | string | No | Display title for the memory |
+| `expiry_time` | integer | No | TTL in seconds |
+| `tenant_metadata` | string | No | JSON string of tenant-level metadata |
+| `document_metadata` | string | No | JSON string of document-level metadata |
+
+<Note>
+**\*** Either `text` OR `user_assistant_pairs` must be provided, but not both.
+</Note>
+
+## Response Format
+
+```json
+{
+  "success": true,
+  "message": "Memories queued for ingestion successfully",
+  "results": [
+    {
+      "source_id": "abc123-def456",
+      "title": "My Document",
+      "status": "queued",
+      "infer": false,
+      "error": null
+    }
+  ],
+  "success_count": 1,
+  "failed_count": 0
+}
+```
+
+## Processing Status
+
+After submitting content, use the [Verify Processing](/api-reference/endpoint/verify-processing) endpoint to check status:
+
+```bash
+curl -X POST \
+  'https://api.usecortex.ai/ingestion/verify-processing?file_id=<source_id>&tenant_id=<tenant_id>' \
+  -H 'Authorization: Bearer <token>'
+```
+
+### Status Values
+
+| Status | Description |
+|--------|-------------|
+| `queued` | Content is waiting to be processed |
+| `processing` | Content is being chunked and embedded |
+| `graph_creation` | Knowledge graph is being built |
+| `completed` | Content is fully indexed and searchable |
+| `errored` | Processing failed (check error_code) |
+
+## Best Practices
+
+<Info>
+**Batch Uploads**: You can include multiple items in a single request for efficient bulk ingestion. Each item can have different `infer` settings.
+</Info>
 
 <Warning>
-**Automatic Tenant Provisioning**: If you receive an error stating "Tenant-id/sub-tenant-id combination either does not exist or is not provisioned for user memory", this means the tenant/sub-tenant combination hasn't been set up for user memory functionality yet. This will be automatically provisioned when you add or generate your first user memory for this combination.
+**Content Validation**: Either `text` or `user_assistant_pairs` must be provided for each memory item, but not both simultaneously.
 </Warning>
 
 <Note>
-**Memory Persistence**: User memories are stored permanently until explicitly deleted. They persist across sessions and can be retrieved using the [Retrieve User Memory](/api-reference/endpoint/retrieve-user-memory) endpoint.
+**Processing Time**: 
+- `infer=false`: Typically 1-3 minutes
+- `infer=true`: May take longer due to LLM inference processing
+- Large batches: Processing time scales with content volume
 </Note>
 
-<Info>
-**Best Practices**: 
-- Use clear, descriptive memory content that will be useful for future AI interactions
-- Consider the context in which memories will be retrieved
-- Avoid storing sensitive information unless necessary
-- Use consistent formatting for similar types of memories
-- **Choose either `raw_text` or `user_assistant_pairs`** - do not provide both in the same request
-</Info>
+## Migration from Previous APIs
+
+This endpoint replaces and unifies:
+- `/memories/add-memories` (deprecated)
+- `/ingestion/upload-content` (deprecated)
+
+### Key Changes
+
+| Old API | New API |
+|---------|---------|
+| `raw_text` | `text` |
+| `content` in body wrapper | `memories` array at top level |
+| Separate endpoints | Single unified endpoint |
 
 ## Error Responses
 
 All endpoints return consistent error responses following the standard format. For detailed error information, see our [Error Responses](/api-reference/error-responses) documentation.
-

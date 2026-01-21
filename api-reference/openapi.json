@@ -43,124 +43,13 @@
         }
       }
     },
-    "/ingestion/upload-content": {
-      "post": {
-        "tags": [
-          "ingestion"
-        ],
-        "summary": "Upload Content",
-        "description": "Upload raw text or markdown content for ingestion.\nSupports both single and batch uploads via the contents list in the request.",
-        "operationId": "upload_content_ingestion_upload_content_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Body_upload_content_ingestion_upload_content_post"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SourceUploadResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request - Invalid input parameters",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/cortex__models__response__commons__ActualErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized - Authentication required",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/cortex__models__response__commons__ActualErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden - Access denied",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/cortex__models__response__commons__ActualErrorResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found - Resource does not exist",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/cortex__models__response__commons__ActualErrorResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity - Validation failed",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/cortex__models__response__commons__ActualErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/cortex__models__response__commons__ActualErrorResponse"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Service Unavailable",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/cortex__models__response__commons__ActualErrorResponse"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "x-fern-sdk-group-name": "upload",
-        "x-fern-sdk-method-name": "upload_content",
-        "x-fern-sdk-audience": [
-          "public"
-        ]
-      }
-    },
     "/ingestion/upload-document": {
       "post": {
         "tags": [
           "ingestion"
         ],
         "summary": "Upload Document",
+        "description": "Upload one or more documents for ingestion.\nSupports both single and batch uploads.\nFor single file: send one file with the 'files' field.\nFor batch: send multiple files with the 'files' field (FastAPI will parse as list).",
         "operationId": "upload_document_ingestion_upload_document_post",
         "requestBody": {
           "content": {
@@ -258,6 +147,11 @@
           {
             "HTTPBearer": []
           }
+        ],
+        "x-fern-sdk-group-name": "upload",
+        "x-fern-sdk-method-name": "upload_document",
+        "x-fern-sdk-audience": [
+          "public"
         ]
       }
     },
@@ -527,7 +421,7 @@
           "tenants"
         ],
         "summary": "Create Tenant",
-        "description": "Create a tenant for your account.\n\nUse this endpoint to initialize a tenant space you can use for ingestion, embeddings, and search. Optionally include a metadata schema to enforce consistent attributes across documents.\n\nExpected outcome\n\nA tenant is created and returned with its identifier.\nIf the tenant already exists, you receive a success message with the existing identifier.",
+        "description": "Create a tenant for your account.\n\nUse this endpoint to initialize a tenant space you can use for ingestion, embeddings, and search.\n\n**Tenant Metadata Schema**\n\nYou can optionally provide a `tenant_metadata_schema` to define custom fields that will be\nindexed in the vector store. Each field can be configured with:\n\n- `enable_match`: Enable text filtering on this field\n- `enable_dense_embedding`: Create dense embeddings for semantic similarity search\n- `enable_sparse_embedding`: Create sparse embeddings (BM25) for keyword search\n\n**Example Request:**\n```json\n{\n    \"tenant_id\": \"my-tenant\",\n    \"tenant_metadata_schema\": [\n        {\n            \"name\": \"category\",\n            \"data_type\": \"VARCHAR\",\n            \"max_length\": 256,\n            \"enable_match\": true\n        },\n        {\n            \"name\": \"product_description\",\n            \"data_type\": \"VARCHAR\",\n            \"max_length\": 4096,\n            \"enable_dense_embedding\": true,\n            \"enable_sparse_embedding\": true\n        }\n    ]\n}\n```\n\nExpected outcome:\n- A tenant is created and returned with its identifier.\n- If tenant_metadata_schema is provided, the vector store collection will include\n  the specified custom fields with their configured search capabilities.\n- If the tenant already exists, you receive a success message with the existing identifier.",
         "operationId": "create_tenant_tenants_create_post",
         "requestBody": {
           "content": {
@@ -634,7 +528,7 @@
           "tenants"
         ],
         "summary": "Get Tenant Stats",
-        "description": "Retrieve usage stats for your tenant.\n\nUse this endpoint to check whether a tenant exists and view core metrics like total indexed objects and vector dimension. This helps you validate setup and monitor ingestion.\n\nExpected outcome\n\nYou receive the current object count and vector dimension for the tenant.\nIf the tenant does not exist, you get a not-found error.",
+        "description": "Retrieve usage stats for your tenant.\n\nUse this endpoint to check whether a tenant exists and view core metrics like total\nindexed objects and vector dimension. This helps you validate\nsetup and monitor ingestion.\n\nExpected outcome\n\nYou receive the current object count and vector dimension for the tenant.\nIf the tenant does not exist, you get a not-found error.",
         "operationId": "get_tenant_stats_tenants_stats_get",
         "security": [
           {
@@ -1176,7 +1070,7 @@
           "embeddings"
         ],
         "summary": "Delete Raw Embeddings Endpoint",
-        "description": "Delete embedding chunks by chunk ID.\n\nUse this to remove specific chunks from your embeddings index when they are no longer valid or should not appear in results.",
+        "description": "Delete embedding chunks by chunk ID.\n\nUse this to remove specific chunks from your embeddings index when they are no longer\nvalid or should not appear in results.",
         "operationId": "delete_raw_embeddings_endpoint_embeddings_delete_raw_embeddings_delete",
         "security": [
           {
@@ -2069,7 +1963,7 @@
         },
         "security": [
           {
-            "APIKeyHeader": []
+            "HTTPBearer": []
           }
         ]
       }
@@ -2186,7 +2080,7 @@
         },
         "security": [
           {
-            "APIKeyHeader": []
+            "HTTPBearer": []
           }
         ]
       }
@@ -2303,24 +2197,24 @@
         },
         "security": [
           {
-            "APIKeyHeader": []
+            "HTTPBearer": []
           }
         ]
       }
     },
-    "/memories/add-memories": {
+    "/memories/add_memory": {
       "post": {
         "tags": [
           "Memories"
         ],
-        "summary": "Add user memory",
-        "description": "Store new user memories for future reference.\n\n    This API allows you to add memories in two formats:\n    1. Raw text string - A single text-based memory\n    2. User/Assistant pairs array - Conversation pairs that will be\n       chunked as a single memory\n\n    The stored memories will be chunked, embedded, and indexed for\n    semantic search and retrieval.",
-        "operationId": "add_user_memory_memories_add_memories_post",
+        "summary": "Add memory",
+        "description": "Add memories for indexing and retrieval.\n    \n    This API provides a unified entry point for ingesting various types of content:\n    \n    **Content Types Supported:**\n    - Raw text content (`text` field)\n    - Markdown formatted content (`text` + `is_markdown=true`)\n    - User/assistant conversation pairs (`user_assistant_pairs` field)\n    \n    **Key Features:**\n    - **Inference Mode (`infer=true`)**: When enabled, the system extracts additional \n      insights and implicit information from your content. Useful for conversation \n      analysis and knowledge extraction.\n    - **Direct Mode (`infer=false`)**: Content is chunked and indexed as-is without \n      additional processing.\n    \n    Use `/ingestion/verify-processing` endpoint to check the processing status.",
+        "operationId": "add_memory_memories_add_memory_post",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AddUserMemoryRequest"
+                "$ref": "#/components/schemas/Body_add_memory_memories_add_memory_post"
               }
             }
           },
@@ -2332,7 +2226,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AddUserMemoryResponse"
+                  "$ref": "#/components/schemas/AddMemoryResponse"
                 }
               }
             }
@@ -2410,22 +2304,27 @@
         },
         "security": [
           {
-            "APIKeyHeader": []
+            "HTTPBearer": []
           }
+        ],
+        "x-fern-sdk-group-name": "upload",
+        "x-fern-sdk-method-name": "add_memory",
+        "x-fern-sdk-audience": [
+          "public"
         ]
       }
     },
-    "/memories/delete-memory": {
+    "/memories/delete_memory": {
       "delete": {
         "tags": [
           "Memories"
         ],
-        "summary": "Delete user memory",
-        "description": "Permanently remove a specific user memory from storage.\n\n    This API allows you to delete a user memory by its unique identifier.\n    Once deleted, the memory cannot be recovered, so use this operation carefully.\n\n    The memory will be removed from your tenant's storage and will no longer\n    appear in search results or memory listings.",
-        "operationId": "delete_user_memory_memories_delete_memory_delete",
+        "summary": "Delete memory",
+        "description": "Permanently remove a specific memory from storage.\n\n    This API allows you to delete a memory by its unique identifier.\n    Once deleted, the memory cannot be recovered, so use this operation carefully.\n\n    The memory will be removed from your tenant's storage and will no longer\n    appear in search results or memory listings.",
+        "operationId": "delete_memory_memories_delete_memory_delete",
         "security": [
           {
-            "APIKeyHeader": []
+            "HTTPBearer": []
           }
         ],
         "parameters": [
@@ -3017,12 +2916,12 @@
       }
     },
     "/dashboard/user/create_user": {
-      "get": {
+      "post": {
         "tags": [
           "dashboard"
         ],
         "summary": "Create User",
-        "operationId": "create_user_dashboard_user_create_user_get",
+        "operationId": "create_user_dashboard_user_create_user_post",
         "parameters": [
           {
             "name": "full_name",
@@ -3056,13 +2955,13 @@
         }
       }
     },
-    "/dashboard/check_user_exists": {
+    "/dashboard/user/check_user_exists": {
       "get": {
         "tags": [
           "dashboard"
         ],
         "summary": "Check User Exists",
-        "operationId": "check_user_exists_dashboard_check_user_exists_get",
+        "operationId": "check_user_exists_dashboard_user_check_user_exists_get",
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -3116,173 +3015,46 @@
         ],
         "title": "ActualErrorResponse"
       },
-      "AddUserMemoryRequest": {
-        "properties": {
-          "tenant_id": {
-            "type": "string",
-            "title": "Tenant Id",
-            "description": "Unique identifier for the tenant/organization",
-            "example": "tenant_1234"
-          },
-          "sub_tenant_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Sub Tenant Id",
-            "description": "Optional sub-tenant identifier used to organize data within a tenant. If omitted, the default sub-tenant created during tenant setup will be used.",
-            "example": "sub_tenant_4567"
-          },
-          "raw_text": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Raw Text",
-            "description": "Single raw text memory to store. If both raw_text and user_assistant_pairs are provided, raw_text will be used."
-          },
-          "user_assistant_pairs": {
-            "anyOf": [
-              {
-                "items": {
-                  "$ref": "#/components/schemas/UserAssistantPair"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "User Assistant Pairs",
-            "description": "Array of user/assistant conversation pairs to store as a single memory"
-          },
-          "expiry_time": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Expiry Time",
-            "description": "Expiry time in seconds for the memory (optional)"
-          },
-          "infer": {
-            "type": "boolean",
-            "title": "Infer",
-            "description": "If true, process and compress chunks into inferred representations before indexing (default: False)",
-            "default": false,
-            "example": true
-          },
-          "custom_instructions": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Custom Instructions",
-            "description": "Custom instructions to guide cortex"
-          },
-          "user_name": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "User Name",
-            "description": "User's name for personalization",
-            "example": "John Doe"
-          },
-          "memory_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Memory Id",
-            "description": "Optional custom memory ID (auto-generated if not provided)",
-            "example": "memory_1234"
-          }
-        },
-        "type": "object",
-        "required": [
-          "tenant_id"
-        ],
-        "title": "AddUserMemoryRequest"
-      },
-      "AddUserMemoryResponse": {
+      "AddMemoryResponse": {
         "properties": {
           "success": {
             "type": "boolean",
             "title": "Success",
-            "description": "Indicates whether the memory addition operation was successful",
             "default": true,
             "example": true
           },
-          "user_memory_added": {
-            "type": "boolean",
-            "title": "User Memory Added",
-            "description": "Confirms whether the memory was successfully stored in the system",
-            "default": true,
-            "example": true
-          },
-          "memory_id": {
+          "message": {
             "type": "string",
-            "title": "Memory Id",
-            "description": "Unique identifier assigned to the newly created memory",
-            "default": "",
-            "example": "memory_1234"
+            "title": "Message",
+            "default": "Memories queued for ingestion successfully"
           },
-          "source_id": {
-            "type": "string",
-            "title": "Source Id",
-            "description": "Source identifier from the memory service",
-            "default": "",
-            "example": "CortexDoc1234"
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/MemoryResultItem"
+            },
+            "type": "array",
+            "title": "Results",
+            "description": "List of results for each ingested memory item.",
+            "example": []
           },
-          "chunks_created": {
+          "success_count": {
             "type": "integer",
-            "title": "Chunks Created",
-            "description": "Total number of chunks created from the memory",
+            "title": "Success Count",
+            "description": "Number of items successfully queued for ingestion.",
             "default": 0,
             "example": 1
           },
-          "original_chunks": {
+          "failed_count": {
             "type": "integer",
-            "title": "Original Chunks",
-            "description": "Number of original (non-inferred) chunks created",
-            "default": 0,
-            "example": 1
-          },
-          "inferred_chunks": {
-            "type": "integer",
-            "title": "Inferred Chunks",
-            "description": "Number of inferred chunks created",
+            "title": "Failed Count",
+            "description": "Number of items that failed to queue.",
             "default": 0,
             "example": 1
           }
         },
         "type": "object",
-        "title": "AddUserMemoryResponse",
-        "description": "Response model for adding a new user memory."
+        "title": "AddMemoryResponse",
+        "description": "Response model for add_memory endpoint."
       },
       "ApiKeyCreateRequest": {
         "properties": {
@@ -3529,6 +3301,46 @@
         ],
         "title": "BM25OperatorType"
       },
+      "Body_add_memory_memories_add_memory_post": {
+        "properties": {
+          "memories": {
+            "items": {
+              "$ref": "#/components/schemas/MemoryItem"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Memories",
+            "description": "List of memory items to ingest",
+            "example": []
+          },
+          "tenant_id": {
+            "type": "string",
+            "title": "Tenant Id",
+            "description": "Unique identifier for the tenant/organization",
+            "example": "tenant_1234"
+          },
+          "sub_tenant_id": {
+            "type": "string",
+            "title": "Sub Tenant Id",
+            "description": "Optional sub-tenant identifier used to organize data within a tenant. If omitted, the default sub-tenant created during tenant setup will be used.",
+            "default": "",
+            "example": "sub_tenant_4567"
+          },
+          "upsert": {
+            "type": "boolean",
+            "title": "Upsert",
+            "description": "If true, update existing sources with the same source_id.",
+            "default": true,
+            "example": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "memories",
+          "tenant_id"
+        ],
+        "title": "Body_add_memory_memories_add_memory_post"
+      },
       "Body_filter_raw_embeddings_endpoint_embeddings_filter_raw_embeddings_post": {
         "properties": {
           "tenant_id": {
@@ -3592,8 +3404,8 @@
           },
           "limit": {
             "type": "integer",
-            "maximum": 10000,
-            "minimum": 1,
+            "maximum": 10000.0,
+            "minimum": 1.0,
             "title": "Limit",
             "description": "Maximum number of results to return",
             "default": 100,
@@ -3686,8 +3498,8 @@
           },
           "limit": {
             "type": "integer",
-            "maximum": 1000,
-            "minimum": 1,
+            "maximum": 1000.0,
+            "minimum": 1.0,
             "title": "Limit",
             "description": "Maximum number of results to return",
             "default": 10,
@@ -3773,40 +3585,6 @@
           "tenant_id"
         ],
         "title": "Body_upload_app_ingestion_upload_app_post"
-      },
-      "Body_upload_content_ingestion_upload_content_post": {
-        "properties": {
-          "content": {
-            "$ref": "#/components/schemas/ContentUploadRequest",
-            "description": "CONTENT_DESCRIPTION"
-          },
-          "tenant_id": {
-            "type": "string",
-            "title": "Tenant Id",
-            "description": "Unique identifier for the tenant/organization",
-            "example": "tenant_1234"
-          },
-          "sub_tenant_id": {
-            "type": "string",
-            "title": "Sub Tenant Id",
-            "description": "Optional sub-tenant identifier used to organize data within a tenant. If omitted, the default sub-tenant created during tenant setup will be used.",
-            "default": "",
-            "example": "sub_tenant_4567"
-          },
-          "upsert": {
-            "type": "boolean",
-            "title": "Upsert",
-            "description": "If true, update existing sources with the same source_id. Defaults to True.",
-            "default": true,
-            "example": true
-          }
-        },
-        "type": "object",
-        "required": [
-          "content",
-          "tenant_id"
-        ],
-        "title": "Body_upload_content_ingestion_upload_content_post"
       },
       "Body_upload_document_ingestion_upload_document_post": {
         "properties": {
@@ -3933,111 +3711,68 @@
         "type": "object",
         "title": "ContentModel"
       },
-      "ContentUploadItem": {
+      "CustomPropertyDefinition": {
         "properties": {
-          "source_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Source Id",
-            "description": "Optional file ID (used for idempotency or re-uploads)",
-            "example": "CortexDoc1234"
-          },
-          "title": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Title",
-            "description": "Display title of the source document.",
-            "examples": [
-              "Q3 Financial Report"
-            ]
-          },
-          "tenant_metadata": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Tenant Metadata",
-            "description": "JSON string containing tenant-level document metadata (e.g., department, compliance_tag)\n\nExample: > \"{\"department\":\"Finance\",\"compliance_tag\":\"GDPR\"}\"\n\n"
-          },
-          "document_metadata": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Document Metadata",
-            "description": "JSON string containing document-specific metadata (e.g., title, author, file_id). If file_id is not provided, the system will generate an ID automatically.\n\nExample: > \"{\"title\":\"Q1 Report.pdf\",\"author\":\"Alice Smith\",\"file_id\":\"custom_file_123\"}\"\n\n\n"
-          },
-          "content": {
+          "name": {
             "type": "string",
-            "title": "Content",
-            "description": "Text or markdown content to be indexed.",
-            "examples": [
-              "# Introduction\n\nThis is the document content."
-            ],
-            "example": "<content>"
+            "title": "Name",
+            "description": "Property name (used as field name in Milvus)",
+            "example": "<name>"
           },
-          "is_markdown": {
+          "data_type": {
+            "$ref": "#/components/schemas/MilvusDataType",
+            "description": "Milvus data type. Use VARCHAR for text fields that need embeddings.",
+            "default": "VARCHAR"
+          },
+          "max_length": {
+            "type": "integer",
+            "title": "Max Length",
+            "description": "Max length for VARCHAR fields. Increase for longer text content.",
+            "default": 1024,
+            "example": 1
+          },
+          "enable_analyzer": {
             "type": "boolean",
-            "title": "Is Markdown",
-            "description": "Whether the content is markdown formatted.",
+            "title": "Enable Analyzer",
+            "description": "Enable text analyzer for full-text search capabilities",
             "default": false,
             "example": true
           },
-          "relations": {
-            "anyOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Relations",
-            "description": "Optional JSON string containing relations as key-value pairs",
-            "default": false
+          "enable_match": {
+            "type": "boolean",
+            "title": "Enable Match",
+            "description": "Enable TEXT_MATCH filtering on this field",
+            "default": false,
+            "example": true
+          },
+          "enable_dense_embedding": {
+            "type": "boolean",
+            "title": "Enable Dense Embedding",
+            "description": "Create a dense embedding field (FLOAT_VECTOR) for semantic similarity search. Only applicable to VARCHAR fields. A corresponding '{name}_embedding' field will be created.",
+            "default": false,
+            "example": true
+          },
+          "enable_sparse_embedding": {
+            "type": "boolean",
+            "title": "Enable Sparse Embedding",
+            "description": "Create a sparse embedding field (BM25) for keyword search. Only applicable to VARCHAR fields. A corresponding '{name}_sparse' field and BM25 function will be created.",
+            "default": false,
+            "example": true
+          },
+          "nullable": {
+            "type": "boolean",
+            "title": "Nullable",
+            "description": "Whether field can be null",
+            "default": true,
+            "example": true
           }
         },
         "type": "object",
         "required": [
-          "content"
+          "name"
         ],
-        "title": "ContentUploadItem",
-        "description": "Represents a single file/content upload.\nThis model is intended to be used inside a list for batch uploads."
-      },
-      "ContentUploadRequest": {
-        "properties": {
-          "docs": {
-            "items": {
-              "$ref": "#/components/schemas/ContentUploadItem"
-            },
-            "type": "array",
-            "title": "Docs",
-            "description": "List of text/markdown content to upload.",
-            "example": []
-          }
-        },
-        "type": "object",
-        "title": "ContentUploadRequest"
+        "title": "CustomPropertyDefinition",
+        "description": "Definition for custom/dynamic properties on a collection.\n\nUse this to define tenant metadata fields that can enhance search capabilities:\n- enable_dense_embedding: Creates a dense vector field for semantic similarity search\n- enable_sparse_embedding: Creates a sparse vector field for BM25 keyword search\n\nExample:\n    CustomPropertyDefinition(\n        name=\"product_description\",\n        data_type=MilvusDataType.VARCHAR,\n        max_length=4096,\n        enable_dense_embedding=True,  # Enables semantic search on this field\n        enable_sparse_embedding=True,  # Enables keyword search on this field\n    )"
       },
       "DashboardApisResponse": {
         "properties": {
@@ -4337,7 +4072,7 @@
           },
           "chunk_relations": {
             "items": {
-              "$ref": "#/components/schemas/ScoredTripletResponse"
+              "$ref": "#/components/schemas/ScoredPathResponse"
             },
             "type": "array",
             "title": "Chunk Relations",
@@ -4356,7 +4091,7 @@
         },
         "type": "object",
         "title": "GraphContext",
-        "description": "Graph context containing query-based paths and chunk-based relations."
+        "description": "Graph context containing query-based paths and chunk-based relation paths."
       },
       "HTTPValidationError": {
         "properties": {
@@ -4433,7 +4168,7 @@
             "type": "number",
             "title": "Recency Bias",
             "description": "Preference for newer content (0.0 = no bias, 1.0 =             strong recency preference)",
-            "default": 0,
+            "default": 0.0,
             "example": 1.0
           },
           "personalise_search": {
@@ -4597,6 +4332,210 @@
         ],
         "title": "ListSourcesByIdRequest"
       },
+      "MemoryItem": {
+        "properties": {
+          "source_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Id",
+            "description": "Optional unique identifier. Auto-generated if not provided.",
+            "example": "CortexDoc1234"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title",
+            "description": "Display title for this memory item."
+          },
+          "text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Text",
+            "description": "Raw text or markdown content to be indexed.",
+            "examples": [
+              "# Introduction\n\nThis is the document content."
+            ]
+          },
+          "user_assistant_pairs": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/UserAssistantPair"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User Assistant Pairs",
+            "description": "Array of user/assistant conversation pairs to store as memory."
+          },
+          "is_markdown": {
+            "type": "boolean",
+            "title": "Is Markdown",
+            "description": "Whether the text is markdown formatted.",
+            "default": false,
+            "example": true
+          },
+          "infer": {
+            "type": "boolean",
+            "title": "Infer",
+            "description": "If true, process and extract additional insights/inferences from the content before indexing. Useful for extracting implicit information from conversations.",
+            "default": false,
+            "example": true
+          },
+          "custom_instructions": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom Instructions",
+            "description": "Custom instructions to guide inference processing."
+          },
+          "user_name": {
+            "type": "string",
+            "title": "User Name",
+            "description": "User's name for personalization in conversation pairs.",
+            "default": "User",
+            "example": "John Doe"
+          },
+          "expiry_time": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expiry Time",
+            "description": "Optional TTL in seconds for this memory."
+          },
+          "tenant_metadata": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tenant Metadata",
+            "description": "JSON string containing tenant-level document metadata (e.g., department, compliance_tag)\n\nExample: > \"{\"department\":\"Finance\",\"compliance_tag\":\"GDPR\"}\"\n\n",
+            "default": ""
+          },
+          "document_metadata": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Document Metadata",
+            "description": "JSON string containing document-specific metadata (e.g., title, author, file_id). If file_id is not provided, the system will generate an ID automatically.\n\nExample: > \"{\"title\":\"Q1 Report.pdf\",\"author\":\"Alice Smith\",\"file_id\":\"custom_file_123\"}\"\n\n\n",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "title": "MemoryItem",
+        "description": "Represents a single memory item for ingestion.\nSupports raw text, markdown, and user/assistant conversation pairs."
+      },
+      "MemoryResultItem": {
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "title": "Source Id",
+            "description": "Unique identifier for the ingested source.",
+            "example": "CortexDoc1234"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title",
+            "description": "Title of the memory if provided."
+          },
+          "status": {
+            "$ref": "#/components/schemas/SourceStatus",
+            "description": "Initial processing status.",
+            "default": "queued"
+          },
+          "infer": {
+            "type": "boolean",
+            "title": "Infer",
+            "description": "Whether inference was requested for this memory.",
+            "default": false,
+            "example": true
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error",
+            "description": "Error message if ingestion failed."
+          }
+        },
+        "type": "object",
+        "required": [
+          "source_id"
+        ],
+        "title": "MemoryResultItem",
+        "description": "Result for a single ingested memory item."
+      },
+      "MilvusDataType": {
+        "type": "string",
+        "enum": [
+          "BOOL",
+          "INT8",
+          "INT16",
+          "INT32",
+          "INT64",
+          "FLOAT",
+          "DOUBLE",
+          "VARCHAR",
+          "JSON",
+          "ARRAY",
+          "FLOAT_VECTOR",
+          "SPARSE_FLOAT_VECTOR"
+        ],
+        "title": "MilvusDataType",
+        "description": "Milvus data types mapped from Weaviate schema."
+      },
       "OnboardUserRequest": {
         "properties": {
           "email": {
@@ -4703,10 +4642,12 @@
               "queued",
               "processing",
               "completed",
-              "errored"
+              "errored",
+              "graph_creation",
+              "success"
             ],
             "title": "Indexing Status",
-            "description": "Current status of the file. Possible values are 'queued', 'processing', 'completed', 'errored'",
+            "description": "Current status of the file. Possible values are 'queued', 'processing', 'completed', 'errored', 'graph_creation', 'success'. 'graph_creation' indicates the file is indexed but the knowledge graph is still being created. 'success' is an alias for 'completed'.",
             "example": "<indexing_status>"
           },
           "error_code": {
@@ -4766,8 +4707,8 @@
           },
           "max_chunks": {
             "type": "integer",
-            "maximum": 50,
-            "minimum": 1,
+            "maximum": 50.0,
+            "minimum": 1.0,
             "title": "Max Chunks",
             "description": "Maximum number of context chunks to retrieve",
             "default": 10,
@@ -4780,8 +4721,8 @@
           },
           "alpha": {
             "type": "number",
-            "maximum": 1,
-            "minimum": 0,
+            "maximum": 1.0,
+            "minimum": 0.0,
             "title": "Alpha",
             "description": "Hybrid search alpha (0.0 = sparse/keyword, 1.0 = dense/semantic)",
             "default": 0.8,
@@ -4830,8 +4771,8 @@
           },
           "temperature": {
             "type": "number",
-            "maximum": 2,
-            "minimum": 0,
+            "maximum": 2.0,
+            "minimum": 0.0,
             "title": "Temperature",
             "description": "LLM temperature for answer generation (lower = more focused)",
             "default": 0.3,
@@ -4839,8 +4780,8 @@
           },
           "max_tokens": {
             "type": "integer",
-            "maximum": 16000,
-            "minimum": 100,
+            "maximum": 16000.0,
+            "minimum": 100.0,
             "title": "Max Tokens",
             "description": "Maximum tokens for the generated answer",
             "default": 4096,
@@ -4912,32 +4853,6 @@
       },
       "RawEmbeddingDocument": {
         "properties": {
-          "tenant_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Tenant Id",
-            "description": "Tenant identifier",
-            "example": "tenant_1234"
-          },
-          "sub_tenant_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Sub Tenant Id",
-            "description": "Sub-tenant identifier (partition key)",
-            "example": "sub_tenant_4567"
-          },
           "source_id": {
             "type": "string",
             "title": "Source Id",
@@ -5006,14 +4921,14 @@
             "type": "number",
             "title": "Score",
             "description": "Similarity score",
-            "default": 0,
+            "default": 0.0,
             "example": 1.0
           },
           "distance": {
             "type": "number",
             "title": "Distance",
             "description": "Vector distance",
-            "default": 0,
+            "default": 0.0,
             "example": 1.0
           },
           "metadata": {
@@ -5085,8 +5000,8 @@
           },
           "confidence": {
             "type": "number",
-            "maximum": 1,
-            "minimum": 0,
+            "maximum": 1.0,
+            "minimum": 0.0,
             "title": "Confidence",
             "description": "Confidence score",
             "default": 0.8,
@@ -5215,6 +5130,18 @@
               }
             ],
             "title": "Combined Context"
+          },
+          "group_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Group Id",
+            "description": "Path group identifier (e.g., 'p_0') for chunk mapping"
           }
         },
         "type": "object",
@@ -5223,32 +5150,6 @@
           "relevancy_score"
         ],
         "title": "ScoredPathResponse"
-      },
-      "ScoredTripletResponse": {
-        "properties": {
-          "source": {
-            "$ref": "#/components/schemas/Entity"
-          },
-          "relation": {
-            "$ref": "#/components/schemas/RelationEvidence"
-          },
-          "target": {
-            "$ref": "#/components/schemas/Entity"
-          },
-          "relevancy_score": {
-            "type": "number",
-            "title": "Relevancy Score",
-            "example": 1.0
-          }
-        },
-        "type": "object",
-        "required": [
-          "source",
-          "relation",
-          "target",
-          "relevancy_score"
-        ],
-        "title": "ScoredTripletResponse"
       },
       "SearchMode": {
         "type": "string",
@@ -5396,8 +5297,8 @@
           },
           "expiry_seconds": {
             "type": "integer",
-            "maximum": 604800,
-            "minimum": 60,
+            "maximum": 604800.0,
+            "minimum": 60.0,
             "title": "Expiry Seconds",
             "description": "Expiry time in seconds for presigned URL (60-604800, default: 3600)",
             "default": 3600,
@@ -5901,13 +5802,86 @@
             "title": "Tenant Id",
             "description": "Unique tenant identifier",
             "example": "tenant_1234"
+          },
+          "is_embeddings_tenant": {
+            "type": "boolean",
+            "title": "Is Embeddings Tenant",
+            "description": "True to create embeddings tenant",
+            "default": false,
+            "example": true
+          },
+          "embeddings_dimension": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Embeddings Dimension",
+            "description": "Embedding dimensions for embeddings tenant. Not required for non-embeddings (is_embeddings_tenant=False) tenants",
+            "default": 1536
+          },
+          "tenant_metadata_schema": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/CustomPropertyDefinition"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tenant Metadata Schema",
+            "description": "Schema definition for tenant metadata fields. Each field can be configured for: filtering (enable_match), semantic search (enable_dense_embedding), and/or keyword search (enable_sparse_embedding). Fields with embeddings enabled must be VARCHAR type.",
+            "examples": [
+              [
+                {
+                  "data_type": "VARCHAR",
+                  "enable_match": true,
+                  "max_length": 256,
+                  "name": "category"
+                },
+                {
+                  "data_type": "VARCHAR",
+                  "enable_dense_embedding": true,
+                  "enable_sparse_embedding": true,
+                  "max_length": 4096,
+                  "name": "product_description"
+                }
+              ]
+            ],
+            "example": [
+              {
+                "key": "department",
+                "type": "string",
+                "searchable": true,
+                "filterable": true
+              },
+              {
+                "key": "compliance_framework",
+                "type": "string",
+                "searchable": true,
+                "filterable": false
+              },
+              {
+                "key": "data_classification",
+                "type": "string",
+                "searchable": false,
+                "filterable": true
+              }
+            ]
           }
         },
         "type": "object",
         "required": [
           "tenant_id"
         ],
-        "title": "TenantCreateRequest"
+        "title": "TenantCreateRequest",
+        "description": "Request model for creating a tenant with optional metadata schema.\n\nThe tenant_metadata_schema allows you to define custom fields that will be indexed\nin Milvus with configurable search capabilities:\n\nExample:\n    {\n        \"tenant_id\": \"my-tenant\",\n        \"tenant_metadata_schema\": [\n            {\n                \"name\": \"category\",\n                \"data_type\": \"VARCHAR\",\n                \"max_length\": 256,\n                \"enable_match\": true\n            },\n            {\n                \"name\": \"product_description\",\n                \"data_type\": \"VARCHAR\",\n                \"max_length\": 4096,\n                \"enable_dense_embedding\": true,\n                \"enable_sparse_embedding\": true\n            }\n        ]\n    }"
       },
       "TenantCreateResponse": {
         "properties": {
@@ -5920,6 +5894,17 @@
           "infra": {
             "$ref": "#/components/schemas/Infra",
             "description": "Infra status"
+          },
+          "metadata_schema": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TenantMetadataSchemaInfo"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Summary of configured tenant metadata schema (if provided)"
           },
           "message": {
             "type": "string",
@@ -5963,6 +5948,40 @@
           "timestamp"
         ],
         "title": "TenantInfo"
+      },
+      "TenantMetadataSchemaInfo": {
+        "properties": {
+          "field_count": {
+            "type": "integer",
+            "title": "Field Count",
+            "description": "Number of custom metadata fields configured",
+            "example": 1
+          },
+          "dense_embedding_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Dense Embedding Fields",
+            "description": "Fields with dense embeddings enabled for semantic search",
+            "example": []
+          },
+          "sparse_embedding_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Sparse Embedding Fields",
+            "description": "Fields with sparse embeddings enabled for keyword search",
+            "example": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "field_count"
+        ],
+        "title": "TenantMetadataSchemaInfo",
+        "description": "Summary of configured tenant metadata schema fields."
       },
       "TenantStatsResponse": {
         "properties": {
@@ -6049,7 +6068,8 @@
           "user",
           "assistant"
         ],
-        "title": "UserAssistantPair"
+        "title": "UserAssistantPair",
+        "description": "Represents a user-assistant conversation pair."
       },
       "ValidationError": {
         "properties": {
@@ -6274,11 +6294,6 @@
       "HTTPBearer": {
         "type": "http",
         "scheme": "bearer"
-      },
-      "APIKeyHeader": {
-        "type": "apiKey",
-        "in": "header",
-        "name": "X-API-Key"
       }
     }
   }

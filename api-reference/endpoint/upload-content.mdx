@@ -1,7 +1,12 @@
 ---
 title: 'Upload Content'
 openapi: 'POST /ingestion/upload-content'
+tag: 'DEPRECATED'
 ---
+
+<Note>
+⚠️ **Deprecated**: This endpoint has been superseded by the unified [Add Memory](/api-reference/endpoint/add-memories) API. Please migrate to `/memories/add_memory` for new integrations.
+</Note>
 
 import { TableOfContents } from '/snippets/table-of-contents.jsx'
 import TryIt from '/snippets/try-it.mdx'
@@ -9,7 +14,74 @@ import TryIt from '/snippets/try-it.mdx'
 <Panel>
   <TableOfContents />
 </Panel>
-<TryIt />
+
+## Migration Guide
+
+### Old Request Format
+```bash
+curl -X 'POST' \
+  'https://api.usecortex.ai/ingestion/upload-content' \
+  -d '{
+  "content": {
+    "contents": [
+      {
+        "file_id": "doc-123",
+        "content": "Your text content here",
+        "is_markdown": false
+      }
+    ]
+  },
+  "tenant_id": "tenant-01",
+  "sub_tenant_id": "",
+  "upsert": true
+}'
+```
+
+### New Request Format (Recommended)
+```bash
+curl -X 'POST' \
+  'https://api.usecortex.ai/memories/add_memory' \
+  -d '{
+  "memories": [
+    {
+      "source_id": "doc-123",
+      "text": "Your text content here",
+      "is_markdown": false,
+      "infer": false
+    }
+  ],
+  "tenant_id": "tenant-01",
+  "sub_tenant_id": "",
+  "upsert": true
+}'
+```
+
+### Key Changes
+
+| Old Field | New Field | Notes |
+|-----------|-----------|-------|
+| `content.contents[].content` | `memories[].text` | Content field renamed |
+| `content.contents[].file_id` | `memories[].source_id` | ID field renamed |
+| Nested structure | Flat structure | `memories` array at top level |
+| No inference option | `infer` field | New inference capability |
+
+## New Features in Add Memory API
+
+The new `/memories/add_memory` endpoint provides:
+
+- **Unified ingestion**: Single endpoint for text, markdown, and conversations
+- **Inference mode**: Extract insights and preferences from content
+- **User-assistant pairs**: Store conversation history
+- **Batch uploads**: Multiple items in a single request
+
+See the [Add Memory documentation](/api-reference/endpoint/add-memories) for full details.
+
+---
+
+## Legacy Documentation
+
+<Accordion title="Original Upload Content Documentation">
+
 ### Examples
 
 <Tabs>
@@ -54,7 +126,6 @@ import TryIt from '/snippets/try-it.mdx'
   </Tab>
   <Tab title="Python (Sync)">
     ```python
-    # Async usage is similar, just use async_client and await
     result = client.upload.upload_text(
         tenant_id="tenant_1234",
         sub_tenant_id="sub_tenant_4567",
@@ -69,114 +140,18 @@ import TryIt from '/snippets/try-it.mdx'
 
 Upload text content directly to your tenant's knowledge base. The text will be processed, chunked, and indexed for search and retrieval.
 
-## Text Processing Pipeline
+### Text Processing Pipeline
 
 When you upload text content, it goes through a streamlined processing pipeline optimized for direct text input:
 
-### 1. **Immediate Upload & Queue**
-- Your text content is immediately accepted and stored securely
-- It's added to our processing queue for background processing
-- You receive a confirmation response with a `file_id` for tracking
+1. **Immediate Upload & Queue** - Content is accepted and queued for processing
+2. **Text Processing Phase** - Content validation, format detection, text normalization
+3. **Intelligent Chunking** - Text is split into semantically meaningful chunks
+4. **Embedding Generation** - Each chunk is converted into vector embeddings
+5. **Indexing & Database Updates** - Embeddings stored in vector database
 
-### 2. **Text Processing Phase**
-Our system automatically handles:
-- **Content Validation**: Ensuring text content is properly formatted and accessible
-- **Format Detection**: Identifying markdown, plain text, or structured content
-- **Text Normalization**: Cleaning and standardizing text formatting
-
-### 3. **Intelligent Chunking**
-- Text is split into semantically meaningful chunks
-- Chunk size is optimized for both context preservation and search accuracy
-- Overlapping boundaries ensure no information is lost between chunks
-- Metadata is preserved and associated with each chunk
-
-### 4. **Embedding Generation**
-- Each chunk is converted into high-dimensional vector embeddings
-- Embeddings capture semantic meaning and context
-- Vectors are optimized for similarity search and retrieval
-
-### 5. **Indexing & Database Updates**
-- Embeddings are stored in our vector database for fast similarity search
-- Full-text search indexes are created for keyword-based queries
-- Metadata is indexed for filtering and faceted search
-- Cross-references are established for related content
-
-### 6. **Quality Assurance**
-- Automated quality checks ensure processing accuracy
-- Content validation verifies text completeness
-- Embedding quality is assessed for optimal retrieval performance
-
-<Note>
-**Processing Time**: Text content is typically processed and searchable within 1-3 minutes. Large text blocks (10,000+ words) may take up to 5 minutes. You can check processing status using the document ID returned in the response.
-</Note>
-
-<Note>
-**Default Sub-Tenant Behavior**: If you don't specify a `sub_tenant_id`, the text content will be uploaded to the default sub-tenant created when your tenant was set up. This is perfect for organization-wide content that should be accessible across all departments.
-</Note>
-
-> **File ID Management**: The system uses a priority-based approach for file ID assignment:
-> 1. **First Priority**: If you provide a `file_id` as a direct body parameter, that specific ID will be used
-> 2. **Second Priority**: If no direct `file_id` is provided, the system checks for a `file_id` in the `document_metadata` object
-> 3. **Auto-Generation**: If neither source provides a `file_id`, the system will automatically generate a unique identifier
-
-### **Duplicate File ID Behavior**
-
-When you upload text content with a `file_id` that already exists in your tenant:
-
-- **Overwrite Behavior**: The existing text content with the same `file_id` will be **completely replaced** with the new content
-- **Processing**: The new text content will go through the full processing pipeline (validation, chunking, embedding generation, indexing)
-- **Search Results**: Previous search results and embeddings from the old content will be replaced with the new content
-- **Idempotency**: Uploading the same text content with the same `file_id` multiple times is safe and will result in the same final state
-
-<Warning>
-**Important**: When overwriting existing text content, all previous chunks, embeddings, and search indexes associated with that `file_id` will be permanently removed and replaced. This action cannot be undone.
-</Warning>
-
-**Example Success Response for Duplicate File ID:**
-```json
-{
-  "message": "Text content uploaded successfully. Existing content with file_id 'text_123456' has been overwritten.",
-  "file_id": "text_123456",
-  "status": "success"
-}
-```
-
-## Processing Status & Monitoring
-
-After uploading, you can monitor your text content's processing status:
-
-### **Immediate Response**
-Upon successful upload, you'll receive:
-```json
-{
-  "message": "Text content uploaded successfully",
-  "file_id": "doc_123456"
-}
-```
-
-### **Processing States**
-Your text content will progress through these states:
-- **`queued`**: Text content is in the processing queue, waiting to be processed
-- **`in_progress`**: Text content is actively being processed (includes validation, chunking, embedding generation, and indexing)
-- **`success`**: Text content is fully processed and searchable
-- **`errored`**: Processing encountered an error (rare occurrence)
-
-<Info>
-**In-Progress Details**: While the status shows `in_progress`, the system is actually performing multiple steps: content validation, format detection, intelligent chunking, embedding generation, and database indexing. These happen sequentially but are all part of the single `in_progress` state.
-</Info>
-
-### **When Your Text is Ready**
-Once processing is complete, your text content will be:
-- ✅ **Searchable** via semantic search and Q&A endpoints
-- ✅ **Retrievable** through our retrieval APIs
-- ✅ **Available** for AI-powered applications
-- ✅ **Indexed** for fast query performance
-
-<Warning>
-**Important**: Don't attempt to search or retrieve your text content immediately after upload. Wait for processing to complete (typically 1-3 minutes) to ensure optimal results.
-</Warning>
+</Accordion>
 
 ## Error Responses
 
 All endpoints return consistent error responses following the standard format. For detailed error information, see our [Error Responses](/api-reference/error-responses) documentation.
-

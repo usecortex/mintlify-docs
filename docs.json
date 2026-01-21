@@ -76,6 +76,13 @@
             ]
           },
           {
+            "group": "User Memories",
+            "pages": [
+              "api-reference/endpoint/add-memories",
+              "api-reference/endpoint/delete-memory"
+            ]
+          },
+          {
             "group": "Knowledge Ingestion",
             "pages": [
               "api-reference/endpoint/upload-document",
@@ -110,13 +117,6 @@
               "api-reference/endpoint/search-raw-embeddings",
               "api-reference/endpoint/filter-raw-embeddings",
               "api-reference/endpoint/delete-raw-embeddings"
-            ]
-          },
-          {
-            "group": "User Memories",
-            "pages": [
-              "api-reference/endpoint/add-memories",
-              "api-reference/endpoint/delete-memory"
             ]
           }
         ]
