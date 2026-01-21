@@ -1,0 +1,131 @@
+# Endpoint: /upload/update_embeddings
+# Method: PATCH
+
+"/upload/update_embeddings":
+  patch:
+    description: Updates existing embeddings using chunk IDs and new embedding vectors.
+    parameters:
+    - name: Authorization
+      in: header
+      required: true
+      description: Bearer token (your API key)
+      schema:
+        type: string
+      example: Bearer {API_KEY}
+    - name: Content-Type
+      in: header
+      required: true
+      description: Request content type
+      schema:
+        type: string
+        default: application/json
+    - name: accept
+      in: header
+      required: true
+      description: Response content type
+      schema:
+        type: string
+        default: application/json
+    - name: tenant_id
+      in: query
+      required: false
+      description: Primary organizational identifier (e.g., enterprise client, company) for multi-tenant data isolation
+      schema:
+        type: string
+    - name: sub_tenant_id
+      in: query
+      required: false
+      description: Secondary organizational identifier (e.g., department, team, project) within a tenant for hierarchical data organization; defaults to tenant_id if not provided
+      schema:
+        type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              embeddings:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    type: number
+                    format: float
+                description: Dictionary with chunk IDs as keys and embedding arrays as values
+                example:
+                  "CortexEmbeddings123_0": [0.1, 0.2, 0.3, 0.4, 0.5]
+                  "CortexEmbeddings123_1": [0.6, 0.7, 0.8, 0.9, 1.0]
+              tenant_metadata:
+                type: object
+                description: JSON object containing tenant-level metadata for the embeddings
+                example: '{"department":"AI_Research","model_version":"v2.2"}'
+              document_metadata:
+                type: object
+                description: JSON object containing document-specific metadata for the embeddings
+                example: '{"title":"Updated Research Paper Embeddings","author":"Dr. Smith","source_type":"academic_paper"}'
+            required:
+            - embeddings
+    responses:
+      '200':
+        description: Embeddings updated successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                  description: Indicates if the update was successful
+                  example: true
+                message:
+                  type: string
+                  description: Status message about the update operation
+                  example: "Embeddings update message pushed to SQS."
+                chunk_ids:
+                  type: array
+                  items:
+                    type: string
+                  description: List of chunk IDs that were updated
+                  example: ["CortexEmbeddings123_0", "CortexEmbeddings123_1"]
+                batch_id:
+                  type: string
+                  description: Batch identifier extracted from chunk IDs
+                  example: "CortexEmbeddings123"
+                updated_count:
+                  type: integer
+                  description: Number of embeddings that were updated
+                  example: 2
+              example:
+                success: true
+                message: "Embeddings update message pushed to SQS."
+                chunk_ids: ["CortexEmbeddings123_0", "CortexEmbeddings123_1"]
+                batch_id: "CortexEmbeddings123"
+                updated_count: 2
+      '400':
+        description: |
+          Invalid request. Possible errors:
+          - 'embeddings' field is required and cannot be empty
+          - embeddings must be a dictionary with chunk_id as keys and embedding arrays as values
+          - All chunk IDs must be strings
+          - Invalid chunk ID format (must be: batch_id_index)
+          - Could not extract source ID from chunk ID
+          - All chunk IDs must belong to the same batch
+          - All embedding values must be arrays of decimals
+          - All embedding values must be numeric
+          - embeddings dictionary cannot be empty
+          - embedding vectors cannot be empty
+          - All embedding vectors must have the same dimension
+          - Embeddings dimensions exceed limits (Max: 2000 rows × 3024 columns)
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                detail:
+                  type: string
+                  example: "All chunk IDs must belong to the same batch. Found sources: ['CortexEmbeddings123', 'CortexEmbeddings456']"
+      '401':
+        description: Invalid or missing API key
+      '5XX':
+        description: Internal server error

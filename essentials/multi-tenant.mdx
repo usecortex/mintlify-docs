@@ -1,0 +1,239 @@
+---
+title: "Multi-Tenant Support"
+description: "Create completely isolated workspaces called tenants for secure, scalable B2B platforms that serve many organizations without cross-contamination of data."
+---
+
+Cortex provides a robust multi-tenant architecture with hierarchical tenant support, enabling you to build secure, scalable B2B platforms. Understanding the difference between `tenant_id` and `sub_tenant_id` is crucial for implementing proper data isolation and access control.
+
+## Understanding Tenant Hierarchy
+
+### Tenant ID (`tenant_id`) - Your Organization
+The **tenant_id** is like your company's main identifier. It represents the primary organizational unit - typically your main enterprise client or organization. This is the top-level identifier that provides the broadest scope of data isolation.
+
+**Think of it as**: The company name or organization ID that completely separates your data from all other organizations using Cortex.
+
+### Sub-Tenant ID (`sub_tenant_id`) - Your Department/Team
+The **sub_tenant_id** represents a subdivision within a tenant - such as departments, teams, or individual customers within an enterprise. This enables hierarchical data organization and more granular access control.
+
+**Think of it as**: The department or team name within your company (like "Engineering", "Sales", or "HR").
+
+### Default Sub-Tenant Behavior
+**Important**: When you create a tenant, Cortex automatically creates a **DEFAULT sub-tenant** that acts as a global space for that tenant. 
+
+- If you don't specify a `sub_tenant_id` when using any API, your data will be stored in this default sub-tenant
+- This means if you upload documents with just a `tenant_id` and leave `sub_tenant_id` empty, they'll go to the default sub-tenant
+- The default sub-tenant is perfect for organization-wide data that should be accessible across all departments
+
+## Creating Additional Sub-Tenants
+
+**No Explicit API Required**: Cortex doesn't require a separate API call to create sub-tenants. Sub-tenants are created automatically when you first use a new `sub_tenant_id` that doesn't exist yet.
+
+### How Sub-Tenant Creation Works
+
+1. **Automatic Creation**: When you upload a document, text, or any content with a `sub_tenant_id` that doesn't exist, Cortex automatically creates that sub-tenant
+2. **First Upload Triggers Creation**: The first API call with a new `sub_tenant_id` will create the sub-tenant and then process your content
+3. **Immediate Availability**: Once created, the sub-tenant is immediately available for all subsequent operations
+
+**Example - Creating a New Sub-Tenant:**
+```json
+POST /upload/upload_document?tenant_id=acme_corp&sub_tenant_id=engineering_team_alpha
+{
+  "file": "engineering_standards.pdf",
+  "document_metadata": {
+    "title": "Engineering Standards",
+    "department": "Engineering"
+  }
+}
+```
+
+If `engineering_team_alpha` doesn't exist as a sub-tenant under `acme_corp`, Cortex will:
+1. ✅ Create the new sub-tenant `engineering_team_alpha`
+2. ✅ Upload and process the document
+3. ✅ Make the sub-tenant available for future operations
+
+### Sub-Tenant ID Best Practices
+
+#### **Recommended Naming Conventions**
+
+**For User-Based Sub-Tenants (B2C):**
+```javascript
+// Use user IDs as sub-tenant IDs for individual user workspaces
+sub_tenant_id: "user_12345"
+sub_tenant_id: "user_67890"
+sub_tenant_id: "user_abc123"
+```
+
+**For Department/Team-Based Sub-Tenants (B2B):**
+```javascript
+// Use descriptive department names
+sub_tenant_id: "engineering"
+sub_tenant_id: "sales"
+sub_tenant_id: "hr"
+sub_tenant_id: "marketing"
+```
+
+**For Project-Based Sub-Tenants:**
+```javascript
+// Use project identifiers
+sub_tenant_id: "project_alpha"
+sub_tenant_id: "project_beta"
+sub_tenant_id: "client_acme_corp"
+```
+
+**For Customer-Based Sub-Tenants (Multi-tenant SaaS):**
+```javascript
+// Use customer identifiers
+sub_tenant_id: "customer_12345"
+sub_tenant_id: "customer_acme_inc"
+sub_tenant_id: "customer_beta_corp"
+```
+
+#### **Best Practices for Sub-Tenant IDs**
+
+1. **Use Consistent Naming**: Establish a clear naming convention across your application
+2. **Include Prefixes**: Use prefixes like `user_`, `dept_`, `project_` to make the purpose clear
+3. **Avoid Special Characters**: Stick to alphanumeric characters and underscores
+4. **Keep It Descriptive**: Make sub-tenant IDs self-explanatory
+5. **Consider Hierarchies**: For complex organizations, consider hierarchical naming like `dept_engineering_team_alpha`
+
+**Good Examples:**
+```javascript
+sub_tenant_id: "user_12345"           // Individual user
+sub_tenant_id: "dept_engineering"     // Department
+sub_tenant_id: "project_alpha_v2"     // Project
+sub_tenant_id: "client_acme_corp"     // Client
+sub_tenant_id: "team_mobile_dev"      // Team
+```
+
+**Avoid These:**
+```javascript
+sub_tenant_id: "12345"                // Too generic
+sub_tenant_id: "user@company.com"     // Special characters
+sub_tenant_id: "very_long_descriptive_name_that_is_hard_to_read" // Too long
+sub_tenant_id: "temp"                 // Not descriptive
+```
+
+## Multi-Tenant Architecture
+
+**What it is:**  
+Cortex's multi-tenant system creates completely isolated workspaces at both the tenant and sub-tenant levels. All documents, search results, embeddings, and AI memories are isolated per tenant/sub-tenant combination, ensuring zero cross-contamination of data.
+
+**Key Benefits:**
+- **Complete Data Isolation**: Zero cross-contamination between tenants and sub-tenants
+- **Scalable B2B Architecture**: Serve unlimited organizations and their subdivisions
+- **Granular Access Control**: Control data access at organization and department levels
+- **Performance Optimization**: Tenant-scoped searches for faster results
+- **Compliance Ready**: Meet enterprise security and privacy requirements
+
+## Real-World Use Cases
+
+### 1. Enterprise SaaS Platform
+
+**Scenario**: You're building an AI knowledge assistant for multiple enterprise clients.
+
+```
+Tenant: "acme_corp" (Acme Corporation)
+├── Sub-tenant: "engineering" (Engineering Department)
+├── Sub-tenant: "sales" (Sales Department)
+├── Sub-tenant: "hr" (Human Resources)
+└── Sub-tenant: "finance" (Finance Department)
+
+Tenant: "tech_solutions" (Tech Solutions Inc.)
+├── Sub-tenant: "product_dev" (Product Development)
+├── Sub-tenant: "customer_success" (Customer Success)
+└── Sub-tenant: "operations" (Operations)
+```
+
+**Implementation**:
+- Each enterprise client gets their own `tenant_id`
+- Each department within the enterprise gets their own `sub_tenant_id`
+- Documents uploaded by Acme's Engineering team are only accessible to Acme Corporation (`tenant_id: "acme_corp"`) and specifically to the Engineering department (`sub_tenant_id: "engineering"`)
+
+### 2. Consulting Firm with Multiple Clients
+
+**Scenario**: A consulting firm serving multiple clients with project-based work.
+
+```
+Tenant: "consulting_firm" (Your Consulting Firm)
+├── Sub-tenant: "client_alpha" (Client Alpha Project)
+├── Sub-tenant: "client_beta" (Client Beta Project)
+├── Sub-tenant: "client_gamma" (Client Gamma Project)
+└── Sub-tenant: "internal" (Internal Operations)
+```
+
+**Implementation**:
+- Your consulting firm is the main `tenant_id`
+- Each client project gets its own `sub_tenant_id`
+- Client Alpha's documents are completely isolated from Client Beta's data
+- Internal firm knowledge can be kept separate from client work
+
+### 3. Educational Platform
+
+**Scenario**: An AI-powered learning platform serving multiple schools.
+
+```
+Tenant: "stanford_university" (Stanford University)
+├── Sub-tenant: "computer_science" (CS Department)
+├── Sub-tenant: "business_school" (Business School)
+└── Sub-tenant: "medical_school" (Medical School)
+
+Tenant: "mit" (MIT)
+├── Sub-tenant: "engineering" (Engineering Department)
+├── Sub-tenant: "sloan_school" (Sloan School of Management)
+└── Sub-tenant: "media_lab" (Media Lab)
+```
+
+**Implementation**:
+- Each university is a separate `tenant_id`
+- Each department/school is a `sub_tenant_id`
+- Research papers and course materials are isolated by institution and department
+
+### 4. Multi-Brand E-commerce
+
+**Scenario**: A company managing multiple brands with different customer bases.
+
+```
+Tenant: "fashion_group" (Fashion Group Corp)
+├── Sub-tenant: "luxury_brand" (Luxury Brand)
+├── Sub-tenant: "casual_brand" (Casual Brand)
+└── Sub-tenant: "sports_brand" (Sports Brand)
+```
+
+**Implementation**:
+- The parent company is the `tenant_id`
+- Each brand is a `sub_tenant_id`
+- Customer data, product catalogs, and support documents are brand-specific
+
+## API Implementation
+
+When making API calls, always include both identifiers:
+
+```json
+{
+  "tenant_id": "acme_corp",
+  "sub_tenant_id": "engineering",
+  "query": "What are our coding standards?",
+  // other parameters...
+}
+```
+
+### Default Behavior
+- If `sub_tenant_id` is not provided, it automatically uses the **DEFAULT sub-tenant** created when the tenant was set up
+- This means the search/operation applies to the default sub-tenant scope (organization-wide data)
+- For tenant-wide operations, you can omit `sub_tenant_id` and your data will be stored in the default sub-tenant
+- The default sub-tenant acts as a global space where organization-wide documents and data are stored
+
+## Security and Isolation
+
+### Data Isolation Guarantees
+- **Tenant Level**: No data can ever cross tenant boundaries
+- **Sub-Tenant Level**: Data is isolated within sub-tenants unless explicitly queried at tenant level
+- **Search Scope**: All searches are automatically scoped to the specified tenant/sub-tenant
+- **Memory Isolation**: AI memories are completely isolated per tenant/sub-tenant combination
+
+### Access Patterns
+- **Tenant-Wide Access**: Use same value for both `tenant_id` and `sub_tenant_id`
+- **Sub-Tenant Specific**: Use specific `sub_tenant_id` within a `tenant_id`
+- **Cross Sub-Tenant**: Not supported - maintains strict isolation
+
+This architecture ensures your platform can scale securely while maintaining the flexibility to organize data hierarchically within each client organization.

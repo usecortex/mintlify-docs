@@ -1,0 +1,149 @@
+# Endpoint: /search/qna
+# Method: POST
+
+"/search/qna":
+  post:
+    description: Ask a question to your uploaded knowledge inside Cortex.
+    # --- Parameters (Headers) ---
+    parameters:
+    - name: Authorization
+      in: header
+      required: true
+      description: Bearer token (your API key)
+      schema:
+        type: string
+      example: Bearer {API_KEY}
+    - name: Content-Type
+      in: header
+      required: true
+      description: Request content type
+      schema:
+        type: string
+        default: application/json
+    - name: accept
+      in: header
+      required: true
+      description: Response content type
+      schema:
+        type: string
+        default: application/json
+    # --- Request Body ---
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              question:
+                type: string
+                description: The original user query.
+              user_name:
+                type: string
+                description: User name to personalize the final answer generation.
+              user_instructions:
+                type: string
+                description: Custom instructions that you or your users can provide to Cortex to personalize the final answer generation.
+              session_id:
+                type: string
+                description: Chat session ID to track the conversation history and maintain session context. Always provide a new session ID for each new chat session.
+              tenant_id:
+                type: string
+                description: Primary organizational identifier (e.g., enterprise client, company) for multi-tenant data isolation.
+              sub_tenant_id:
+                type: string
+                description: Secondary organizational identifier (e.g., department, team, project) within a tenant for hierarchical data organization; defaults to tenant_id if not provided.
+              stream:
+                type: boolean
+                description: Enable streaming to receive your answer in a stream.
+              context_list:
+                type: array
+                items:
+                  type: string
+                description: List of document IDs to restrict and focus the search to a specific set of documents.
+              search_modes:
+                type: array
+                items:
+                  type: string
+                description: "Give your agents additional tools to answer user questions. Current supported search modes are: 'web' and 'creative'. 'web' mode is used to search the web for the most relevant information. 'creative' mode is used to generate a creative answer to the user's question."
+              top_n:
+                type: number
+                description: Number of results to return from the search.
+              ai_generation:
+                type: boolean
+                description: Enable Cortex to directly answer the user's question using the search results and AI.
+              highlight_chunks:
+                type: boolean
+                description: Return source chunks to highlight the exact location of the cited content within the documents.
+              search_alpha:
+                type: number
+                format: float
+                description: Weight for semantic match. Cortex search combines the results of a vector search and a keyword (BM25F) search by fusing the two result sets. Alpha is the weight for the vector search. An Alpha of 0.0 means only keyword search is used, and an Alpha of 1.0 means only vector search is used. An Alpha of 0 means only keyword search is used.
+              recency_bias:
+                type: number
+                format: float
+                description: Recency bias describes the preference for more recent sources. A value of 0 means no preference, a value of 1 means recent sources are strongly considered.
+              multi_step_reasoning:
+                type: boolean
+                default: true
+                description: If enabled, Cortex search will break down complex queries into multiple steps for a deep search across your knowledge base. If set to false, auto-enabling of multi-step search is disabled, and only single-step search will be used regardless of query complexity.
+              auto_agent_routing:
+                type: boolean
+                default: true
+                description: If true, enables routing for choosing the best suitable agent automatically; if false, the answer is generated from the default model.
+              metadata:
+                type: object
+                description: 'Filter context to only sources matching the metadata filters you provide. Allowed keys are source_title and source_type.'
+                properties:
+                  source_title:
+                    type: string
+                    description: Restrict to sources with this title.
+                  source_type:
+                    type: string
+                    description: Restrict to sources of this type (e.g., document, webpage).
+                additionalProperties: false
+            required:
+            - question
+            - session_id
+            - tenant_id
+    # --- Responses ---
+    responses:
+      '200':
+        description: QnA response returned successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                answer:
+                  type: string
+                  description: The generated answer to the user's question
+                  example: "Based on your recent interactions, I think..."
+                sources:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      source_id:
+                        type: string
+                        description: Unique identifier for the source document
+                      chunk_uuid:
+                        type: string
+                        description: Unique identifier for the content chunk
+                      content:
+                        type: string
+                        description: Relevant content from the source
+                      metadata:
+                        type: object
+                        description: Additional metadata about the source
+                  description: List of sources used to generate the answer
+                session_id:
+                  type: string
+                  description: Chat session ID for maintaining conversation context
+                  example: "session_12345"
+      '422':
+        description: Incomplete/invalid parameters
+      '401':
+        description: Invalid or missing API key
+      '5XX':
+        description: Internal server error 

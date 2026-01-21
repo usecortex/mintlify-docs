@@ -1,0 +1,76 @@
+# Endpoint: /upload/scrape_webpage
+# Method: POST
+
+"/upload/scrape_webpage":
+  post:
+    description: Scrapes and processes content from a public webpage.
+    # --- Parameters (Headers & Query) ---
+    parameters:
+      - name: Authorization
+        in: header
+        required: true
+        description: Bearer token (your API key)
+        schema:
+          type: string
+        example: Bearer {API_KEY}
+      - name: accept
+        in: header
+        required: true
+        description: Response content type
+        schema:
+          type: string
+          default: application/json
+      - name: web_url
+        in: query
+        required: true
+        description: The public URL to scrape
+        schema:
+          type: string
+        example: https://example.com/article
+      - name: tenant_id
+        in: query
+        required: true
+        description: Primary organizational identifier (e.g., enterprise client, company) for multi-tenant data isolation
+        schema:
+          type: string
+        example: tenant_456
+      - name: sub_tenant_id
+        in: query
+        required: false
+        description: Secondary organizational identifier (e.g., department, team, project) within a tenant for hierarchical data organization; defaults to tenant_id if not provided
+        schema:
+          type: string
+        example: subtenant_123
+      - name: file_id
+        in: query
+        required: false
+        description: Custom file identifier. If not provided, the system will generate an ID automatically.
+        schema:
+          type: string
+        example: custom_webpage_123
+    # --- Request Body ---
+    requestBody:
+      required: false
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              tenant_metadata:
+                type: object
+                description: JSON object containing tenant-level metadata for the scraped content
+                example: '{"department":"Marketing","content_type":"blog_post"}'
+              document_metadata:
+                type: object
+                description: JSON object containing document-specific metadata for the scraped content
+                example: '{"title":"Product Launch Blog","author":"Marketing Team","source_url":"https://example.com/blog"}'
+    # --- Responses ---
+    responses:
+      '200':
+        description: Webpage scraped successfully
+      '422':
+        description: Incomplete/invalid parameters
+      '401':
+        description: Invalid or missing API key
+      '5XX':
+        description: Internal server error 

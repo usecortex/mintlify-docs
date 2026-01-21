@@ -1,0 +1,91 @@
+---
+title: "Core Concepts"
+description: "Understand the core concepts of using Cortex"
+---
+
+The Cortex SDK is designed to give you the most flexible developer experience for building AI apps and agents. Set up a global memory store for individual users (B2C), or configure organizations as tenants and onboard their users (B2B).
+
+### Tenants
+
+Think of a **tenant** as a completely separate workspace or organization in your Cortex application. It's like having different "companies" or "projects" that can't see each other's data.
+
+**Simple Analogy**: Imagine you're building a knowledge management system for multiple companies. Each company gets their own "tenant" - like separate office buildings where employees can't access each other's files.
+
+Cortex supports both **B2C** and **B2B** use cases:
+
+- **B2C (Business-to-Consumer)**: Each individual user gets their own private workspace within your single tenant. Perfect for personal AI assistants or individual productivity apps.
+- **B2B (Business-to-Business)**: Each organization gets their own tenant with complete data isolation. Perfect for enterprise software serving multiple companies.
+
+### Sub-Tenants
+
+A **sub-tenant** is like a department or team within an organization. It provides an additional layer of organization within a tenant.
+
+**Simple Analogy**: If a tenant is like a company, then sub-tenants are like departments (Engineering, Sales, HR) within that company. Each department has its own space, but they're all part of the same company.
+
+**Key Benefits**:
+- **Complete Data Isolation**: No tenant can ever see another tenant's data
+- **Organized Workspaces**: Sub-tenants help organize data within large organizations
+- **Flexible Access Control**: Control who can access what data at both tenant and sub-tenant levels
+- **Scalable Architecture**: Serve unlimited organizations and their subdivisions
+
+### Creating Sub-Tenants
+
+**Automatic Creation**: Sub-tenants are created automatically when you first use a new `sub_tenant_id` that doesn't exist yet. There's no separate API call required.
+
+**How It Works**:
+1. **First Upload**: When you upload content with a new `sub_tenant_id`, Cortex automatically creates that sub-tenant
+2. **Immediate Availability**: The sub-tenant is immediately available for all subsequent operations
+3. **No Setup Required**: No configuration or setup is needed - just start using the new `sub_tenant_id`
+
+**Best Practice - Use User IDs for B2C Applications**:
+```javascript
+// For individual user workspaces, use user IDs as sub-tenant IDs
+sub_tenant_id: "user_12345"    // User's personal workspace
+sub_tenant_id: "user_67890"    // Another user's workspace
+```
+
+**Best Practice - Use Descriptive Names for B2B Applications**:
+```javascript
+// For organizational subdivisions, use descriptive names
+sub_tenant_id: "engineering"   // Engineering department
+sub_tenant_id: "sales"         // Sales team
+sub_tenant_id: "hr"            // Human Resources
+```
+
+### Knowledge
+
+These are the atoms that power your retrievals. Any context you or your users add is treated as knowledge for the retrieval engine to search and retreive. This includes any type of documents, chats, images, webpages, presentations, reports, any form of unstructured information. Cortex can also digest CSVs.
+
+Each piece of knowledge you add is meticulously cleaned, parsed using in-house parsers, chunked, embedded, and prepared for the most optimal retrieval experience.
+
+### AI Memory
+
+Memory is where personalization lives. Unlike static knowledge, memory is dynamic and user-specific. Cortex stores evolving insights about users, their preferences, past interactions, and contextual signals.
+
+- Think of it as a **long-term cache of user profile**—not just what they said, but what they meant and what they’ve done before. Their preferences, intentions, and statements.
+- Cortex memories update automatically through conversation, queries, and usage, giving your app the ability to learn, remember, and adapt.
+
+### Querying
+
+Querying is how you extract meaningful answers from your knowledge and memory layers. Cortex gives you control over **how retrieval works**, using a combination of:
+
+- **Top-K search** across documents, passages, or snippets
+- **Alpha, recency bias, and contextual expansion:**\
+  Each query is processed deeply to determine the optimal retrieval strategy. This ensures results are not just relevant, but also personalized and self-improving over time.
+- **Memory injection** automatically infuses long-term user context (e.g. preferences, past interactions) into every query.
+- **Citations and Bounding Boxes**:\
+  Every answer returned by Cortex is backed by **verifiable citations**—with exact source snippets and optional **bounding boxes** for visual references (e.g. PDFs, slides, or structured files). This builds trust and lets users trace every insight back to its origin.
+- **Mixture-of-Experts Routing**:\
+  Cortex dynamically routes each query through a Mixture-of-Experts engine to select the best answering strategy—whether it needs to use memory, search more deeply, dynamically adjust prompts, or chain multi-hop lookups.
+
+### Metadata (& Agentic Querying)
+
+Metadata allows you to structure and filter retrieval with precision. You can tag documents, pages, or entities with key-value pairs and filter results by user role, product, team, time, or any custom logic.
+
+\
+**Agentic Querying** goes a step further—enabling agents to retrieve, reason, and act autonomously based on structured metadata and memory signals. This unlocks use cases like:
+
+- **Agent workflows that chain multi-step queries**
+- **Personalized agent routing per user or org**
+- **Task-specific memory selection for copilots and assistants**\
+  Cortex makes it easy to build intelligent agents that retrieve exactly what they need, when they need it.

@@ -1,0 +1,116 @@
+# Endpoint: /upload/batch_update
+# Method: PATCH
+
+"/upload/batch_update":
+  patch:
+    description: Updates multiple existing sources by uploading new files corresponding to each source ID.
+    parameters:
+    - name: Authorization
+      in: header
+      required: true
+      description: Bearer token (your API key)
+      schema:
+        type: string
+      example: Bearer {API_KEY}
+    - name: Content-Type
+      in: header
+      required: true
+      description: Request content type
+      schema:
+        type: string
+        default: multipart/form-data
+    - name: accept
+      in: header
+      required: true
+      description: Response content type
+      schema:
+        type: string
+        default: application/json
+    - name: tenant_id
+      in: query
+      required: true
+      description: Primary organizational identifier (e.g., enterprise client, company) for multi-tenant data isolation
+      schema:
+        type: string
+    - name: sub_tenant_id
+      in: query
+      required: false
+      description: Secondary organizational identifier (e.g., department, team, project) within a tenant for hierarchical data organization; defaults to tenant_id if not provided
+      schema:
+        type: string
+    requestBody:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              files:
+                type: array
+                items:
+                  type: string
+                  format: binary
+                description: Files to upload for each corresponding source ID
+              source_ids:
+                type: array
+                items:
+                  type: string
+                description: A list of source IDs matching the files order
+              tenant_metadata:
+                type: string
+                description: JSON string array of tenant metadata objects, aligned by index with files
+              document_metadata:
+                type: string
+                description: JSON string array of document metadata objects, aligned by index with files
+            required:
+            - files
+            - source_ids
+          examples:
+            batch_update:
+              summary: Update multiple documents
+              description: Example with 2 files and 2 source IDs
+              value:
+                files:
+                - updated1.pdf
+                - updated2.docx
+                source_ids:
+                - CortexDoc123
+                - CortexDoc456
+                tenant_metadata: '[{"department":"Finance"},{"department":"Sales"}]'
+                document_metadata: '[{"title":"Q1 Report.pdf"},{"title":"Q2 Report.pdf"}]'
+    responses:
+      '200':
+        description: Batch update accepted
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                uploaded:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      file_id:
+                        type: string
+                      filename:
+                        type: string
+                message:
+                  type: string
+              example:
+                success: true
+                uploaded:
+                - file_id: CortexDoc123
+                  filename: updated1.pdf
+                - file_id: CortexDoc456
+                  filename: updated2.docx
+                message: Batch update messages pushed to SQS.
+      '400':
+        description: Validation error (e.g., mismatch between files and source_ids)
+      '401':
+        description: Invalid or missing API key
+      '5XX':
+        description: Internal server error
+

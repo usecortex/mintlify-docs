@@ -1,0 +1,173 @@
+---
+title: "Supported File Formats"
+description: "Comprehensive list of all supported file formats for document processing in Cortex"
+---
+
+Cortex supports a comprehensive range of file formats for document processing. Files are automatically parsed and their content extracted for indexing and search. This page provides a complete reference of all supported formats.
+
+<Warning>
+**Unsupported File Formats**: If you attempt to upload a file format that is not supported, you will receive an error response with status code `400` and the message: `"Unsupported file format: [filename]. Please check our supported file formats documentation."` Ensure your files are in one of the supported formats listed below before uploading.
+</Warning>
+
+
+## Word Processing and Presentations
+
+Office documents and presentation files:
+
+- **PDF**
+- **ODT (OpenDocument Text)**
+- **RTF (Rich Text Format)**
+- **DOC**
+- **DOCX (Office Open XML)**
+- **DOCM, DOT, DOTM**
+- **Pages**
+- **CWK, LWP, MW, MCW, HWP, PBD, zabw**
+- **WPD, WPS**
+- **XML**
+- **Key**
+- **PPT, PPTX, PPTM, POT, POTM, POTX, SDD, SDA, SDP, SGL, STI, SXI, STW, SXW, SXG, UOP**
+
+## Spreadsheets
+
+Data and spreadsheet formats:
+
+- **XLSX**
+- **XLS**
+- **XLSM, XLSB, XLW, CSV, TSV, DIF, SYLK, SLK, PRN, NUMBERS, ET, ODS, FODS, UOS1, UOS2, DBF, WK1, WK2, WK3, WK4, WKS, 123, WQ1, WQ2, WB1, WB2, WB3, QPW, XLR, ETH**
+
+## Markup and Documentation
+
+These formats are ideal for documentation, wikis, and structured text content:
+
+- **Markdown** (all variants: CommonMark, GitHub-Flavored, MultiMarkdown, Markdown Extra, Djot)
+- **HTML, XHTML**
+- **LaTeX**
+- **reStructuredText**
+- **Textile**
+- **Emacs Org-Mode**
+- **Emacs Muse**
+- **OPML**
+- **DocBook**
+- **AsciiDoc**
+- **MediaWiki, TWiki, DokuWiki, TikiWiki, Vimwiki, Muse Wiki**
+- **JATS, BITS**
+- **FictionBook2 (FB2)**
+- **GNU TexInfo**
+- **Haddock markup**
+- **TEI Simple**
+- **Typst**
+- **pod, man (roff), mdoc**
+- **Creole, Jira wiki markup**
+- **Markua, txt2tags**
+- **Plain text (TXT)**
+
+## Images
+
+Image files with text content:
+
+- **JPEG, JPG, PNG, GIF, BMP, SVG, TIFF, WEBP**
+
+<Note>
+**Image Processing**: Image files are processed using OCR (Optical Character Recognition) to extract text content. Ensure images have clear, readable text for best results.
+</Note>
+
+## Ebooks
+
+Digital book formats:
+
+- **EPUB**
+- **FictionBook2 (FB2)**
+
+## Data/Bibliography/Serialization
+
+Structured data and reference formats:
+
+- **BibTeX/BibLaTeX/CSL JSON/CSL YAML**
+- **RIS**
+- **EndNote XML**
+- **Jupyter notebook (ipynb)**
+- **JSON**
+- **XML**
+- **Haskell AST**
+
+## Others (Special Formats)
+
+Specialized and niche formats:
+
+- **InDesign ICML**
+- **XWiki, ZimWiki**
+- **Beamer, Slidy, Slideous, S5, DZSlides, reveal.js (presentation/slideshow formats)**
+- **ANSI-formatted text**
+
+## File Size and Processing Limits
+
+### **File Size Limits**
+- **Maximum file size**: 50MB per file
+- **Recommended size**: Under 10MB for optimal processing speed
+- **Large files**: Files over 100 pages may take longer to process
+
+### **Processing Time**
+Cortex is optimized for speed and typically processes files much faster than traditional solutions:
+
+- **Small files** (< 10 pages): **Under 2 minutes** (typically 30 seconds to 1 minute)
+- **Medium files** (10-100 pages): **2-5 minutes** (typically 1-3 minutes)
+- **Large files** (100+ pages): **5-15 minutes** (typically 3-8 minutes)
+
+<Note>
+**Performance Note**: Cortex's processing times are significantly faster than traditional document processing solutions. Most files under 10 pages are processed in under 2 minutes, with many completing in under 1 minute.
+</Note>
+
+## Best Practices
+
+### **File Preparation**
+- Ensure files are not password-protected
+- Use clear, well-structured documents for better parsing
+- Avoid corrupted or damaged files
+- Use descriptive filenames for easier identification
+
+### **Format-Specific Tips**
+
+**PDF Files:**
+- Use text-based PDFs rather than scanned images when possible
+- Ensure proper text encoding (UTF-8 preferred)
+- Avoid password-protected or encrypted PDFs
+
+**Office Documents:**
+- Save in the latest format version when possible
+- Remove unnecessary formatting that might interfere with parsing
+- Ensure all content is accessible (not hidden or in comments only)
+
+**Images:**
+- Use high-resolution images with clear, readable text
+- Ensure good contrast between text and background
+- Avoid heavily stylized fonts that might be difficult to OCR
+
+**Markdown:**
+- Use standard Markdown syntax for best compatibility
+- Include proper heading structure for better chunking
+- Use consistent formatting throughout the document
+
+## Troubleshooting
+
+### **Common Issues**
+
+**File Not Processing:**
+- Check if the file format is supported (see list above)
+- Verify the file is not corrupted or password-protected
+- Ensure the file size is under 50MB
+- Check your API key permissions
+
+**Poor Text Extraction:**
+- For images: ensure high resolution and clear text
+- For PDFs: use text-based rather than scanned PDFs
+- For office docs: avoid complex formatting or embedded objects
+
+**Processing Errors:**
+- Check the file format against the supported list
+- Verify file integrity (not corrupted)
+- Ensure proper file permissions
+- Contact support with the `file_id` if issues persist
+
+<Info>
+**Need Help?** If you're experiencing issues with file processing or have questions about format support, contact our support team at founders@usecortex.ai with the `file_id` for assistance.
+</Info>

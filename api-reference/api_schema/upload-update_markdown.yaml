@@ -1,0 +1,89 @@
+# Endpoint: /upload/update_text
+# Method: PATCH
+
+"/upload/update_text":
+  patch:
+    description: Updates an existing text/markdown source's content by source ID.
+    parameters:
+    - name: Authorization
+      in: header
+      required: true
+      description: Bearer token (your API key)
+      schema:
+        type: string
+      example: Bearer {API_KEY}
+    - name: Content-Type
+      in: header
+      required: true
+      description: Request content type
+      schema:
+        type: string
+        default: application/json
+    - name: accept
+      in: header
+      required: true
+      description: Response content type
+      schema:
+        type: string
+        default: application/json
+    - name: tenant_id
+      in: query
+      required: false
+      description: Primary organizational identifier (e.g., enterprise client, company) for multi-tenant data isolation
+      schema:
+        type: string
+    - name: sub_tenant_id
+      in: query
+      required: false
+      description: Secondary organizational identifier (e.g., department, team, project) within a tenant for hierarchical data organization; defaults to tenant_id if not provided
+      schema:
+        type: string
+    - name: source_id
+      in: query
+      required: true
+      description: The ID of the source to update
+      schema:
+        type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              content:
+                type: string
+                description: The updated text/markdown content
+              tenant_metadata:
+                type: object
+                description: Custom tenant-level metadata
+              document_metadata:
+                type: object
+                description: Custom document-level metadata
+            required:
+            - content
+    responses:
+      '200':
+        description: Update accepted
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                message:
+                  type: string
+                file_id:
+                  type: string
+              example:
+                success: true
+                message: Markdown update message pushed to SQS.
+                file_id: CortexDoc123
+      '400':
+        description: Missing source_id or invalid payload
+      '401':
+        description: Invalid or missing API key
+      '5XX':
+        description: Internal server error
+

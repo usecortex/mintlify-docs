@@ -1,0 +1,52 @@
+
+*, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+#content-side-layout div.code-group {
+    display: none;
+}
+
+/* Override Panel height restrictions for table of contents */
+.panel.w-full.xl\:w-\[28rem\].mb-6.relative.max-h-\[calc\(100\%-32px\)\].overflow-y-auto:has(#table-of-contents-custom) {
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+/* Hide elements with specific Tailwind utility classes */
+:where(.mt-8.lg\:mt-0.flex.flex-col.gap-6.xl\:hidden.max-h-\[30rem\]),
+:where([class*="mt-8"][class*="lg:mt-0"][class*="flex"][class*="flex-col"][class*="gap-6"][class*="xl:hidden"][class*="max-h-[30rem]"]) {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    width: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    position: absolute !important;
+    clip: rect(0, 0, 0, 0) !important;
+    overflow: hidden !important;
+}
+
+#content-side-layout {
+    max-width: 18rem !important;
+}
+
+#content-area {
+    width: calc(100% - 20rem) !important;
+}
+
+#chat-assistant-sheet {
+    display: none !important;   
+}
+    
+#navbar {
+    position: fixed
+}
+
+
+@media (min-width: 1024px) {
+    #header.relative {
+        margin-top: 7rem;
+    }
+}

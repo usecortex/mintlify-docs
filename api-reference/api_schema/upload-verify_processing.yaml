@@ -1,0 +1,59 @@
+# Endpoint: /upload/verify_processing
+# Method: POST
+
+"/upload/verify_processing":
+  post:
+    description: Checks if a document has been successfully processed.
+    # --- Parameters (Headers & Query) ---
+    parameters:
+    - name: Authorization
+      in: header
+      required: true
+      description: Bearer token (your API key)
+      schema:
+        type: string
+      example: Bearer {API_KEY}
+    - name: Content-Type
+      in: header
+      required: true
+      description: Request content type
+      schema:
+        type: string
+        default: application/json
+    - name: file_id
+      in: query
+      required: true
+      description: ID of the uploaded file
+      schema:
+        type: string
+      example: file_123
+    # --- Responses ---
+    responses:
+      '200':
+        description: Processing status returned successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                file_id:
+                  type: string
+                  description: ID of the uploaded file
+                  example: '123123123123'
+                indexing_status:
+                  type: string
+                  enum:
+                  - success
+                  - in_progress
+                  - errored
+                  description: Indexing status of the file
+                  example: success
+            example:
+              file_id: '123123123123'
+              indexing_status: success
+      '422':
+        description: Incomplete/invalid parameters
+      '401':
+        description: Invalid or missing API key
+      '5XX':
+        description: Internal server error 

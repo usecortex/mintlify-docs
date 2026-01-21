@@ -1,0 +1,46 @@
+# Endpoint: /list/sources
+# Method: GET
+
+"/list/sources":
+  get:
+    description: Fetches all sources/documents for a given tenant.
+    # --- Parameters (Headers & Query) ---
+    parameters:
+    - name: Authorization
+      in: header
+      required: true
+      description: Bearer token (your API key)
+      schema:
+        type: string
+      example: Bearer {API_KEY}
+    - name: accept
+      in: header
+      required: true
+      description: Response content type
+      schema:
+        type: string
+        default: application/json
+    - name: tenant_id
+      in: query
+      required: true
+      description: Primary organizational identifier (e.g., enterprise client, company) for multi-tenant data isolation
+      schema:
+        type: string
+      example: tenant_456
+    - name: sub_tenant_id
+      in: query
+      required: false
+      description: Secondary organizational identifier (e.g., department, team, project) within a tenant for hierarchical data organization; defaults to tenant_id if not provided
+      schema:
+        type: string
+      example: subtenant_123
+    # --- Responses ---
+    responses:
+      '200':
+        description: List of sources returned successfully
+      '422':
+        description: Incomplete/invalid parameters
+      '401':
+        description: Invalid or missing API key
+      '5XX':
+        description: Internal server error 

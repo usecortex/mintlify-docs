@@ -1,0 +1,50 @@
+# openapi: 3.1.0
+info:
+  title: Cortex API
+  description: Documentation for Cortex's core upload and retrieval endpoints
+  license:
+    name: MIT
+  version: 1.0.1
+servers:
+- url: https://api.usecortex.ai
+security:
+- bearerAuth: []
+paths:
+  /upload/scrape_webpage:
+    $ref: './api_schema/upload-scrape_webpage.yaml#/upload/scrape_webpage'
+  /upload/upload_document:
+    $ref: './api_schema/upload-upload_document.yaml#/upload/upload_document'
+  /upload/upload_text:
+    $ref: './api_schema/upload-upload_text.yaml#/upload/upload_text'
+  /upload/batch_upload:
+    $ref: './api_schema/upload-batch_upload.yaml#/upload/batch_upload'
+  /upload/upload_app_sources:
+    $ref: './api_schema/upload-upload_app_sources.yaml#/upload/upload_app_sources'
+  /search/qna:
+    $ref: './api_schema/search-qna.yaml#search/qna'
+  /list/sources:
+    $ref: './api_schema/list-sources.yaml#/list/sources'
+  /list/sources_by_id:
+    $ref: './api_schema/list-sources_by_id.yaml#/list/sources_by_id'
+  /delete_source:
+    $ref: './api_schema/delete_memory.yaml#/delete_source'
+  /upload/verify_processing:
+    $ref: './api_schema/upload-verify_processing.yaml#/upload/verify_processing'
+  /fetch/fetch_content:
+    $ref: './api_schema/fetch-fetch_content.yaml#/fetch/fetch_content'
+  /user_memory/list_user_memories:
+    $ref: './api_schema/user_memory-list_user_memories.yaml#/user_memory/list_user_memories'
+  /user_memory/delete_user_memory:
+    $ref: './api_schema/user_memory-delete_user_memory.yaml#/user_memory/delete_user_memory'
+  /user_memory/retrieve_user_memory:
+    $ref: './api_schema/user_memory-retrieve_user_memory.yaml#/user_memory/retrieve_user_memory'
+  /user_memory/add_user_memory:
+    $ref: './api_schema/user_memory-add_user_memory.yaml#/user_memory/add_user_memory'
+  /user_memory/generate_user_memory:
+    $ref: './api_schema/user_memory-generate_user_memory.yaml#/user_memory/generate_user_memory'
+components:
+  schemas: {}
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer

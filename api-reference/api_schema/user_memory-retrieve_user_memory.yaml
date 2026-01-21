@@ -1,0 +1,91 @@
+# Endpoint: /user_memory/retrieve_user_memory
+# Method: GET
+
+"/user_memory/retrieve_user_memory":
+  get:
+    description: Searches and retrieves relevant user memories based on a query.
+    # --- Parameters (Headers & Query) ---
+    parameters:
+    - name: Authorization
+      in: header
+      required: true
+      description: Bearer token (your API key)
+      schema:
+        type: string
+      example: Bearer {API_KEY}
+    - name: Content-Type
+      in: header
+      required: true
+      description: Request content type
+      schema:
+        type: string
+        default: application/json
+    - name: accept
+      in: header
+      required: true
+      description: Response content type
+      schema:
+        type: string
+        default: application/json
+    - name: tenant_id
+      in: query
+      required: true
+      description: Primary organizational identifier (e.g., enterprise client, company) for multi-tenant data isolation
+      schema:
+        type: string
+    - name: sub_tenant_id
+      in: query
+      required: true
+      description: Secondary organizational identifier (e.g., department, team, project) within a tenant for hierarchical data organization; defaults to tenant_id if not provided
+      schema:
+        type: string
+    - name: max_count
+      in: query
+      required: false
+      description: Maximum number of memories to return. When set to 0, Cortex intelligently selects the best memories based on relevance and context.
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 50
+      example: 10
+    # --- Request Body ---
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              query:
+                type: string
+                description: Search query to find relevant memories
+                example: project meeting notes
+              user_name:
+                type: string
+                description: User's name to enhance personalisation
+                default: ""
+                example: John Doe
+            required:
+              - query
+    # --- Responses ---
+    responses:
+      '200':
+        description: Relevant memories returned successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                user_memories:
+                  type: array
+                  items:
+                    type: object
+                    description: User memory objects matching the search query
+      '401':
+        description: Invalid or missing API key
+      '422':
+        description: Incomplete/invalid parameters
+      '5XX':
+        description: Internal server error 

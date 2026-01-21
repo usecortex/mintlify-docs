@@ -1,0 +1,137 @@
+# Endpoint: /upload/upload_app_sources
+# Method: POST
+
+"/upload/upload_app_sources":
+  post:
+    description: Works similar to the upload endpoint but is specifically designed to upload multiple app sources (e.g., Gmail, Slack, Notion) in a single request for processing and indexing.
+    # --- Parameters (Headers & Query) ---
+    parameters:
+    - name: Authorization
+      in: header
+      required: true
+      description: Bearer token (your API key)
+      schema:
+        type: string
+      example: Bearer {API_KEY}
+    - name: Content-Type
+      in: header
+      required: true
+      description: Request content type
+      schema:
+        type: string
+        default: application/json
+    - name: accept
+      in: header
+      required: true
+      description: Response content type
+      schema:
+        type: string
+        default: application/json
+    - name: tenant_id
+      in: query
+      required: false
+      description: Primary organizational identifier (e.g., enterprise client, company) for multi-tenant data isolation
+      schema:
+        type: string
+    - name: sub_tenant_id
+      in: query
+      required: false
+      description: Secondary organizational identifier (e.g., department, team, project) within a tenant for hierarchical data organization; defaults to tenant_id if not provided
+      schema:
+        type: string
+    # --- Request Body ---
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                collections:
+                  type: array
+                  items:
+                    type: string
+                id:
+                  type: string
+                title:
+                  type: string
+                type:
+                  type: string
+                description:
+                  type: string
+                note:
+                  type: string
+                url:
+                  type: string
+                timestamp:
+                  type: string
+                content:
+                  type: object
+                  properties:
+                    text:
+                      type: string
+                    html_base64:
+                      type: string
+                    csv_base64:
+                      type: string
+                    markdown:
+                      type: string
+                    files:
+                      type: array
+                    layout:
+                      type: array
+                cortex_metadata:
+                  type: object
+                  description: Custom metadata object that can include file_id. If file_id is not provided, the system will generate an ID automatically.
+                meta:
+                  type: object
+                attachments:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      url:
+                        type: string
+                      title:
+                        type: string
+                      content_type:
+                        type: string
+                      content_url:
+                        type: string
+                      misc:
+                        type: object
+                      content:
+                        type: object
+                        properties:
+                          text:
+                            type: string
+                          html_base64:
+                            type: string
+                          csv_base64:
+                            type: string
+                          markdown:
+                            type: string
+                          files:
+                            type: array
+                          layout:
+                            type: array
+              required:
+              - id
+              - title
+              - type
+              - timestamp
+              - content
+    # --- Responses ---
+    responses:
+      '200':
+        description: App sources uploaded successfully
+      '422':
+        description: Incomplete/invalid parameters
+      '401':
+        description: Invalid or missing API key
+      '5XX':
+        description: Internal server error 

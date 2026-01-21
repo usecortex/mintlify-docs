@@ -1,0 +1,100 @@
+---
+title: 'List User Memories'
+openapi: 'GET /user_memory/list_user_memories'
+---
+
+import { TableOfContents } from '/snippets/table-of-contents.jsx'
+import TryIt from '/snippets/try-it.mdx'
+
+<Panel>
+  <TableOfContents />
+</Panel>
+<TryIt />
+### Examples
+
+<Tabs>
+  <Tab title="API Request">
+    ```bash
+    curl --request GET \
+      --url 'https://api.usecortex.ai/user_memory/list_user_memories?tenant_id=tenant_1234&sub_tenant_id=sub_tenant_4567' \
+      --header 'Authorization: Bearer YOUR_API_KEY'
+      ```
+  </Tab>
+  <Tab title="TypeScript">
+    ```ts
+    const memories = await client.userMemory.listUserMemories({
+      tenant_id: "tenant_1234",
+      sub_tenant_id: "sub_tenant_4567"
+    });
+    ```
+  </Tab>
+  <Tab title="Python (Sync)">
+    ```python
+    # Async usage is similar, just use async_client and await
+    memories = client.user_memory.list_user_memories(
+        tenant_id="tenant_1234",
+        sub_tenant_id="sub_tenant_4567"
+    )
+    ```
+  </Tab>
+</Tabs>
+
+## Overview
+
+Retrieve all stored memories for a specific user within a tenant/sub-tenant combination to view and manage the user's complete memory profile.
+
+## Functionality
+
+- **Complete Memory Retrieval**: Fetches all user memories
+- **Tenant-Based Filtering**: Returns memories specific to the provided tenant and sub-tenant combination
+- **Simplified Response**: Provides essential memory information including unique IDs and content
+- **User Context Integration**: Automatically filters memories based on the authenticated user
+- **Memory Management**: Enables you to review and manage stored user memories
+
+## Use Cases
+
+- **Memory Audit**: Review all stored memories for a user to ensure data quality
+- **User Profile Overview**: Get a complete picture of what the system knows about a user
+- **Memory Management**: Identify memories that may need updating or deletion
+- **Debugging**: Troubleshoot issues with user personalization by examining stored memories
+- **Data Export**: Retrieve all user memories for data analysis or migration
+
+### With Optional Sub-tenant
+
+```bash
+curl -X GET "https://api.usecortex.ai/user_memory/list_user_memories?tenant_id=company_123" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+<Note>
+**Sub-tenant Default**: If no sub_tenant_id is provided, the system uses DEFAULT sub-tenant which was created while creating the tenant.
+</Note>
+
+## Important Notes
+
+<Warning>
+**Memory Privacy**: This API returns all memories for the authenticated user. Ensure proper access controls are in place to prevent unauthorized access to user memory data.
+</Warning>
+
+<Info>
+**Memory IDs**: Each memory has a unique `memory_id` that can be used with the [Delete User Memory](/api-reference/endpoint/delete-user-memory) endpoint to remove specific memories.
+</Info>
+
+<Tip>
+**Pro Tip**: Use this API in combination with [Retrieve User Memory](/api-reference/endpoint/retrieve-user-memory) to first search for relevant memories, then list all memories to get the complete context.
+</Tip>
+
+## Response Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `success` | boolean | Indicates whether the operation was successful |
+| `user_memories` | array | List of user memory objects |
+| `user_memories[].source_id` | string | Unique identifier for the memory |
+| `user_memories[].source_content` | string | The actual content of the memory |
+
+## Error Responses
+
+All endpoints return consistent error responses following the standard format. For detailed error information, see our [Error Responses](/api-reference/error-responses) documentation.
+

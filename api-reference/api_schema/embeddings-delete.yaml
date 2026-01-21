@@ -1,0 +1,90 @@
+# Endpoint: /embeddings/delete
+# Method: DELETE
+
+"/embeddings/delete":
+  delete:
+    description: Delete specific embedding chunks from indexed sources.
+    parameters:
+    - name: Authorization
+      in: header
+      required: true
+      description: Bearer token (your API key)
+      schema:
+        type: string
+      example: Bearer {API_KEY}
+    - name: Content-Type
+      in: header
+      required: true
+      description: Request content type
+      schema:
+        type: string
+        default: application/json
+    - name: accept
+      in: header
+      required: true
+      description: Response content type
+      schema:
+        type: string
+        default: application/json
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              chunk_ids:
+                type: array
+                items:
+                  type: string
+                description: List of chunk IDs to delete
+                example: ["CortexEmbeddings123_1"]
+              tenant_id:
+                type: string
+                description: Primary organizational identifier (e.g., enterprise client, company) for multi-tenant data isolation
+                example: tenant_456
+              sub_tenant_id:
+                type: string
+                description: Secondary organizational identifier (e.g., department, team, project) within a tenant for hierarchical data organization; defaults to tenant_id if not provided
+                example: subtenant_123
+            required:
+            - chunk_ids
+            - tenant_id
+    responses:
+      '200':
+        description: Embedding chunks deleted successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: object
+                  description: Status of deletion for each chunk ID (chunk_id -> success boolean)
+                  additionalProperties:
+                    type: boolean
+                  example: {"CortexEmbeddings123_1": true}
+                total_deleted:
+                  type: integer
+                  description: Number of chunks successfully deleted
+                  example: 1
+              example:
+                status: {"CortexEmbeddings123_1": true}
+                total_deleted: 1
+      '400':
+        description: |
+          Invalid request. Possible errors:
+          - chunk_ids list cannot be empty
+          - All chunk_ids must be non-empty strings
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                detail:
+                  type: string
+                  example: "chunk_ids list cannot be empty"
+      '401':
+        description: Invalid or missing API key
+      '5XX':
+        description: Internal server error

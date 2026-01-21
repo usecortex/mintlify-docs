@@ -1,0 +1,553 @@
+---
+title: "Metadata"
+description: "Add structured metadata to your documents for precise filtering and targeted queries, supercharging your search experience with file type, owner, and custom (upto 15) fields."
+---
+
+Metadata is the foundation of intelligent document retrieval and context-aware search in Cortex. By attaching structured information to your documents, you enable precise filtering, multi-tenant isolation, and sophisticated query capabilities that transform how users interact with your knowledge base.
+
+**Note:** For uploads, use the fields `tenant_metadata` and `document_metadata` (with the same schema as the original metadata field) to attach this information. These fields are not used in the QnA endpoint.
+
+## Metadata Architecture Overview
+
+### Core Concepts
+
+Metadata in Cortex operates on a two-tier architecture designed for enterprise-scale applications:
+
+#### **Tenant Metadata** (`tenant_metadata`)
+- **Purpose**: Organization-level metadata that applies consistently across all documents within a tenant
+- **Immutability**: Keys are **immutable** and can only be set when creating a tenant via `tenant_metadata_schema`
+- **Best For**: Fixed organizational attributes that don't change frequently
+- **Examples**: Department, compliance framework, data classification, business unit, organizational policies
+
+#### **Document Metadata** (`document_metadata`)
+- **Purpose**: Document-specific metadata that varies from document to document
+- **Flexibility**: **Fully mutable** and flexible - can be different for each document
+- **Best For**: Variable document attributes that change per document
+- **Examples**: Title, author, creation date, document type, custom tags, version, status
+
+### Why Two-Tier Architecture?
+
+This separation provides several key benefits:
+
+1. **Organizational Consistency**: Tenant metadata ensures all documents share common organizational context
+2. **Document Flexibility**: Document metadata allows for rich, varied document descriptions
+3. **Query Efficiency**: Enables powerful filtering by both organizational and document-specific criteria
+4. **Compliance & Governance**: Immutable tenant metadata ensures consistent organizational policies
+5. **Scalability**: Supports complex enterprise scenarios with multiple departments and document types
+
+### Metadata Schema Design
+
+Cortex implements a flexible, schema-less metadata system that supports:
+
+- **Dynamic Field Addition**: Add new metadata fields without schema migrations
+- **Type Flexibility**: Support for primitive and complex data types
+- **Nested Structures**: Hierarchical data organization for complex relationships
+- **Array Support**: Multi-value fields for tags, categories, and relationships
+
+## Understanding Immutability vs Flexibility
+
+### Tenant Metadata: Immutable Keys, Consistent Values
+
+**Key Immutability**: Once you define tenant metadata keys during tenant creation, they cannot be changed. This ensures organizational consistency and prevents accidental schema drift.
+
+**Value Consistency**: All documents within a tenant share the same tenant metadata values, providing consistent organizational context.
+
+```json
+// ✅ Set during tenant creation - keys become immutable
+{
+  "tenant_metadata_schema": [
+    {"key": "department", "type": "string", "searchable": true},
+    {"key": "compliance_framework", "type": "string", "searchable": true},
+    {"key": "data_classification", "type": "string", "searchable": false}
+  ]
+}
+
+// ✅ All documents in this tenant will have these same values
+{
+  "tenant_metadata": {
+    "department": "Engineering",
+    "compliance_framework": "SOC2",
+    "data_classification": "internal"
+  }
+}
+```
+
+### Document Metadata: Fully Flexible and Mutable
+
+**Complete Flexibility**: Document metadata keys and values can be different for every document, allowing rich, varied document descriptions.
+
+**Runtime Mutability**: You can change document metadata values during updates without any restrictions.
+
+```json
+// ✅ Document 1 - Engineering spec
+{
+  "document_metadata": {
+    "title": "API Security Guidelines",
+    "author": "Dr. Sarah Chen",
+    "document_type": "technical_specification",
+    "version": "2.1.0",
+    "status": "approved"
+  }
+}
+
+// ✅ Document 2 - Marketing content (completely different structure)
+{
+  "document_metadata": {
+    "title": "Product Launch Blog",
+    "author": "Marketing Team",
+    "content_type": "blog_post",
+    "publish_date": "2024-01-15",
+    "tags": ["product", "launch", "announcement"]
+  }
+}
+```
+
+## Decision Guide: When to Use Which Metadata Type
+
+### Use Tenant Metadata When:
+- ✅ **Organizational attributes** that apply to all documents (department, compliance framework)
+- ✅ **Fixed values** that rarely change (business unit, data classification)
+- ✅ **Governance requirements** that need to be enforced consistently
+- ✅ **Multi-tenant isolation** where different tenants have different organizational contexts
+
+### Use Document Metadata When:
+- ✅ **Document-specific attributes** that vary per document (title, author, creation date)
+- ✅ **Flexible values** that change frequently (status, version, tags)
+- ✅ **Rich descriptions** that help with search and discovery
+- ✅ **Custom attributes** that don't apply to all documents
+
+### Example Decision Tree:
+
+```
+Is this attribute the same for ALL documents in your tenant?
+├─ YES → Use tenant_metadata
+│  ├─ Department: "Engineering" ✅
+│  ├─ Compliance: "SOC2" ✅
+│  └─ Business Unit: "Product" ✅
+└─ NO → Use document_metadata
+   ├─ Title: "API Security Guidelines" ✅
+   ├─ Author: "Dr. Sarah Chen" ✅
+   ├─ Status: "Draft" ✅
+   └─ Tags: ["security", "api"] ✅
+```
+
+## Setting Metadata
+
+### Basic Metadata Structure
+
+```json
+{
+  "tenant_metadata": {
+    "organization_id": "acme_corp",
+    "department": "Engineering",
+    "compliance_framework": "SOC2",
+    "data_classification": "internal"
+  },
+  "document_metadata": {
+    "document_id": "DOC-2024-001",
+    "title": "API Security Guidelines v2.1",
+    "author": {
+      "name": "Dr. Sarah Chen",
+      "email": "sarah.chen@acme.com",
+      "role": "Security Architect"
+    },
+    "created_date": "2024-01-15T10:30:00Z",
+    "document_type": "technical_specification",
+    "version": "2.1.0"
+  }
+}
+```
+
+### Supported Data Types
+
+#### Primitive Types
+| Type | Example | Use Case |
+|------|---------|----------|
+| **String** | `"department": "Engineering"` | Categorical data, identifiers |
+| **Number** | `"priority": 5` | Quantitative metrics, versions |
+| **Boolean** | `"is_confidential": true` | Binary flags, status indicators |
+| **Date/DateTime** | `"created_date": "2024-01-15T10:30:00Z"` | Temporal data, audit trails |
+
+#### Complex Types
+| Type | Example | Use Case |
+|------|---------|----------|
+| **Arrays** | `"tags": ["security", "api", "compliance"]` | Multi-value attributes |
+| **Objects** | `"location": {"city": "SF", "country": "USA"}` | Structured data |
+| **Nested Objects** | `"author": {"name": "John", "role": "Manager"}` | Hierarchical relationships |
+
+## Reserved Keywords
+
+The following keywords are **reserved** and cannot be used as keys in `tenant_metadata_schema`:
+
+- `source_id`
+- `source_title`
+- `source_url`
+- `source_type`
+- `source_collection`
+- `source_owner`
+- `source_collaborator`
+- `source_upload_time`
+- `source_last_updated_time`
+- `chunk_id`
+- `chunk_uuid`
+- `chunk_content`
+- `document_metadata`
+- `base_metadata`
+- `layout`
+- `description`
+
+<Warning>
+**Important**: These keywords are used internally by Cortex for document processing and search functionality. Using any of these reserved keywords as tenant metadata keys will result in an error during tenant creation.
+</Warning>
+
+## Metadata Best Practices
+
+### 1. Naming Conventions and Standards
+
+#### Consistent Field Naming
+```json
+// ✅ Enterprise Standard - snake_case with descriptive names
+{
+  "tenant_metadata": {
+    "organization_identifier": "acme_corp_2024",
+    "business_unit_code": "ENG-001",
+    "compliance_standard": "ISO27001",
+    "data_retention_policy": "7_years"
+  }
+}
+
+// ❌ Avoid - Inconsistent naming patterns
+{
+  "tenant_metadata": {
+    "orgId": "acme_corp_2024",
+    "business_unit": "ENG-001",
+    "complianceStandard": "ISO27001",
+    "retention": "7_years"
+  }
+}
+```
+
+#### Semantic Field Design
+```json
+// ✅ Good - Clear semantic meaning
+{
+  "document_metadata": {
+    "document_classification": "confidential",
+    "approval_workflow_status": "pending_review",
+    "last_review_date": "2024-01-15T10:30:00Z",
+    "next_review_cycle": "quarterly"
+  }
+}
+
+// ❌ Avoid - Ambiguous field names
+{
+  "document_metadata": {
+    "type": "confidential",
+    "status": "pending",
+    "date": "2024-01-15T10:30:00Z",
+    "cycle": "quarterly"
+  }
+}
+```
+
+### 2. Data Structure Optimization
+
+#### Hierarchical Data Organization
+```json
+{
+      "document_metadata": {
+      "ownership": {
+        "primary_owner": {
+          "name": "Dr. Sarah Chen",
+          "email": "sarah.chen@acme.com",
+          "department": "Security",
+          "role": "Security Architect"
+        },
+        "stakeholders": [
+          {
+            "name": "Mike Johnson",
+            "email": "mike.johnson@acme.com",
+            "role": "Engineering Manager"
+          }
+        ]
+      },
+      "project_context": {
+        "project_id": "PROJ-SEC-2024-001",
+        "project_name": "API Security Enhancement",
+        "phase": "implementation",
+        "sprint": "S24.1"
+      }
+    }
+}
+```
+
+#### Array Field Design
+```json
+{
+      "document_metadata": {
+      "security_classifications": [
+        {
+          "level": "confidential",
+          "scope": "internal_only",
+          "expiry_date": "2025-01-15T23:59:59Z"
+        }
+      ],
+      "compliance_requirements": [
+        "GDPR_Article_32",
+        "SOC2_CC6_1",
+        "ISO27001_A_12_2"
+      ],
+      "technical_dependencies": [
+        {
+          "component": "authentication_service",
+          "version": "2.1.0",
+          "criticality": "high"
+        }
+      ]
+    }
+}
+```
+
+## Enterprise Use Cases
+
+### 1. Legal and Compliance Management
+
+```json
+{
+  "tenant_metadata": {
+    "practice_area": "corporate_law",
+    "client_id": "CLIENT-2024-001",
+    "confidentiality_level": "high",
+    "jurisdiction": "California",
+    "regulatory_framework": "CCPA"
+  },
+  "document_metadata": {
+    "document_type": "service_agreement",
+    "contract_party": "Acme Corporation",
+    "effective_date": "2024-01-01T00:00:00Z",
+    "expiry_date": "2025-01-01T23:59:59Z",
+    "contract_value": 500000,
+    "status": "active",
+    "review_cycle": "quarterly",
+    "approval_workflow": {
+      "current_stage": "legal_review",
+      "assigned_to": "legal@firm.com",
+      "due_date": "2024-02-15T17:00:00Z"
+    }
+  }
+}
+```
+
+**Filtering Scenarios:**
+- Active contracts by client: `client_id = "CLIENT-2024-001" AND status = "active"`
+- Expiring contracts: `expiry_date <= "2024-12-31"`
+- High-value agreements: `contract_value > 100000`
+- Pending legal review: `approval_workflow.current_stage = "legal_review"`
+
+### 2. Engineering Documentation Management
+
+```json
+{
+  "tenant_metadata": {
+    "product_line": "mobile_application",
+    "team": "frontend_engineering",
+    "sprint": "S24.1",
+    "release_version": "2.1.0"
+  },
+  "document_metadata": {
+    "document_type": "technical_specification",
+    "component": "user_authentication",
+    "priority": "high",
+    "complexity": "medium",
+    "reviewers": [
+      {
+        "name": "Alice Johnson",
+        "email": "alice.johnson@acme.com",
+        "role": "Senior Developer"
+      },
+      {
+        "name": "Bob Smith",
+        "email": "bob.smith@acme.com",
+        "role": "Security Engineer"
+      }
+    ],
+    "dependencies": [
+      {
+        "component": "api_gateway",
+        "version": "1.5.0",
+        "criticality": "high"
+      },
+      {
+        "component": "user_service",
+        "version": "2.0.0",
+        "criticality": "medium"
+      }
+    ],
+    "estimated_effort": 40,
+    "actual_effort": 35,
+    "status": "in_progress"
+  }
+}
+```
+
+**Filtering Scenarios:**
+- High-priority specs: `priority = "high"`
+- Component-specific docs: `component = "user_authentication"`
+- Overdue reviews: `reviewers.length > 0 AND status = "pending_review"`
+- Sprint-specific work: `sprint = "S24.1"`
+
+### 3. Human Resources Document Management
+
+```json
+{
+  "tenant_metadata": {
+    "department": "Human_Resources",
+    "compliance_region": "EU",
+    "data_retention_policy": "7_years",
+    "privacy_framework": "GDPR"
+  },
+  "document_metadata": {
+    "document_type": "employee_contract",
+    "employee_id": "EMP-2024-001",
+    "position": "Senior Software Engineer",
+    "start_date": "2024-01-15T00:00:00Z",
+    "employment_type": "full_time",
+    "salary_band": "B3",
+    "manager": {
+      "name": "Jane Wilson",
+      "email": "jane.wilson@acme.com",
+      "role": "Engineering Manager"
+    },
+    "benefits_package": "premium",
+    "probation_period": 90,
+    "notice_period": 30,
+    "status": "active"
+  }
+}
+```
+
+**Filtering Scenarios:**
+- Active employees: `status = "active"`
+- Department-specific contracts: `department = "Human_Resources"`
+- High-salary positions: `salary_band = "B3"`
+- Recent hires: `start_date >= "2024-01-01"`
+
+## Performance Optimization
+
+### Metadata Indexing Strategy
+
+Cortex employs sophisticated indexing strategies to ensure optimal query performance:
+
+- **Automatic Indexing**: All tenant metadata fields are automatically indexed for fast filtering
+- **Flattened Nested Objects**: Complex nested structures are flattened for efficient querying
+- **Array Field Optimization**: Array fields support both exact and partial matching with optimized indexes
+- **Type-Specific Indexes**: Different data types use specialized indexing strategies
+
+### Query Optimization Guidelines
+
+#### Field Selection Strategy
+```json
+// ✅ Optimized - Specific field names
+{
+  "tenant_metadata": {
+    "business_unit_identifier": "ENG-001",
+    "compliance_framework": "SOC2",
+    "data_classification_level": "confidential"
+  }
+}
+
+// ❌ Avoid - Generic field names
+{
+  "tenant_metadata": {
+    "unit": "ENG-001",
+    "compliance": "SOC2",
+    "classification": "confidential"
+  }
+}
+```
+
+#### Boolean Flag Optimization
+```json
+// ✅ Good - Boolean flags for simple conditions
+{
+  "document_metadata": {
+    "is_confidential": true,
+    "requires_approval": false,
+    "is_archived": false,
+    "has_attachments": true
+  }
+}
+
+// ❌ Avoid - String flags
+{
+  "document_metadata": {
+    "confidentiality": "yes",
+    "approval_required": "no",
+    "archived": "no",
+    "attachments": "yes"
+  }
+}
+```
+
+### Large Dataset Considerations
+
+#### Metadata Field Management
+- **Focused Fields**: Keep metadata fields relevant and purposeful
+- **Consistent Types**: Use consistent data types across similar documents
+- **Content Separation**: Avoid storing large text content in metadata
+- **Array Optimization**: Use arrays for multi-value fields instead of concatenated strings
+
+#### Query Performance Tips
+- **Selective Filtering**: Use the most selective filters first
+- **Indexed Fields**: Prefer fields that are automatically indexed
+- **Complex Queries**: Break down complex queries into simpler components
+- **Caching Strategy**: Leverage Cortex's built-in query caching
+
+
+## Troubleshooting and Debugging
+
+### Common Issues and Solutions
+
+#### Issue: Filter Returns No Results
+**Problem**: Metadata filter returns empty result set
+**Diagnostic Steps**:
+1. Verify exact field names and values
+2. Check data type consistency (string vs number vs boolean)
+3. Confirm metadata was properly set during upload
+4. Validate filter syntax and operators
+
+
+#### Issue: Array Filtering Problems
+**Problem**: Array contains filter not working as expected
+**Diagnostic Steps**:
+1. Verify array syntax and structure
+2. Check for exact element matching
+3. Validate array data types
+
+#### Issue: Date Filtering Problems
+**Problem**: Date comparisons not working correctly
+**Diagnostic Steps**:
+1. Verify ISO 8601 format compliance
+2. Check timezone consistency
+3. Validate date range syntax
+
+## Use Case & Scenario
+
+You're indexing thousands of company files. A user asks, "Which PDF did John upload in March about pricing?" The AI uses metadata like file type = PDF, uploader = John, and upload_date = March to find the right document instantly.
+
+With proper metadata structure, you can create sophisticated filtering scenarios:
+
+```json
+// User query: "Show me all high-priority engineering documents from last quarter"
+{
+  "tenant_metadata": {
+    "department": "Engineering"
+  },
+  "document_metadata": {
+    "priority": "high",
+    "created_date": "2024-01-01" // Would be filtered by date range
+  }
+}
+```
+
+This metadata-driven approach enables precise, context-aware search that goes far beyond simple keyword matching, providing enterprise-grade document management capabilities that scale with your organization's needs.

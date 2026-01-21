@@ -1,0 +1,105 @@
+# Endpoint: /embeddings/search
+# Method: POST
+
+"/embeddings/search":
+  post:
+    description: Search for similar embedding chunks using vector similarity.
+    parameters:
+    - name: Authorization
+      in: header
+      required: true
+      description: Bearer token (your API key)
+      schema:
+        type: string
+      example: Bearer {API_KEY}
+    - name: Content-Type
+      in: header
+      required: true
+      description: Request content type
+      schema:
+        type: string
+        default: application/json
+    - name: accept
+      in: header
+      required: true
+      description: Response content type
+      schema:
+        type: string
+        default: application/json
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              embeddings:
+                type: array
+                items:
+                  type: number
+                  format: float
+                description: Single embedding vector for similarity search
+                example: [0.1, 0.2, 0.3, 0.4, 0.5]
+              tenant_id:
+                type: string
+                description: Primary organizational identifier (e.g., enterprise client, company) for multi-tenant data isolation
+                example: tenant_456
+              sub_tenant_id:
+                type: string
+                description: Secondary organizational identifier (e.g., department, team, project) within a tenant for hierarchical data organization; defaults to tenant_id if not provided
+                example: subtenant_123
+              max_chunks:
+                type: integer
+                description: Maximum number of chunk IDs to return
+                default: 10
+                minimum: 1
+                maximum: 200
+                example: 10
+            required:
+            - embeddings
+            - tenant_id
+    responses:
+      '200':
+        description: Similar embedding chunks found
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                chunk_ids:
+                  type: array
+                  items:
+                    type: string
+                  description: List of similar chunk IDs ordered by similarity score (highest first)
+                  example: ["CortexEmbeddings123_0", "CortexEmbeddings456_0", "CortexEmbeddings456_1", "CortexEmbeddings123_2", "CortexEmbeddings123_8"]
+                scores:
+                  type: array
+                  items:
+                    type: number
+                    format: float
+                    minimum: 0.0
+                    maximum: 1.0
+                  description: Similarity scores corresponding to each chunk ID (0.0 to 1.0, higher is more similar)
+                  example: [0.95, 0.89, 0.87, 0.82, 0.78]
+              example:
+                chunk_ids: ["CortexEmbeddings123_0", "CortexEmbeddings456_0", "CortexEmbeddings456_1", "CortexEmbeddings123_2", "CortexEmbeddings123_8"]
+                scores: [0.95, 0.89, 0.87, 0.82, 0.78]
+      '400':
+        description: |
+          Invalid request. Possible errors:
+          - embeddings vector cannot be empty
+          - All embedding values must be numeric
+          - max_chunks must be greater than 0
+          - max_chunks cannot exceed 200
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                detail:
+                  type: string
+                  example: "max_chunks cannot exceed 200"
+      '401':
+        description: Invalid or missing API key
+      '5XX':
+        description: Internal server error

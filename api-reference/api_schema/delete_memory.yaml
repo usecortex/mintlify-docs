@@ -1,0 +1,124 @@
+# Endpoint: /delete_source
+# Methods: DELETE, POST
+
+"/delete_source":
+  delete:
+    description: Deletes specific documents or memories associated with a user.
+    # --- Parameters (Headers) ---
+    parameters:
+    - name: Authorization
+      in: header
+      required: true
+      description: Bearer token (your API key)
+      schema:
+        type: string
+      example: Bearer {API_KEY}
+    - name: Content-Type
+      in: header
+      required: true
+      description: Request content type
+      schema:
+        type: string
+        default: application/json
+    - name: accept
+      in: header
+      required: true
+      description: Response content type
+      schema:
+        type: string
+        default: application/json
+    # --- Request Body ---
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              tenant_id:
+                type: string
+                description: Primary organizational identifier (e.g., enterprise client, company) for multi-tenant data isolation
+                example: tenant_456
+              sub_tenant_id:
+                type: string
+                description: Sub-tenant identifier
+                example: subtenant_123
+              source_ids:
+                type: array
+                items:
+                  type: string
+                description: IDs of documents to delete
+                example:
+                - doc_123
+                - doc_456
+            required:
+            - tenant_id
+            - source_ids
+    # --- Responses ---
+    responses:
+      '200':
+        description: Document deleted successfully
+      '422':
+        description: Incomplete/invalid parameters
+      '401':
+        description: Invalid or missing API key
+      '5XX':
+        description: Internal server error
+  post:
+    description: Deletes specific documents or memories associated with a user (POST alternative).
+    # --- Parameters (Headers) ---
+    parameters:
+    - name: Authorization
+      in: header
+      required: true
+      description: Bearer token (your API key)
+      schema:
+        type: string
+      example: Bearer {API_KEY}
+    - name: Content-Type
+      in: header
+      required: true
+      description: Request content type
+      schema:
+        type: string
+        default: application/json
+    - name: accept
+      in: header
+      required: true
+      description: Response content type
+      schema:
+        type: string
+        default: application/json
+    # --- Request Body ---
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              tenant_id:
+                type: string
+                description: Primary organizational identifier (e.g., enterprise client, company) for multi-tenant data isolation
+                example: tenant_456
+              source_ids:
+                type: array
+                items:
+                  type: string
+                description: IDs of documents to delete
+                example:
+                - doc_123
+                - doc_456
+            required:
+            - tenant_id
+            - source_ids
+    # --- Responses ---
+    responses:
+      '200':
+        description: Document deleted successfully (POST)
+      '422':
+        description: Incomplete/invalid parameters
+      '401':
+        description: Invalid or missing API key
+      '5XX':
+        description: Internal server error 

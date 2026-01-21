@@ -1,87 +1,139 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "Cortex SDK",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#7C3AED",
+    "light": "#A78BFA",
+    "dark": "#5B21B6"
   },
   "favicon": "/favicon.svg",
+  "contextual": {
+    "options": [
+      "copy",
+      "chatgpt",
+      "claude",
+      "perplexity"
+    ]
+  },
   "navigation": {
     "tabs": [
       {
         "tab": "Guides",
         "groups": [
           {
-            "group": "Getting started",
+            "group": "Get Started",
             "pages": [
               "index",
-              "quickstart",
-              "development"
+              "concepts",
+              "quickstart"
             ]
           },
           {
-            "group": "Customization",
+            "group": "Essentials",
             "pages": [
-              "essentials/settings",
-              "essentials/navigation"
+              "essentials/retrievals",
+              "essentials/graph-rag",
+              "essentials/multi-step",
+              "essentials/answers",
+              "essentials/metadata",
+              "essentials/file-formats",
+              "essentials/self-improving",
+              "essentials/ai-memories",
+              "essentials/customisation",
+              "essentials/multi-tenant",
+              "essentials/web-search"
             ]
           },
           {
-            "group": "Writing content",
+            "group": "Use Cases",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
-            ]
-          },
-          {
-            "group": "AI tools",
-            "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
+              "essentials/app-integration",
+              "use-cases/glean-clone",
+              "use-cases/ai-chief-of-staff",
+              "use-cases/ai-linkedin-recruiter",
+              "use-cases/ai-travel-planner"
             ]
           }
         ]
       },
       {
-        "tab": "API reference",
+        "tab": "API Reference",
         "groups": [
           {
-            "group": "API documentation",
+            "group": "API Documentation",
             "pages": [
-              "api-reference/introduction"
+              "api-reference/introduction",
+              "api-reference/error-responses",
+              "api-reference/sdks"
             ]
           },
           {
-            "group": "Endpoint examples",
+            "group": "Tenant Management",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "api-reference/endpoint/create-tenant",
+              "api-reference/endpoint/tenant-stats"
+            ]
+          },
+          {
+            "group": "Knowledge Ingestion",
+            "pages": [
+              "api-reference/endpoint/upload-document",
+              "api-reference/endpoint/upload-content",
+              "api-reference/endpoint/upload-app",
+              "api-reference/endpoint/verify-processing"
+            ]
+          },
+          {
+            "group": "Query & Retrieval",
+            "pages": [
+              "api-reference/endpoint/hybrid-search",
+              "api-reference/endpoint/full-text-search",
+              "api-reference/endpoint/qna"
+            ]
+          },
+          {
+            "group": "Knowledge Management",
+            "pages": [
+              "api-reference/endpoint/list-sources",
+              "api-reference/endpoint/list-sources-by-id",
+              "api-reference/endpoint/fetch-source-content",
+              "api-reference/endpoint/delete-sources",
+              "api-reference/endpoint/graph-relations"
+            ]
+          },
+          {
+            "group": "Embeddings",
+            "pages": [
+              "api-reference/endpoint/create-embeddings-tenant",
+              "api-reference/endpoint/insert-raw-embeddings",
+              "api-reference/endpoint/search-raw-embeddings",
+              "api-reference/endpoint/filter-raw-embeddings",
+              "api-reference/endpoint/delete-raw-embeddings"
+            ]
+          },
+          {
+            "group": "User Memories",
+            "pages": [
+              "api-reference/endpoint/add-memories",
+              "api-reference/endpoint/delete-memory"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Changelog",
+        "groups": [
+          {
+            "group": "Release History",
+            "pages": [
+              "changelog"
             ]
           }
         ]
       }
     ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
+    "global": {}
   },
   "logo": {
     "light": "/logo/light.svg",
@@ -91,32 +143,13 @@
     "links": [
       {
         "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "href": "mailto:founders@usecortex.ai"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
-    }
-  },
-  "contextual": {
-    "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
-  },
-  "footer": {
-    "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "label": "Website",
+      "href": "https://www.usecortex.ai"
     }
   }
 }

@@ -1,0 +1,187 @@
+---
+title: 'Retrieve User Memory'
+openapi: 'POST /user_memory/retrieve_user_memory'
+---
+
+import { TableOfContents } from '/snippets/table-of-contents.jsx'
+import TryIt from '/snippets/try-it.mdx'
+
+<Panel>
+  <TableOfContents />
+</Panel>
+<TryIt />
+### Examples
+
+<Tabs>
+  <Tab title="API Request">
+    ```bash
+    curl -X POST "https://api.usecortex.ai/user_memory/retrieve_user_memory?tenant_id=company_123&sub_tenant_id=engineering_team&max_count=5" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "query": "authentication preferences",
+        "user_name": "John Doe"
+      }'
+    ```
+  </Tab>
+  <Tab title="TypeScript">
+    ```ts
+    const memory = await client.userMemory.retrieveUserMemory({
+      tenant_id: "company_123",
+      sub_tenant_id: "engineering_team",
+      query: "authentication preferences",
+      max_count: 5
+    });
+    ```
+  </Tab>
+  <Tab title="Python (Sync)">
+    ```python
+    # Async usage is similar, just use async_client and await
+    memory = client.user_memory.retrieve_user_memory(
+        tenant_id="company_123",
+        sub_tenant_id="engineering_team",
+        query="authentication preferences",
+        max_count=5
+    )
+    ```
+  </Tab>
+</Tabs>
+
+## Overview
+
+The Retrieve User Memory endpoint performs semantic search through a user's stored memories to find the most relevant information based on a query. This is the primary endpoint for accessing user memories in your AI applications, enabling context-aware responses and personalized interactions.
+
+## Functionality
+
+- **Semantic Search**: Uses advanced vector search to find memories that are semantically similar to your query
+- **Relevance Ranking**: Returns memories ranked by relevance to the search query
+- **Configurable Results**: Control the number of memories returned with the `max_count` parameter
+- **Intelligent Selection**: When `max_count` is set to 0, Cortex intelligently selects the best memories based on relevance and context
+- **Context-Aware**: Finds memories that are contextually relevant, not just keyword matches
+- **Personalization**: Optional `user_name` parameter enhances personalization by providing user context for more targeted memory retrieval
+
+## How Semantic Search Works
+
+Unlike traditional keyword search, semantic search understands the meaning and context of your query. For example:
+- Query: "authentication preferences" 
+- Will find memories about: "JWT tokens", "login methods", "security settings", etc.
+- Even if the exact words don't match
+
+## Use Cases
+
+- **Context Retrieval**: Get relevant user context before generating AI responses
+- **Personalization**: Find user preferences and past interactions for tailored experiences
+- **Memory-Based Chat**: Enable AI to reference past conversations and user history
+- **Recommendation Systems**: Use user memories to provide personalized recommendations
+- **Customer Support**: Access user history and preferences for better support
+
+
+### Response
+
+```json
+{
+  "success": true,
+  "user_memories": [
+    {
+      "source_id": "mem_001_abc123",
+      "source_content": "User prefers JWT tokens over session-based authentication for microservices"
+    },
+    {
+      "source_id": "mem_002_def456", 
+      "source_content": "User values stateless authentication approaches"
+    },
+    {
+      "source_id": "mem_003_ghi789",
+      "source_content": "User understands the importance of rate limiting for security"
+    }
+  ]
+}
+```
+
+### Advanced Usage: Context-Aware AI Response
+
+```bash
+# First, retrieve relevant memories
+curl -X POST "https://api.usecortex.ai/user_memory/retrieve_user_memory?tenant_id=company_123&sub_tenant_id=product_team&max_count=3" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "user onboarding feedback",
+    "user_name": "Sarah Johnson"
+  }'
+
+# Then use these memories to generate a personalized response
+```
+
+### Different Query Examples
+
+```bash
+# Find communication preferences
+curl -X POST "https://api.usecortex.ai/user_memory/retrieve_user_memory?tenant_id=company_123&sub_tenant_id=marketing_team&max_count=2" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "communication style preferences",
+    "user_name": "Mike Chen"
+  }'
+
+# Find technical expertise areas  
+curl -X POST "https://api.usecortex.ai/user_memory/retrieve_user_memory?tenant_id=company_123&sub_tenant_id=engineering_team&max_count=5" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "technical skills and experience",
+    "user_name": "Alex Rodriguez"
+  }'
+
+# Find project-related memories
+curl -X POST "https://api.usecortex.ai/user_memory/retrieve_user_memory?tenant_id=company_123&sub_tenant_id=product_team&max_count=3" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "current project work",
+    "user_name": "Emma Wilson"
+  }'
+
+### Intelligent Selection (max_count=0)
+
+When you want Cortex to intelligently select the most relevant memories without specifying a count:
+
+```bash
+curl -X POST "https://api.usecortex.ai/user_memory/retrieve_user_memory?tenant_id=company_123&sub_tenant_id=engineering_team&max_count=0" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "authentication preferences",
+    "user_name": "David Kim"
+  }'
+```
+
+With `max_count=0`, Cortex will analyze all available memories and return only the most relevant ones based on semantic similarity and contextual relevance, automatically determining the optimal number of memories to return.
+
+## Important Notes
+
+<Warning>
+**Automatic Tenant Provisioning**: If you receive an error stating "Tenant-id/sub-tenant-id combination either does not exist or is not provisioned for user memory", this means the tenant/sub-tenant combination hasn't been set up for user memory functionality yet. This will be automatically provisioned when you add or generate your first user memory for this combination.
+</Warning>
+
+<Note>
+**Empty Results**: If no relevant memories are found, the endpoint returns an empty array. This is normal for new users or when searching for topics not covered in existing memories.
+</Note>
+
+<Info>
+**Query Optimization**: 
+- Be specific about the type of information you're looking for
+- Consider using synonyms or related terms if initial queries don't return results
+- Shorter, focused queries often work better than long, complex ones
+- Include the `user_name` parameter for enhanced personalization and more targeted memory retrieval
+</Info>
+
+<Tip>
+**Pro Tip**: This API is most powerful when used in combination with other user memory APIs. Use [Generate User Memory](/api-reference/endpoint/generate-user-memory) to create memories from user interactions, then use this API to retrieve relevant context for future interactions.
+</Tip>
+
+## Error Responses
+
+All endpoints return consistent error responses following the standard format. For detailed error information, see our [Error Responses](/api-reference/error-responses) documentation.
+

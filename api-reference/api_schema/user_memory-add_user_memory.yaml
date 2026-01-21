@@ -1,0 +1,68 @@
+# Endpoint: /user_memory/add_user_memory
+# Method: POST
+
+"/user_memory/add_user_memory":
+  post:
+    description: Manually adds a new user memory for a cortex user.
+    # --- Parameters (Headers & Query) ---
+    parameters:
+    - name: Authorization
+      in: header
+      required: true
+      description: Bearer token (your API key)
+      schema:
+        type: string
+      example: Bearer {API_KEY}
+    - name: Content-Type
+      in: header
+      required: true
+      description: Request content type
+      schema:
+        type: string
+        default: application/json
+    - name: accept
+      in: header
+      required: true
+      description: Response content type
+      schema:
+        type: string
+        default: application/json
+    - name: tenant_id
+      in: query
+      required: true
+      description: Primary organizational identifier (e.g., enterprise client, company) for multi-tenant data isolation
+      schema:
+        type: string
+    - name: sub_tenant_id
+      in: query
+      required: true
+      description: Secondary organizational identifier (e.g., department, team, project) within a tenant for hierarchical data organization; defaults to tenant_id if not provided
+      schema:
+        type: string
+    - name: user_memory
+      in: query
+      required: true
+      description: User memory to be added to their vector store
+      schema:
+        type: string
+    # --- Responses ---
+    responses:
+      '200':
+        description: Memory insertion result
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                  description: Indicates whether the memory addition operation was successful
+                user_memory_added:
+                  type: boolean
+                  description: Confirms whether the user memory was successfully added to the vector store
+      '422':
+        description: Incomplete/invalid parameters
+      '401':
+        description: Invalid or missing API key
+      '5XX':
+        description: Internal server error 

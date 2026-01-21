@@ -1,0 +1,193 @@
+---
+title: 'Batch Upload'
+openapi: 'POST /upload/batch_upload'
+# mode: 'wide'
+---
+
+import { TableOfContents } from '/snippets/table-of-contents.jsx'
+import TryIt from '/snippets/try-it.mdx'
+
+<Panel>
+  <TableOfContents />
+</Panel>
+<TryIt />
+### Examples
+
+<Tabs>
+  <Tab title="API Request">
+    ```bash
+    curl --request POST \
+      --url 'https://api.usecortex.ai/upload/batch_upload?tenant_id=tenant_1234&sub_tenant_id=sub_tenant_4567' \
+      --header 'Authorization: Bearer YOUR_API_KEY' \
+      --header 'Content-Type: multipart/form-data' \
+      --form files=@example-file \
+      --form 'file_ids=["doc_123"]' \
+      --form 'tenant_metadata={}' \
+      --form 'document_metadata={}'
+      ```
+  </Tab>
+  <Tab title="TypeScript">
+    ```ts
+    import fs from 'fs';
+    
+    const results = await client.upload.batchUpload({
+      files: [
+        fs.readFileSync("doc1.pdf"),
+        fs.readFileSync("doc2.pdf")
+      ],
+      tenant_id: "tenant_1234",
+      sub_tenant_id: "sub_tenant_4567",
+      file_ids: ["doc_123", "doc_456"],
+      tenant_metadata: {},
+      document_metadata: {}
+    });
+    ```
+  </Tab>
+  <Tab title="Python (Sync)">
+    ```python
+    # Async usage is similar, just use async_client and await
+    with open("doc1.pdf", 'rb') as f1, open("doc2.pdf", 'rb') as f2:
+        files = [
+            ("doc1.pdf", f1),
+            ("doc2.pdf", f2)
+        ]
+        results = client.upload.batch_upload(
+            tenant_id="tenant_1234",
+            sub_tenant_id="sub_tenant_4567",
+            files=files,
+            file_ids=["doc_123", "doc_456"],
+            tenant_metadata={},
+            document_metadata={}
+        )
+    ```
+  </Tab>
+</Tabs>
+
+Upload multiple documents simultaneously to your tenant's knowledge base. All documents will be processed, chunked, and indexed for search and retrieval.
+
+## Batch Processing Pipeline
+
+When you upload multiple documents, each document goes through our comprehensive processing pipeline in parallel:
+
+### 1. **Immediate Upload & Queue**
+- All documents are immediately accepted and stored securely
+- Each document is added to our processing queue for background processing
+- You receive a confirmation response with individual `file_id`s for tracking each file
+
+### 2. **Parallel Processing Phase**
+Each document is processed independently with:
+- **Content Extraction**: Extracting text from various supported formats (see Supported File Formats section below)
+- **Document Parsing**: Understanding document structure, headers, and formatting
+- **Text Cleaning**: Removing formatting artifacts and normalizing content
+
+### 3. **Intelligent Chunking**
+- Each document is split into semantically meaningful chunks
+- Chunk size is optimized for both context preservation and search accuracy
+- Overlapping boundaries ensure no information is lost between chunks
+- Metadata is preserved and associated with each chunk
+
+### 4. **Embedding Generation**
+- Each chunk is converted into high-dimensional vector embeddings
+- Embeddings capture semantic meaning and context
+- Vectors are optimized for similarity search and retrieval
+
+### 5. **Indexing & Database Updates**
+- Embeddings are stored in our vector database for fast similarity search
+- Full-text search indexes are created for keyword-based queries
+- Metadata is indexed for filtering and faceted search
+- Cross-references are established between related documents
+
+### 6. **Quality Assurance**
+- Automated quality checks ensure processing accuracy for each document
+- Content validation verifies extracted text completeness
+- Embedding quality is assessed for optimal retrieval performance
+
+<Note>
+**Processing Time**: Batch uploads are processed in parallel. Most documents are fully processed and searchable within 2-5 minutes. Larger documents (100+ pages) may take up to 15 minutes. You can check processing status using the individual document IDs returned in the response.
+</Note>
+
+<Note>
+**Default Sub-Tenant Behavior**: If you don't specify a `sub_tenant_id`, all documents will be uploaded to the default sub-tenant created when your tenant was set up. This is perfect for organization-wide document batches that should be accessible across all departments.
+</Note>
+
+> **Recommended**: For optimal performance, limit each batch to a maximum of **20 sources** per request. Send multiple batch requests with an interval of **1 second** between each request.
+
+> **File ID Management**: The system uses a priority-based approach for file ID assignment:
+> 1. **First Priority**: If you provide a `file_id` as a direct body parameter, that specific ID will be used
+> 2. **Second Priority**: If no direct `file_id` is provided, the system checks for a `file_id` in the `document_metadata` object
+> 3. **Auto-Generation**: If neither source provides a `file_id`, the system will automatically generate a unique identifier
+
+### **Duplicate File ID Behavior**
+
+When you upload documents with `file_id`s that already exist in your tenant:
+
+- **Overwrite Behavior**: Each existing document with a matching `file_id` will be **completely replaced** with the new document
+- **Processing**: Each new document will go through the full processing pipeline independently
+- **Search Results**: Previous search results and embeddings from old documents will be replaced with the new documents' content
+- **Idempotency**: Uploading the same documents with the same `file_id`s multiple times is safe and will result in the same final state
+
+<Warning>
+**Important**: When overwriting existing documents, all previous chunks, embeddings, and search indexes associated with those `file_id`s will be permanently removed and replaced. This action cannot be undone.
+</Warning>
+
+**Example Success Response for Duplicate File IDs in Batch:**
+```json
+{
+  "message": "Batch upload successful. Documents with existing file_ids have been overwritten.",
+  "document_ids": ["doc_123456", "doc_789012", "doc_345678", "doc_901234"],
+  "overwritten_file_ids": ["doc_123456", "doc_789012"],
+  "status": "success"
+}
+```
+
+## Supported File Formats
+
+Cortex supports a comprehensive range of file formats for document processing. Files are automatically parsed and their content extracted for indexing and search.
+
+<Info>
+**Complete Reference**: For a comprehensive list of all supported file formats with detailed information, see our [Supported File Formats](/essentials/file-formats) documentation.
+</Info>
+
+<Warning>
+**Unsupported File Formats**: If you attempt to upload a file format that is not supported, you will receive an error response with status code `400` and the message: `"Unsupported file format: [filename]. Please check our supported file formats documentation."` Ensure your files are in one of the supported formats listed above before uploading.
+</Warning>
+
+## Best Practices
+
+### **Document Preparation**
+- **File Size**: Documents up to 50MB are processed efficiently
+- **Content Quality**: Clear, well-structured documents produce better embeddings
+- **Metadata**: Include rich metadata for better filtering and organization
+
+### **Processing Optimization**
+- **Batch Size**: Limit each batch to a maximum of **20 sources** per request
+- **Request Intervals**: Send multiple batch requests with an interval of **1 second** between each request
+- **Metadata Consistency**: Use consistent metadata schemas across your organization
+- **File Naming**: Descriptive filenames help with document identification
+
+### **Troubleshooting**
+
+**Documents Not Appearing in Search?**
+- Wait 5-10 minutes for processing to complete
+- Check if any document status is `errored` (rare occurrence)
+- Verify your search query and filters
+
+**Slow Processing?**
+- Large documents (100+ pages) take longer to process
+- Complex formatting may require additional processing time
+- High system load may temporarily slow processing
+
+**Processing Failures?**
+- If status shows `errored`, ensure your documents aren't corrupted or password-protected
+- Check that the file format is supported (see Supported File Formats section above)
+- Verify your API key has sufficient permissions
+- For unsupported formats, you'll receive a `400` error with the message: `"Unsupported file format: [filename]. Please check our supported file formats documentation."`
+
+<Info>
+**Need Help?** If documents fail to process or you're experiencing issues, contact our support team with the `file_id`s for assistance.
+</Info>
+
+## Error Responses
+
+All endpoints return consistent error responses following the standard format. For detailed error information, see our [Error Responses](/api-reference/error-responses) documentation.
+

@@ -1,80 +1,140 @@
 ---
 title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+description: "Start building amazing LLM experiences in under 5 minutes"
 ---
 
-## Get started in three steps
+> Base URL: `https://api.usecortex.ai`
+>
+> Contact us to get your API key at [founders@usecortex.ai](mailto:founders@usecortex.ai)
 
-Get your documentation site running locally and make your first customization.
+All endpoints require an API key sent as a Bearer token in the `Authorization` header.
 
-### Step 1: Set up your local environment
+```mdx
+Authorization: Bearer <your_api_key>
+```
 
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
+### Prerequisites
 
-### Step 2: Deploy your changes
+- Node.js / Python (or any backend language)
+- Basic knowledge of HTTP requests
+- An API key from [Cortex](https://usecortex.ai/) (`Authorization: Bearer <your_api_key>`)
+- A document or webpage you want your AI to read
 
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
+### **Step 1: Upload Your Knowledge Source**
 
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
+You can upload:
 
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
+- A public webpage
+- A document (PDF, DOCX, etc.)
+- Multiple documents in bulk
 
-### Step 3: Go live
+#### Option A: Upload a document
 
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
+```mdx
+POST /upload/upload_document
+```
 
-## Next steps
+**Form Data:**
 
-Now that you have your docs running, explore these key features:
+- `file`: your document
+- `tenant_id`: your unique tenant ID
 
-<CardGroup cols={2}>
+#### Option B: Upload a webpage
 
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
+```mdx
+POST /upload/scrape_webpage
+```
 
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
+```mdx
+curl -X POST 'https://api.usecortex.ai/upload/scrape_webpage?web_url=https://example.com&tenant_id=your_tenant_id' \
+  -H "Authorization: Bearer <your_api_key>"
+```
 
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
+### **Step 2 (Optional): Verify Processing**
 
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
+Check if the document is fully indexed:
 
-</CardGroup>
+```mdx
+POST /upload/verify_processing?file_id=YOUR_FILE_ID
+```
 
-<Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
-</Note>
+Returns success once the document is ready for querying.
+
+### **Step 3: Ask Questions Using the AI Retrieval API**
+
+```mdx
+POST /search/qna
+```
+
+**Request Body:**
+
+```json
+{
+  "question": "What did the document say about pricing?",
+  "session_id": "user-session-123",
+  "tenant_id": "your_tenant_id",
+  "context_list": ["optional_specific_file_id"],
+  "ai_generation": true,
+  "highlight_chunks": true,
+  "tenant_metadata": {"source_title": "contract.pdf"}
+  "document_metadata": {"source_title": "contract.pdf"}
+}
+```
+
+**Example (cURL):**
+
+```mdx
+curl -X POST 'https://api.usecortex.ai/search/qna' \
+  -H "Authorization: Bearer <your_api_key>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "question": "Summarize the contract terms",
+    "session_id": "user-123-session",
+    "tenant_id": "your_tenant_id",
+    "tenant_metadata": {"source_title": "contract.pdf"}
+    "document_metadata": {"source_title": "contract.pdf"}
+  }'
+```
+
+### **Step 5: Display the Answer in Your App**
+
+You'll get a JSON response like:
+
+```json
+{
+  "answer": "The contract specifies a 12-month term with a 30-day opt-out period...",
+  "sources": [...],
+  "chunks": [...]
+}
+```
+
+Render the answer in your UI and include clickable citations if desired. Citations can reference:
+
+- **Source filename** (e.g., `contract.pdf`)
+- **Page number**
+- **Snippet preview**
+
+If available, use the `bounding_box` to enable clickable highlights or coordinate-based jumping in PDFs.
+
+You can use the `tenant_metadata` and `document_metadata` parameters to restrict the context to only sources matching specific criteria:
+
+- **`tenant_metadata`**: Filter by organizational attributes (department, compliance framework) that apply to all documents in your tenant
+- **`document_metadata`**: Filter by document-specific attributes (title, author, document type) that vary per document
+
+For example, `{ "source_title": "contract.pdf" }` will only use sources with that title for answering the question. You can combine both metadata types for precise filtering: `{ "department": "Legal", "document_type": "contract" }` to find all legal contracts.
+
+### **Step 6: Iterate (Optional)**
+
+Fine-tune the user experience with:
+
+- `AI response (true or false)`: Lets you decide if you only want the retrieved context or the AI generated response to user queries using retrieved context
+- `search_alpha (0-1)`: Prioritize keyword vs. semantic match. An Alpha of "1" means semantic match. An Alpha of "0" means exact keyword match
+- `recency_bias (0-1)`: Control how much you want to favour newly added knowledge. 1 you strongly favour recently added knowledge. 0 means freshness of knowledge doesn't matter.
+- `highlight_chunks`: Get the actual context/chunks can be used for generating answers for RAG or Agentic purposes
+- `stream`: for real-time, streaming answers
+
+### 🧩 Optional Extensions
+
+- **Batch Upload**: `/upload/batch_upload` for multiple files
+- **Delete Memory**: `/delete_source` to remove documents
+- **List Sources**: `/list/sources` to display all uploaded documents

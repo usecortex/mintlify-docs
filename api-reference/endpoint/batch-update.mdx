@@ -1,0 +1,72 @@
+---
+title: 'Batch Update'
+openapi: 'PATCH /upload/batch_update'
+---
+import { TableOfContents } from '/snippets/table-of-contents.jsx'
+import TryIt from '/snippets/try-it.mdx'
+
+<Panel>
+  <TableOfContents />
+</Panel>
+<TryIt />
+### Examples
+
+<Tabs>
+  <Tab title="API Request">
+    ```bash
+    curl --request PATCH \
+      --url 'https://api.usecortex.ai/upload/batch_update?tenant_id=tenant_1234&sub_tenant_id=sub_tenant_4567' \
+      --header 'Authorization: Bearer YOUR_API_KEY' \
+      --header 'Content-Type: multipart/form-data' \
+      --form files=@example-file \
+      --form 'source_ids=[
+      "<string>"
+    ]' \
+      --form 'tenant_metadata={}' \
+      --form 'document_metadata={}'
+      ```
+  </Tab>
+  <Tab title="TypeScript">
+    ```ts
+    import fs from 'fs';
+    
+    const results = await client.upload.batchUpdate({
+      files: [
+        fs.readFileSync("updated-doc1.pdf"),
+        fs.readFileSync("updated-doc2.pdf")
+      ],
+      tenant_id: "tenant_1234",
+      sub_tenant_id: "sub_tenant_4567",
+      source_ids: ["source_123", "source_456"],
+      tenant_metadata: {},
+      document_metadata: {}
+    });
+    ```
+  </Tab>
+  <Tab title="Python (Sync)">
+    ```python
+    # Async usage is similar, just use async_client and await
+    with open("updated-doc1.pdf", 'rb') as f1, open("updated-doc2.pdf", 'rb') as f2:
+        files = [
+            ("updated-doc1.pdf", f1),
+            ("updated-doc2.pdf", f2)
+        ]
+        results = client.upload.batch_update(
+            tenant_id="tenant_1234",
+            sub_tenant_id="sub_tenant_4567",
+            files=files,
+            source_ids=["source_123", "source_456"],
+            tenant_metadata={},
+            document_metadata={}
+        )
+    ```
+  </Tab>
+</Tabs>
+
+Update multiple sources in bulk, creating new entries for any `source_id` that doesn't exist (upsert operation).
+> Provide one `source_id` per file. The number of `source_id`s must match the number of files.
+
+## Error Responses
+
+All endpoints return consistent error responses following the standard format. For detailed error information, see our [Error Responses](/api-reference/error-responses) documentation.
+

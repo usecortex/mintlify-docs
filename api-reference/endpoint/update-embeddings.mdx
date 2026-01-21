@@ -1,0 +1,81 @@
+---
+title: 'Update Embeddings'
+openapi: 'PATCH /upload/update_embeddings'
+---
+
+import { TableOfContents } from '/snippets/table-of-contents.jsx'
+import TryIt from '/snippets/try-it.mdx'
+
+<Panel>
+  <TableOfContents />
+</Panel>
+<TryIt />
+### Examples
+
+<Tabs>
+  <Tab title="API Request">
+    ```bash expandable
+    curl --request PATCH \
+      --url 'https://api.usecortex.ai/upload/update_embeddings?tenant_id=tenant_1234&sub_tenant_id=sub_tenant_4567' \
+      --header 'Authorization: Bearer <token>' \
+      --header 'Content-Type: application/json' \
+      --data '{
+      "embeddings": {
+        "CortexEmbeddings123_0": [
+          0.123413,
+          0.655367,
+          0.987654,
+          0.123456,
+          0.789012
+        ],
+        "CortexEmbeddings123_1": [
+          0.123413,
+          0.655367,
+          0.987654,
+          0.123456,
+          0.789012
+        ]
+      }
+    }'
+      ```
+  </Tab>
+  <Tab title="TypeScript">
+    ```ts
+    const result = await client.upload.updateEmbeddings({
+      tenant_id: "tenant_1234",
+      sub_tenant_id: "sub_tenant_4567",
+      embeddings: {
+        "CortexEmbeddings123_0": [0.123413, 0.655367, 0.987654, 0.123456, 0.789012],
+        "CortexEmbeddings123_1": [0.123413, 0.655367, 0.987654, 0.123456, 0.789012]
+      }
+    });
+    ```
+  </Tab>
+  <Tab title="Python (Sync)">
+    ```python
+    # Async usage is similar, just use async_client and await
+    result = client.upload.update_embeddings(
+        tenant_id="tenant_1234",
+        sub_tenant_id="sub_tenant_4567",
+        embeddings={
+            "CortexEmbeddings123_0": [0.123413, 0.655367, 0.987654, 0.123456, 0.789012],
+            "CortexEmbeddings123_1": [0.123413, 0.655367, 0.987654, 0.123456, 0.789012]
+        }
+    )
+    ```
+  </Tab>
+</Tabs>
+
+### Requirements
+- **Maximum dimensions**: 2000 rows × 3024 columns; i.e. 2000 chunks with a maximum dimension of 3024
+- **Format**: Dictionary with chunk IDs as keys and embedding arrays as values. These chunk IDs should match the ones that you got on inserting the embeddings.
+- **Batch constraint**: All chunk IDs must belong to the same batch/source
+- **Chunk ID format**: Must be valid strings in format `{batch_id}_{index}`
+- **Consistency**: All embedding vectors must have the same dimension
+- **Values**: All embedding values must be numeric (int or float)
+
+
+## Error Responses
+
+All endpoints return consistent error responses following the standard format. For detailed error information, see our [Error Responses](/api-reference/error-responses) documentation.
+

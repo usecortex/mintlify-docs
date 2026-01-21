@@ -1,0 +1,75 @@
+# Endpoint: /user_memory/generate_user_memory
+# Method: POST
+
+"/user_memory/generate_user_memory":
+  post:
+    description: Automatically generates and saves user memories based on a user query. The most sophisticated endpoint that combines query processing, memory generation, and storage.
+    # --- Parameters (Headers & Query) ---
+    parameters:
+    - name: Authorization
+      in: header
+      required: true
+      description: Bearer token (your API key)
+      schema:
+        type: string
+      example: Bearer {API_KEY}
+    - name: Content-Type
+      in: header
+      required: true
+      description: Request content type
+      schema:
+        type: string
+        default: application/json
+    - name: accept
+      in: header
+      required: true
+      description: Response content type
+      schema:
+        type: string
+        default: application/json
+    - name: tenant_id
+      in: query
+      required: true
+      description: Primary organizational identifier (e.g., enterprise client, company) for multi-tenant data isolation
+      schema:
+        type: string
+    - name: sub_tenant_id
+      in: query
+      required: true
+      description: Secondary organizational identifier (e.g., department, team, project) within a tenant for hierarchical data organization; defaults to tenant_id if not provided
+      schema:
+        type: string
+    - name: user_message
+      in: query
+      required: true
+      description: User message to generate memories from
+      schema:
+        type: string
+    - name: user_name
+      in: query
+      required: true
+      description: Name of the user for personalization
+      schema:
+        type: string
+    # --- Responses ---
+    responses:
+      '200':
+        description: Generated memories returned successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                generated_user_memories:
+                  type: array
+                  items:
+                    type: string
+                    description: Generated user memory objects that were created and stored
+      '401':
+        description: Invalid or missing API key
+      '422':
+        description: Incomplete/invalid parameters
+      '5XX':
+        description: Internal server error 
