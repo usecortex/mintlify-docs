@@ -237,20 +237,16 @@ Each app source is processed using specialized pipelines:
 
 > **File ID Management**: When you provide a `file_id` as a key in the `document_metadata` object, that specific ID will be used to identify your content. If no `file_id` is provided in the `document_metadata`, the system will automatically generate a unique identifier for you. This allows you to maintain consistent references to your content across your application while ensuring every piece of content has a unique identifier.
 
-### When a `file_id` already exists: the `upsert` parameter (optional)
+### `Upsert` parameter (optional)
 
-The `upsert` parameter (boolean, default `true`) controls what happens when you upload an app source whose `file_id` already exists in your tenant:
+For app sources, the identifier is `file_id`. When that identifier already exists, `upsert` (boolean, default `true`) controls the behavior:
 
 | Value | Behavior |
 |-------|----------|
-| `true` | Replace the existing app source with the new one |
-| `false` | Fail the request; do not overwrite |
+| `true` | Replace existing (default) |
+| `false` | Fail; do not overwrite |
 
-When `upsert` is `true` (the default), uploading again with the same `file_id` **completely replaces** the existing app source: the new source is processed through its specialized pipeline, previous search results and embeddings for that `file_id` are replaced, and uploading the same app sources with the same `file_id`s multiple times is safe and idempotent.
-
-<Warning>
-**Important**: When overwriting existing app sources, all previous chunks, embeddings, and search indexes associated with those `file_id`s are permanently removed and replaced. This cannot be undone.
-</Warning>
+Overwriting permanently removes and replaces existing chunks, embeddings, and indexes for that identifier.
 
 **Example success response when overwriting by `file_id`:**
 

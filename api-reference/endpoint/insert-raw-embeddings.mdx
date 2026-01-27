@@ -139,18 +139,16 @@ Our system automatically handles:
 
 > **File ID Management**: When you provide a `file_id` as a key in the `document_metadata` object, that specific ID will be used to identify your content. If no `file_id` is provided in the `document_metadata`, the system will automatically generate a unique identifier for you. This allows you to maintain consistent references to your content across your application while ensuring every piece of content has a unique identifier.
 
-### **Duplicate File ID Behavior**
+### `Upsert` parameter (optional)
 
-When you upload embeddings with a `file_id` that already exists in your tenant:
+For embeddings, the identifier is `file_id`. When that identifier already exists, `upsert` (boolean, default `true`) controls the behavior:
 
-- **Overwrite Behavior**: The existing embeddings with the same `file_id` will be **completely replaced** with the new embeddings
-- **Processing**: The new embeddings will go through validation and direct indexing (no embedding generation needed)
-- **Search Results**: Previous search results and vector data from the old embeddings will be replaced with the new embeddings
-- **Idempotency**: Uploading the same embeddings with the same `file_id` multiple times is safe and will result in the same final state
+| Value | Behavior |
+|-------|----------|
+| `true` | Replace existing (default) |
+| `false` | Fail; do not overwrite |
 
-<Warning>
-**Important**: When overwriting existing embeddings, all previous vector data, chunk IDs, and search indexes associated with that `file_id` will be permanently removed and replaced. This action cannot be undone.
-</Warning>
+Overwriting permanently removes and replaces existing chunks, embeddings, and indexes for that identifier.
 
 **Example Success Response for Duplicate File ID:**
 

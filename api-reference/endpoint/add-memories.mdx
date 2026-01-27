@@ -326,14 +326,16 @@ Controls whether Cortex extracts additional insights from the content:
 - Performance-critical bulk uploads
 </Info>
 
-### `upsert` (boolean)
+### `Upsert` parameter (optional)
 
-Controls behavior when a `source_id` already exists:
+For memories, the identifier is `source_id`. When that identifier already exists, `upsert` (boolean, default `true`) controls the behavior:
 
 | Value | Behavior |
 |-------|----------|
-| `true` | Replace existing content with the same `source_id` |
-| `false` | Fail if `source_id` already exists |
+| `true` | Replace existing (default) |
+| `false` | Fail; do not overwrite |
+
+Overwriting permanently removes and replaces existing chunks, embeddings, and indexes for that identifier.
 
 ### `source_id` (optional)
 

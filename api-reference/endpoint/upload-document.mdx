@@ -242,20 +242,16 @@ Our system automatically handles:
 > 1. **First Priority**: If you provide a `file_id` in the `file_metadata`
 > 3. **Auto-Generation**: If neither source provides a `file_id`, the system will automatically generate a unique identifier
 
-### When a `file_id` already exists: the `upsert` parameter (optional)
+### `Upsert` parameter (optional)
 
-The `upsert` parameter (boolean, default `true`) controls what happens when you upload a document whose `file_id` already exists in your tenant:
+For documents, the identifier is `file_id`. When that identifier already exists, `upsert` (boolean, default `true`) controls the behavior:
 
 | Value | Behavior |
 |-------|----------|
-| `true` | Replace the existing document with the new one |
-| `false` | Fail the request; do not overwrite |
+| `true` | Replace existing (default) |
+| `false` | Fail; do not overwrite |
 
-When `upsert` is `true` (the default), uploading again with the same `file_id` **completely replaces** the existing document: the new file is processed (content extraction, chunking, embedding generation, indexing), previous search results and embeddings for that `file_id` are replaced, and uploading the same document with the same `file_id` multiple times is safe and idempotent.
-
-<Warning>
-**Important**: When overwriting an existing document, all previous chunks, embeddings, and search indexes associated with that `file_id` are permanently removed and replaced. This cannot be undone.
-</Warning>
+Overwriting permanently removes and replaces existing chunks, embeddings, and indexes for that identifier.
 
 ## Processing Status & Monitoring
 

@@ -151,20 +151,16 @@ See the [Add Memory documentation](/api-reference/endpoint/add-memories) for ful
 
 Upload text content directly to your tenant's knowledge base. The text will be processed, chunked, and indexed for search and retrieval.
 
-### When a `file_id` already exists: the `upsert` parameter (optional)
+### `Upsert` parameter (optional)
 
-The `upsert` parameter (boolean, default `true`) controls what happens when you upload content whose `file_id` already exists in your tenant:
+For text content, the identifier is `file_id`. When that identifier already exists, `upsert` (boolean, default `true`) controls the behavior:
 
 | Value | Behavior |
 |-------|----------|
-| `true` | Replace the existing content with the new one |
-| `false` | Fail the request; do not overwrite |
+| `true` | Replace existing (default) |
+| `false` | Fail; do not overwrite |
 
-When `upsert` is `true` (the default), uploading again with the same `file_id` **completely replaces** the existing content: the new content is processed (validation, chunking, embedding generation, indexing), previous search results and embeddings for that `file_id` are replaced, and uploading the same content with the same `file_id` multiple times is safe and idempotent.
-
-<Warning>
-**Important**: When overwriting existing content, all previous chunks, embeddings, and search indexes associated with that `file_id` are permanently removed and replaced. This cannot be undone.
-</Warning>
+Overwriting permanently removes and replaces existing chunks, embeddings, and indexes for that identifier.
 
 ### Text Processing Pipeline
 
