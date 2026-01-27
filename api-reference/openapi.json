@@ -1857,7 +1857,7 @@
           "Search"
         ],
         "summary": "Hybrid search",
-        "description": "Search for relevant content within your indexed sources or user memories.\n    \n    Results are ranked by relevance and can be customized with parameters like \n    result limits, alpha weighting, and recency preferences.\n    \n    Use `search_mode` to specify what to search:\n    - \"sources\" (default): Search over indexed documents\n    - \"memories\": Search over user memories (uses inferred content)\n    \n    Use `mode` to control retrieval quality:\n    - \"fast\" (default): Single query, faster response\n    - \"accurate\": Multi-query generation with reranking, higher quality",
+        "description": "Search for relevant content within your indexed sources or user memories.\n    \n    Results are ranked by relevance and can be customised with parameters like \n    result limits, alpha weighting, and recency preferences.\n    \n    Use `search_mode` to specify what to search:\n    - \"sources\" (default): Search over indexed documents\n    - \"memories\": Search over user memories (uses inferred content)\n    \n    Use `mode` to control retrieval quality:\n    - \"fast\" (default): Single query, faster response\n    - \"accurate\": Multi-query generation with reranking, higher quality",
         "operationId": "hybrid_search_search_hybrid_search_post",
         "requestBody": {
           "content": {

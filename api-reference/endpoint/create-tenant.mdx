@@ -13,6 +13,9 @@ import TryIt from '/snippets/try-it.mdx'
 Create a new tenant. If you pass `tenant_id` as a query parameter, that ID will be used. If not provided, the service generates a new `tenant_id` and returns it.
 
 <TryIt />
+
+## Try It
+
 ### Examples
 
 <Tabs>
@@ -26,6 +29,7 @@ Create a new tenant. If you pass `tenant_id` as a query parameter, that ID will 
   "tenant_id": "string"
   }'
     ```
+
   </Tab>
   <Tab title="Python (Sync)">
     ```python expandable
@@ -54,6 +58,7 @@ Create a new tenant. If you pass `tenant_id` as a query parameter, that ID will 
         ]
     )
     ```
+
   </Tab>
 </Tabs>
 
@@ -74,13 +79,18 @@ Create a new tenant. If you pass `tenant_id` as a query parameter, that ID will 
 ### Sub-Tenant ID Best Practices
 
 **For B2C Applications (Individual Users):**
+
+
 ```javascript
 // Use user IDs as sub-tenant IDs for personal workspaces
 sub_tenant_id: "user_12345"
 sub_tenant_id: "user_67890"
 ```
 
+
 **For B2B Applications (Departments/Teams):**
+
+
 ```javascript
 // Use descriptive department or team names
 sub_tenant_id: "engineering"
@@ -89,12 +99,16 @@ sub_tenant_id: "hr"
 sub_tenant_id: "marketing"
 ```
 
+
 **For Project-Based Organizations:**
+
+
 ```javascript
 // Use project identifiers
 sub_tenant_id: "project_alpha"
 sub_tenant_id: "client_acme_corp"
 ```
+
 
 <Info>
 **Naming Convention**: Use consistent prefixes like `user_`, `dept_`, or `project_` to make the purpose of each sub-tenant clear. Avoid special characters and keep names descriptive but concise.
@@ -164,6 +178,7 @@ Understanding the difference between `searchable` and `filterable` is crucial fo
 - **Use When**: You want users to find documents by asking questions about these fields
 - **Example**: `"Which documents are from the Engineering department?"`
 
+
 ```json
 {
   "key": "department", 
@@ -173,11 +188,13 @@ Understanding the difference between `searchable` and `filterable` is crucial fo
 }
 ```
 
+
 **2. Filterable Fields**
 - **Purpose**: Fields that can be used for **precise filtering** and **exact matching**
 - **Behavior**: Content is indexed for fast exact-match filtering operations
 - **Use When**: You want to narrow down results with precise criteria
 - **Example**: `department = "Engineering" AND status = "active"`
+
 
 ```json
 {
@@ -188,7 +205,10 @@ Understanding the difference between `searchable` and `filterable` is crucial fo
 }
 ```
 
+
 **3. Combined Usage**
+
+
 ```json
 {
   "key": "compliance_framework", 
@@ -198,9 +218,12 @@ Understanding the difference between `searchable` and `filterable` is crucial fo
 }
 ```
 
+
 ## Comprehensive Examples
 
 **Enterprise Setup - Multi-Department Organization**
+
+
 ```json
 [
   {
@@ -248,7 +271,10 @@ Understanding the difference between `searchable` and `filterable` is crucial fo
 ]
 ```
 
+
 **Legal Firm Setup - Client and Case Management**
+
+
 ```json
 [
   {
@@ -290,7 +316,10 @@ Understanding the difference between `searchable` and `filterable` is crucial fo
 ]
 ```
 
+
 **Engineering Team Setup - Project and Component Management**
+
+
 ```json
 [
   {
@@ -332,7 +361,10 @@ Understanding the difference between `searchable` and `filterable` is crucial fo
 ]
 ```
 
+
 **Simple Setup - Basic Organization**
+
+
 ```json
 [
   {
@@ -355,6 +387,7 @@ Understanding the difference between `searchable` and `filterable` is crucial fo
   }
 ]
 ```
+
 
 ## Metadata Best Practices
 
@@ -390,6 +423,7 @@ Once you've defined your tenant metadata schema, here's how it works with your d
 ### Document Upload with Metadata
 When you upload documents, you'll provide both tenant and document metadata:
 
+
 ```json
 {
   "tenant_metadata": {
@@ -411,30 +445,43 @@ When you upload documents, you'll provide both tenant and document metadata:
 }
 ```
 
+
 ### Query Examples
 
 With the metadata schema defined above, users can perform sophisticated queries:
 
 #### Semantic Search (Searchable Fields)
+
 ```
+
 "Find all engineering documents about security compliance"
 ```
+
+
 - Searches through `department` (searchable: true)
 - Searches through `compliance_framework` (searchable: true)
 - Searches through document content and titles
 
 #### Precise Filtering (Filterable Fields)
+
 ```
+
 department = "Engineering" AND data_classification = "internal" AND is_confidential = false
 ```
+
+
 - Exact match on `department` (filterable: true)
 - Exact match on `data_classification` (filterable: true)
 - Exact match on `is_confidential` (filterable: true)
 
 #### Combined Queries
+
 ```
+
 "Show me all SOC2 compliance documents from the Product business unit"
 ```
+
+
 - Semantic search for "SOC2 compliance" (searchable fields)
 - Precise filter: `business_unit = "Product"` (filterable: true)
 
@@ -479,6 +526,7 @@ All documents in your tenant automatically inherit the tenant metadata schema yo
 
 ## Sample Response
 
+
 ```json
 {
   "status": "success",
@@ -486,6 +534,7 @@ All documents in your tenant automatically inherit the tenant metadata schema yo
   "tenant_id": "B1SlKQ2j2l1aWYLa"
 }
 ```
+
 
 ### Functionality
 - Accepts an optional `tenant_id` via query

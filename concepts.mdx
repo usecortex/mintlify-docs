@@ -5,6 +5,8 @@ description: "Understand the core concepts of using Cortex"
 
 The Cortex SDK is designed to give you the most flexible developer experience for building AI apps and agents. Set up a global memory store for individual users (B2C), or configure organizations as tenants and onboard their users (B2B).
 
+## Core Concepts
+
 ### Tenants
 
 Think of a **tenant** as a completely separate workspace or organization in your Cortex application. It's like having different "companies" or "projects" that can't see each other's data.
@@ -47,7 +49,9 @@ sub_tenant_id: "user_12345"    // User's personal workspace
 sub_tenant_id: "user_67890"    // Another user's workspace
 ```
 
+
 **Best Practice - Use Descriptive Names for B2B Applications**:
+
 
 ```javascript
 // For organizational subdivisions, use descriptive names
@@ -55,6 +59,7 @@ sub_tenant_id: "engineering"   // Engineering department
 sub_tenant_id: "sales"         // Sales team
 sub_tenant_id: "hr"            // Human Resources
 ```
+
 
 ### Knowledge
 

@@ -10,30 +10,39 @@ import TryIt from '/snippets/try-it.mdx'
   <TableOfContents />
 </Panel>
 <TryIt />
+
+## Try It
+
 ### Examples
 
 <Tabs>
   <Tab title="API Request">
+
     ```bash
     curl --location --request POST 'https://api.usecortex.ai/embeddings/create_tenant?tenant_id={TENANT_ID}' \
       --header 'Authorization: Bearer {API_KEY}' \
       --header 'accept: application/json'
     ```
+
   </Tab>
   <Tab title="TypeScript">
+
     ```ts
     const collection = await client.embeddings.createCollection({
       tenant_id: "tenant_1234",
     });
     ```
+
   </Tab>
   <Tab title="Python (Sync)">
+
     ```python
     # Async usage is similar, just use async_client and await
     collection = client.embeddings.create_collection(
         tenant_id="tenant_1234",
     )
     ```
+
   </Tab>
 </Tabs>
 
@@ -47,13 +56,15 @@ Create a tenant dedicated to directly storing and querying embeddings.
 
 ## Sample Response
 
+
 ```json
 {
   "status": "success",
   "message": "Tenant 'embeddings_test' created successfully.",
-  "tenant_id": "embeddings_test",
+  "tenant_id": "embeddings_test"
 }
 ```
+
 
 ## Error Responses
 

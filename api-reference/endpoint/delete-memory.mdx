@@ -10,18 +10,24 @@ import TryIt from '/snippets/try-it.mdx'
   <TableOfContents />
 </Panel>
 <TryIt />
+
+## Try It
+
 ### Examples
 
 <Tabs>
   <Tab title="API Request">
+
     ```bash
     curl -X 'DELETE' \
       'https://api.usecortex.ai/memories/delete-memory?tenant_id=tenant_123&memory_id=memory_123' \
       -H 'accept: application/json'
       --header 'Authorization: Bearer YOUR_API_KEY'
       ```
+
   </Tab>
   <Tab title="TypeScript">
+
     ```ts
     const result = await client.userMemory.deleteUserMemory({
       tenant_id: "tenant_1234",
@@ -29,8 +35,10 @@ import TryIt from '/snippets/try-it.mdx'
       sub_tenant_id: "sub_tenant_4567"
     });
     ```
+
   </Tab>
   <Tab title="Python (Sync)">
+
     ```python
     # Async usage is similar, just use async_client and await
     result = client.user_memory.delete_user_memory(
@@ -39,6 +47,7 @@ import TryIt from '/snippets/try-it.mdx'
         sub_tenant_id="sub_tenant_4567"
     )
     ```
+
   </Tab>
 </Tabs>
 
@@ -97,7 +106,7 @@ The Delete User Memory endpoint allows you to remove specific memories from a us
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `tenant_id` | string | Yes | Primary organizational identifier |
-| `sub_tenant_id` | string | Yes | Secondary organizational identifier |
+| `sub_tenant_id` | string | No | Secondary organizational identifier; if omitted, defaults to the default sub-tenant for the tenant |
 | `memory_id` | string | Yes | Unique identifier of the memory to delete |
 
 ## Error Responses

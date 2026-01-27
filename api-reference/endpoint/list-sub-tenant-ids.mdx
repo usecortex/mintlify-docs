@@ -10,30 +10,39 @@ import TryIt from '/snippets/try-it.mdx'
   <TableOfContents />
 </Panel>
 <TryIt />
+
+## Try It
+
 ### Examples
 
 <Tabs>
   <Tab title="API Request">
+
     ```bash
     curl --request GET \
       --url 'https://api.usecortex.ai/tenant/sub_tenant_ids?tenant_id=tenant_1234' \
       --header 'Authorization: Bearer YOUR_API_KEY'
       ```
+
   </Tab>
   <Tab title="TypeScript">
+
     ```ts
     const subTenants = await client.tenant.getSubTenantIds({
       tenant_id: "tenant_1234"
     });
     ```
+
   </Tab>
   <Tab title="Python (Sync)">
+
     ```python
     # Async usage is similar, just use async_client and await
     sub_tenants = client.tenant.get_sub_tenant_ids(
         tenant_id="tenant_1234"
     )
     ```
+
   </Tab>
 </Tabs>
 
@@ -71,11 +80,14 @@ The endpoint returns a structured response containing:
 
 ## Example Request
 
+
 ```bash
 GET /tenant/sub_tenant_ids?tenant_id=acme_corp
 ```
 
+
 ## Example Response
+
 
 ```json
 {
@@ -94,6 +106,7 @@ GET /tenant/sub_tenant_ids?tenant_id=acme_corp
   "message": "Successfully retrieved sub-tenant IDs for tenant acme_corp"
 }
 ```
+
 
 ## Response Details
 
@@ -129,6 +142,8 @@ The `count` field represents the total number of sub-tenants, including:
 ### **Common Error Scenarios**
 
 **Invalid Tenant ID:**
+
+
 ```json
 {
   "error": "Tenant not found",
@@ -136,7 +151,10 @@ The `count` field represents the total number of sub-tenants, including:
 }
 ```
 
+
 **Authentication Issues:**
+
+
 ```json
 {
   "error": "Unauthorized",
@@ -144,13 +162,17 @@ The `count` field represents the total number of sub-tenants, including:
 }
 ```
 
+
 **Internal Server Error:**
+
+
 ```json
 {
   "error": "Internal server error",
   "message": "Failed to fetch sub-tenant IDs"
 }
 ```
+
 
 <Info>
 **Performance**: This API provides real-time data directly from the underlying data store, ensuring you always get the most current list of sub-tenants.

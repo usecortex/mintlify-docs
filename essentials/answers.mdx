@@ -21,6 +21,7 @@ You can also allow users to explicitly specify how they want answers — for exa
 "I like summaries with bullets, not long paragraphs."
 ```
 
+
 This creates a highly tailored experience where answers feel personalized, not generic.
 
 ---
@@ -40,6 +41,7 @@ This happens automatically when the AI determines a query is too broad, unclear,
 
 Example interaction:
 
+
 ```json
 {
   "question": "Tell me about the contract",
@@ -49,6 +51,7 @@ Example interaction:
   }
 }
 ```
+
 
 You can use these clarification questions in your frontend to **prompt users for more details**, ensuring they get high-quality, relevant answers rather than generic responses. This creates a more conversational experience and significantly improves result accuracy.
 
@@ -65,6 +68,7 @@ When a user asks a question, the answer is generated using documents, web data, 
 - Allows the frontend to show inline citations, source previews, or even highlight regions in original files
 
 Example output:
+
 
 ```json
 {
@@ -87,6 +91,7 @@ Example output:
 }
 ```
 
+
 This keeps responses **auditable, explainable, and trustworthy** — especially useful in enterprise, legal, and compliance settings.
 
 ---
@@ -95,10 +100,12 @@ This keeps responses **auditable, explainable, and trustworthy** — especially 
 
 You can restrict the context used for answering questions by providing `tenant_metadata` and `document_metadata` parameters in upload API calls. This allows you to filter sources by `source_title` or `source_type`.
 
+
 ```json
 "tenant_metadata": {"source_title": "contract.pdf"},
 "document_metadata": {"source_title": "contract.pdf"}
 ```
+
 
 Only sources matching the provided metadata will be used for context.
 
@@ -123,12 +130,14 @@ Use this when you want the AI to help with:
 
 You can toggle this mode using the `search_mode: ["creative"]` parameter in the `/search/qna` API call.
 
+
 ```json
 {
   "question": "Give me 5 fun blog title ideas about data privacy",
   "search_mode": ["creative"]
 }
 ```
+
 
 ---
 

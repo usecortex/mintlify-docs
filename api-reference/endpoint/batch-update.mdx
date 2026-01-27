@@ -9,10 +9,14 @@ import TryIt from '/snippets/try-it.mdx'
   <TableOfContents />
 </Panel>
 <TryIt />
+
+## Try It
+
 ### Examples
 
 <Tabs>
   <Tab title="API Request">
+
     ```bash
     curl --request PATCH \
       --url 'https://api.usecortex.ai/upload/batch_update?tenant_id=tenant_1234&sub_tenant_id=sub_tenant_4567' \
@@ -25,8 +29,10 @@ import TryIt from '/snippets/try-it.mdx'
       --form 'tenant_metadata={}' \
       --form 'document_metadata={}'
       ```
+
   </Tab>
   <Tab title="TypeScript">
+
     ```ts
     import fs from 'fs';
     
@@ -42,8 +48,10 @@ import TryIt from '/snippets/try-it.mdx'
       document_metadata: {}
     });
     ```
+
   </Tab>
   <Tab title="Python (Sync)">
+
     ```python
     # Async usage is similar, just use async_client and await
     with open("updated-doc1.pdf", 'rb') as f1, open("updated-doc2.pdf", 'rb') as f2:
@@ -60,6 +68,7 @@ import TryIt from '/snippets/try-it.mdx'
             document_metadata={}
         )
     ```
+
   </Tab>
 </Tabs>
 

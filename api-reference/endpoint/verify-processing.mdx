@@ -10,18 +10,24 @@ import TryIt from '/snippets/try-it.mdx'
   <TableOfContents />
 </Panel>
 <TryIt />
+
+## Try It
+
 ### Examples
 
 <Tabs>
   <Tab title="API Request">
+
     ```bash
     curl -X 'POST' \
     'https://api.usecortex.ai/ingestion/verify-processing?file_id=file_123' \
     -H 'accept: application/json' \
       --header 'Authorization: Bearer YOUR_API_KEY'
       ```
+
   </Tab>
   <Tab title="TypeScript">
+
     ```ts
     const status = await client.upload.verifyProcessing({
       file_id: "CortexDoc1234",
@@ -29,8 +35,10 @@ import TryIt from '/snippets/try-it.mdx'
       sub_tenant_id: "sub_tenant_4567"
     });
     ```
+
   </Tab>
   <Tab title="Python (Sync)">
+
     ```python
     # Async usage is similar, just use async_client and await
     status = client.upload.verify_processing(
@@ -39,6 +47,7 @@ import TryIt from '/snippets/try-it.mdx'
         sub_tenant_id="sub_tenant_4567"
     )
     ```
+
   </Tab>
 </Tabs>
 

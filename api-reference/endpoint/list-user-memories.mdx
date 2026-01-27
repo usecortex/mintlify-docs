@@ -10,25 +10,33 @@ import TryIt from '/snippets/try-it.mdx'
   <TableOfContents />
 </Panel>
 <TryIt />
+
+## Try It
+
 ### Examples
 
 <Tabs>
   <Tab title="API Request">
+
     ```bash
     curl --request GET \
       --url 'https://api.usecortex.ai/user_memory/list_user_memories?tenant_id=tenant_1234&sub_tenant_id=sub_tenant_4567' \
       --header 'Authorization: Bearer YOUR_API_KEY'
       ```
+
   </Tab>
   <Tab title="TypeScript">
+
     ```ts
     const memories = await client.userMemory.listUserMemories({
       tenant_id: "tenant_1234",
       sub_tenant_id: "sub_tenant_4567"
     });
     ```
+
   </Tab>
   <Tab title="Python (Sync)">
+
     ```python
     # Async usage is similar, just use async_client and await
     memories = client.user_memory.list_user_memories(
@@ -36,6 +44,7 @@ import TryIt from '/snippets/try-it.mdx'
         sub_tenant_id="sub_tenant_4567"
     )
     ```
+
   </Tab>
 </Tabs>
 
@@ -61,11 +70,13 @@ Retrieve all stored memories for a specific user within a tenant/sub-tenant comb
 
 ### With Optional Sub-tenant
 
+
 ```bash
 curl -X GET "https://api.usecortex.ai/user_memory/list_user_memories?tenant_id=company_123" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json"
 ```
+
 
 <Note>
 **Sub-tenant Default**: If no sub_tenant_id is provided, the system uses DEFAULT sub-tenant which was created while creating the tenant.

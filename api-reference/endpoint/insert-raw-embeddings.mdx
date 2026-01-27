@@ -10,6 +10,9 @@ import TryIt from '/snippets/try-it.mdx'
   <TableOfContents />
 </Panel>
 <TryIt />
+
+## Try It
+
 ### Examples
 
 <Tabs>
@@ -43,8 +46,10 @@ import TryIt from '/snippets/try-it.mdx'
   "upsert": false
 }'
       ```
+
   </Tab>
   <Tab title="TypeScript">
+
     ```ts
     const result = await client.upload.uploadEmbeddings({
       tenant_id: "tenant_1234",
@@ -56,8 +61,10 @@ import TryIt from '/snippets/try-it.mdx'
       file_id: "CortexDoc1234"
     });
     ```
+
   </Tab>
   <Tab title="Python (Sync)">
+
     ```python
     # Async usage is similar, just use async_client and await
     result = client.upload.upload_embeddings(
@@ -70,6 +77,7 @@ import TryIt from '/snippets/try-it.mdx'
         file_id="CortexDoc1234"
     )
     ```
+
   </Tab>
 </Tabs>
 
@@ -145,6 +153,8 @@ When you upload embeddings with a `file_id` that already exists in your tenant:
 </Warning>
 
 **Example Success Response for Duplicate File ID:**
+
+
 ```json
 {
   "message": "Embeddings uploaded successfully. Existing embeddings with file_id 'emb_123456' have been overwritten.",

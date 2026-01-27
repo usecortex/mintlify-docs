@@ -10,10 +10,14 @@ import TryIt from '/snippets/try-it.mdx'
   <TableOfContents />
 </Panel>
 <TryIt />
+
+## Try It
+
 ### Examples
 
 <Tabs>
   <Tab title="API Request">
+
     ```bash
    curl -X 'POST' \
   'https://api.usecortex.ai/fetch/fetch-source-content' \
@@ -27,8 +31,10 @@ import TryIt from '/snippets/try-it.mdx'
   "expiry_seconds": 3600
 }'
       ```
+
   </Tab>
   <Tab title="TypeScript">
+
     ```ts
     const content = await client.fetch.fetchContent({
       file_id: "CortexDoc1234",
@@ -38,8 +44,10 @@ import TryIt from '/snippets/try-it.mdx'
       sub_tenant_id: "sub_tenant_4567"
     });
     ```
+
   </Tab>
   <Tab title="Python (Sync)">
+
     ```python
     # Async usage is similar, just use async_client and await
     content = client.fetch.fetch_content(
@@ -50,6 +58,7 @@ import TryIt from '/snippets/try-it.mdx'
         sub_tenant_id="sub_tenant_4567"
     )
     ```
+
   </Tab>
 </Tabs>
 

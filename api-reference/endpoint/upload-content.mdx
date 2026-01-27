@@ -18,6 +18,7 @@ import TryIt from '/snippets/try-it.mdx'
 ## Migration Guide
 
 ### Old Request Format
+
 ```bash
 curl -X 'POST' \
   'https://api.usecortex.ai/ingestion/upload-content' \
@@ -37,7 +38,10 @@ curl -X 'POST' \
 }'
 ```
 
+
 ### New Request Format (Recommended)
+
+
 ```bash
 curl -X 'POST' \
   'https://api.usecortex.ai/memories/add_memory' \
@@ -55,6 +59,7 @@ curl -X 'POST' \
   "upsert": true
 }'
 ```
+
 
 ### Key Changes
 
@@ -86,6 +91,7 @@ See the [Add Memory documentation](/api-reference/endpoint/add-memories) for ful
 
 <Tabs>
   <Tab title="API Request">
+
     ```bash
     curl -X 'POST' \
   'https://api.usecortex.ai/ingestion/upload-content' \
@@ -109,8 +115,10 @@ See the [Add Memory documentation](/api-reference/endpoint/add-memories) for ful
   "upsert": true
 }'
     ```
+
   </Tab>
   <Tab title="TypeScript">
+
     ```ts
     const result = await client.upload.uploadText({
       tenant_id: "tenant_1234",
@@ -123,8 +131,10 @@ See the [Add Memory documentation](/api-reference/endpoint/add-memories) for ful
       }
     });
     ```
+
   </Tab>
   <Tab title="Python (Sync)">
+
     ```python
     result = client.upload.upload_text(
         tenant_id="tenant_1234",
@@ -135,10 +145,26 @@ See the [Add Memory documentation](/api-reference/endpoint/add-memories) for ful
         document_metadata={}
     )
     ```
+
   </Tab>
 </Tabs>
 
 Upload text content directly to your tenant's knowledge base. The text will be processed, chunked, and indexed for search and retrieval.
+
+### When a `file_id` already exists: the `upsert` parameter (optional)
+
+The `upsert` parameter (boolean, default `true`) controls what happens when you upload content whose `file_id` already exists in your tenant:
+
+| Value | Behavior |
+|-------|----------|
+| `true` | Replace the existing content with the new one |
+| `false` | Fail the request; do not overwrite |
+
+When `upsert` is `true` (the default), uploading again with the same `file_id` **completely replaces** the existing content: the new content is processed (validation, chunking, embedding generation, indexing), previous search results and embeddings for that `file_id` are replaced, and uploading the same content with the same `file_id` multiple times is safe and idempotent.
+
+<Warning>
+**Important**: When overwriting existing content, all previous chunks, embeddings, and search indexes associated with that `file_id` are permanently removed and replaced. This cannot be undone.
+</Warning>
 
 ### Text Processing Pipeline
 

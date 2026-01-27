@@ -10,10 +10,14 @@ import TryIt from '/snippets/try-it.mdx'
   <TableOfContents />
 </Panel>
 <TryIt />
+
+## Try It
+
 ### Examples
 
 <Tabs>
   <Tab title="API Request">
+
     ```bash
     curl --request DELETE \
       --url https://api.usecortex.ai/delete/delete-sources \
@@ -23,8 +27,10 @@ import TryIt from '/snippets/try-it.mdx'
       "sub_tenant_id": ""
     }'
       ```
+
   </Tab>
   <Tab title="TypeScript">
+
     ```ts
     const result = await client.upload.deleteSource({
       tenant_id: "tenant_1234",
@@ -32,8 +38,10 @@ import TryIt from '/snippets/try-it.mdx'
       source_ids: ["doc_123", "doc_456"]
     });
     ```
+
   </Tab>
   <Tab title="Python (Sync)">
+
     ```python
     # Async usage is similar, just use async_client and await
     result = client.upload.delete_source(
@@ -42,6 +50,7 @@ import TryIt from '/snippets/try-it.mdx'
         source_ids=["doc_123", "doc_456"]
     )
     ```
+
   </Tab>
 </Tabs>
 

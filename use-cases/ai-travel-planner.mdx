@@ -13,7 +13,7 @@ This guide demonstrates how to build a revolutionary AI-powered travel planning 
 
 Traditional travel platforms force users to think like search engines:
 
-- **Keyword matching**: "Hotels in Paris" or "Flights to Tokyo"
+- **Keyword matching**: “Hotels in Paris” or “Flights to Tokyo”
 - **Filter-heavy interfaces**: Complex combinations of dates, prices, and amenities
 - **Manual research**: Hours spent comparing options across multiple sites
 - **Generic recommendations**: One-size-fits-all suggestions that ignore personal preferences
@@ -23,11 +23,11 @@ Traditional travel platforms force users to think like search engines:
 
 With Cortex, travelers can plan naturally and get personalized recommendations:
 
-- **"Plan a 5-day romantic trip to Italy for my anniversary in September with a budget of \$3000"**
-- **"Find me a family-friendly resort in Bali with a kids club and water sports activities"**
-- **"I want to experience authentic local cuisine in Bangkok - suggest restaurants and food tours"**
-- **"Plan a solo backpacking trip through Southeast Asia for 3 weeks, focusing on cultural experiences"**
-- **"Find pet-friendly accommodations in San Francisco with easy access to dog parks"**
+- **“Plan a 5-day romantic trip to Italy for my anniversary in September with a budget of \$3000”**
+- **“Find me a family-friendly resort in Bali with a kids club and water sports activities”**
+- **“I want to experience authentic local cuisine in Bangkok - suggest restaurants and food tours”**
+- **“Plan a solo backpacking trip through Southeast Asia for 3 weeks, focusing on cultural experiences”**
+- **“Find pet-friendly accommodations in San Francisco with easy access to dog parks”**
 
 ## Architecture Overview
 
@@ -48,11 +48,13 @@ graph TD
     C --> F
 ```
 
+
 ## Step 1: Travel Data Ingestion Strategy
 
 ### 1.1 Hotel and Accommodation Data
 
 Start by uploading comprehensive hotel and accommodation data using Cortex's batch upload capabilities:
+
 
 ```javascript
 const uploadHotelData = async (hotels) => {
@@ -84,9 +86,11 @@ const uploadHotelData = async (hotels) => {
 };
 ```
 
+
 ### 1.2 Flight and Transportation Data
 
 Upload flight schedules, routes, and transportation options:
+
 
 ```javascript
 const uploadFlightData = async (flights) => {
@@ -118,9 +122,11 @@ const uploadFlightData = async (flights) => {
 };
 ```
 
+
 ### 1.3 Restaurant and Dining Data
 
 Upload restaurant information with cuisine types and reviews:
+
 
 ```javascript
 const uploadRestaurantData = async (restaurants) => {
@@ -152,9 +158,11 @@ const uploadRestaurantData = async (restaurants) => {
 };
 ```
 
+
 ### 1.4 Activity and Attraction Data
 
 Upload tourist attractions, activities, and experiences:
+
 
 ```javascript
 const uploadActivityData = async (activities) => {
@@ -186,11 +194,13 @@ const uploadActivityData = async (activities) => {
 };
 ```
 
+
 ## Step 2: Building the AI Travel Assistant
 
 ### 2.1 Natural Language Query Processing
 
 Create a travel query handler that understands complex travel requests:
+
 
 ```javascript
 class TravelAssistant {
@@ -227,9 +237,11 @@ class TravelAssistant {
 }
 ```
 
+
 ### 2.2 Personalized Recommendation Engine
 
 Implement AI memories to remember user preferences and past travel patterns:
+
 
 ```javascript
 class PersonalizationEngine {
@@ -262,11 +274,13 @@ class PersonalizationEngine {
 }
 ```
 
+
 ## Step 3: Advanced Search Capabilities
 
 ### 3.1 Semantic Search for Travel Experiences
 
 Implement semantic search to understand complex travel desires:
+
 
 ```javascript
 const searchTravelExperiences = async (query, filters = {}) => {
@@ -289,9 +303,11 @@ const searchTravelExperiences = async (query, filters = {}) => {
 };
 ```
 
+
 ### 3.2 Multi-Modal Travel Search
 
 Support different types of travel queries:
+
 
 ```javascript
 const handleTravelQuery = async (query, context) => {
@@ -315,11 +331,13 @@ const handleTravelQuery = async (query, context) => {
 };
 ```
 
+
 ## Step 4: Real-World Implementation Examples
 
 ### 4.1 Family Vacation Planning
 
-**User Query**: _"Plan a 7-day family vacation to Orlando with kids aged 8 and 12, budget \$4000, we love theme parks and want kid-friendly restaurants"_
+**User Query**: _“Plan a 7-day family vacation to Orlando with kids aged 8 and 12, budget \$4000, we love theme parks and want kid-friendly restaurants”_
+
 
 ```javascript
 const planFamilyVacation = async (query, userProfile) => {
@@ -350,9 +368,11 @@ const planFamilyVacation = async (query, userProfile) => {
 };
 ```
 
+
 ### 4.2 Business Travel Optimization
 
-**User Query**: _"I need to travel to London for business next week, find hotels near financial district with good WiFi and meeting rooms"_
+**User Query**: _“I need to travel to London for business next week, find hotels near financial district with good WiFi and meeting rooms”_
+
 
 ```javascript
 const planBusinessTravel = async (query, userProfile) => {
@@ -373,9 +393,11 @@ const planBusinessTravel = async (query, userProfile) => {
 };
 ```
 
+
 ### 4.3 Adventure Travel Planning
 
-**User Query**: _"I want to go trekking in Nepal for 2 weeks, suggest routes for intermediate hikers with cultural experiences"_
+**User Query**: _“I want to go trekking in Nepal for 2 weeks, suggest routes for intermediate hikers with cultural experiences”_
+
 
 ```javascript
 const planAdventureTravel = async (query, userProfile) => {
@@ -398,9 +420,11 @@ const planAdventureTravel = async (query, userProfile) => {
 };
 ```
 
+
 ## Step 5: Contextual Recommendations
 
 ### 5.1 Weather-Based Suggestions
+
 
 ```javascript
 const getWeatherBasedRecommendations = async (destination, travelDate) => {
@@ -419,7 +443,9 @@ const getWeatherBasedRecommendations = async (destination, travelDate) => {
 };
 ```
 
+
 ### 5.2 Cultural Event Integration
+
 
 ```javascript
 const getCulturalEventRecommendations = async (destination, travelDate) => {
@@ -438,9 +464,11 @@ const getCulturalEventRecommendations = async (destination, travelDate) => {
 };
 ```
 
+
 ## Step 6: Learning from User Behavior
 
 ### 6.1 Booking Pattern Analysis
+
 
 ```javascript
 const analyzeBookingPatterns = async (userId, bookingData) => {
@@ -456,7 +484,9 @@ const analyzeBookingPatterns = async (userId, bookingData) => {
 };
 ```
 
+
 ### 6.2 Search Refinement
+
 
 ```javascript
 const refineSearch = async (originalQuery, userFeedback, sessionId) => {
@@ -472,9 +502,11 @@ const refineSearch = async (originalQuery, userFeedback, sessionId) => {
 };
 ```
 
+
 ## Advanced Features
 
 ### Multi-Language Support
+
 
 ```javascript
 const handleMultiLanguageQuery = async (query, language, destination) => {
@@ -492,7 +524,9 @@ const handleMultiLanguageQuery = async (query, language, destination) => {
 };
 ```
 
+
 ### Real-Time Price Monitoring
+
 
 ```javascript
 const monitorPriceChanges = async (travelPlan) => {
@@ -507,11 +541,12 @@ const monitorPriceChanges = async (travelPlan) => {
 };
 ```
 
+
 ## Example User Interactions
 
 ### Scenario 1: Spontaneous Weekend Trip
 
-**User**: _"I want to go somewhere warm this weekend, budget \$800, flying from New York"_
+**User**: _“I want to go somewhere warm this weekend, budget \$800, flying from New York”_
 
 **AI Response**: Based on your budget and preference for warm weather, I recommend:
 
@@ -521,7 +556,7 @@ const monitorPriceChanges = async (travelPlan) => {
 
 ### Scenario 2: Anniversary Celebration
 
-**User**: _"Plan a romantic anniversary trip to Paris for 5 days in May, we love art museums and fine dining"_
+**User**: _“Plan a romantic anniversary trip to Paris for 5 days in May, we love art museums and fine dining”_
 
 **AI Response**: For your romantic Paris anniversary:
 
@@ -534,7 +569,7 @@ const monitorPriceChanges = async (travelPlan) => {
 
 ### Scenario 3: Solo Adventure Planning
 
-**User**: _"I'm planning a solo backpacking trip through Southeast Asia for a month, focusing on cultural immersion and budget-friendly options"_
+**User**: _“I'm planning a solo backpacking trip through Southeast Asia for a month, focusing on cultural immersion and budget-friendly options”_
 
 **AI Response**: Your month-long Southeast Asia adventure:
 
@@ -547,6 +582,7 @@ const monitorPriceChanges = async (travelPlan) => {
 ## Integration with Booking Systems
 
 ### Real-Time Availability Checking
+
 
 ```javascript
 const checkAvailability = async (hotelId, checkIn, checkOut) => {
@@ -566,7 +602,9 @@ const checkAvailability = async (hotelId, checkIn, checkOut) => {
 };
 ```
 
+
 ### Dynamic Pricing Integration
+
 
 ```javascript
 const getDynamicPricing = async (searchResults, userProfile) => {
@@ -584,6 +622,7 @@ const getDynamicPricing = async (searchResults, userProfile) => {
   return response;
 };
 ```
+
 
 ## Conclusion
 

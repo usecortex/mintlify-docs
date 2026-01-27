@@ -11,7 +11,10 @@ import TryIt from '/snippets/try-it.mdx'
 </Panel>
 <TryIt />
 
+## Try It
+
 ### Sample Request
+
 ```bash
 curl -X 'POST' \
   'https://api.usecortex.ai/memories/add_memory' \
@@ -143,6 +146,7 @@ curl -X 'POST' \
       "upsert": true
     }'
     ```
+
   </Tab>
   <Tab title="TypeScript">
     ```ts expandable
@@ -193,6 +197,7 @@ curl -X 'POST' \
       upsert: true
     });
     ```
+
   </Tab>
   <Tab title="Python (Sync)">
     ```python expandable
@@ -247,6 +252,7 @@ curl -X 'POST' \
         upsert=True
     )
     ```
+
   </Tab>
 </Tabs>
 
@@ -261,6 +267,7 @@ The API supports three types of content input:
 ### 1. Raw Text (`text`)
 Plain text content that will be chunked, embedded, and indexed for retrieval.
 
+
 ```json
 {
   "text": "Your text content here",
@@ -268,8 +275,10 @@ Plain text content that will be chunked, embedded, and indexed for retrieval.
 }
 ```
 
+
 ### 2. Markdown Content (`text` + `is_markdown`)
 Markdown-formatted documents that preserve structure during processing.
+
 
 ```json
 {
@@ -279,8 +288,10 @@ Markdown-formatted documents that preserve structure during processing.
 }
 ```
 
+
 ### 3. User-Assistant Pairs (`user_assistant_pairs`)
 Conversation exchanges between users and AI assistants, ideal for storing chat history and extracting user preferences.
+
 
 ```json
 {
@@ -290,6 +301,7 @@ Conversation exchanges between users and AI assistants, ideal for storing chat h
   "infer": true
 }
 ```
+
 
 ## Key Parameters
 
@@ -355,6 +367,7 @@ Each item in the `memories` array can have the following fields:
 
 ## Response Format
 
+
 ```json
 {
   "success": true,
@@ -373,15 +386,18 @@ Each item in the `memories` array can have the following fields:
 }
 ```
 
+
 ## Processing Status
 
 After submitting content, use the [Verify Processing](/api-reference/endpoint/verify-processing) endpoint to check status:
+
 
 ```bash
 curl -X POST \
   'https://api.usecortex.ai/ingestion/verify-processing?file_id=<source_id>&tenant_id=<tenant_id>' \
   -H 'Authorization: Bearer <token>'
 ```
+
 
 ### Status Values
 

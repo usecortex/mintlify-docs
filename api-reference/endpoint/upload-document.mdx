@@ -10,10 +10,14 @@ import TryIt from '/snippets/try-it.mdx'
   <TableOfContents />
 </Panel>
 <TryIt />
+
+## Try It
+
 ### Examples
 
 <Tabs>
   <Tab title="API Request">
+
     ```bash
     curl -X POST https://api.usecortex.ai/upload-document \
   -F "tenant_id=tenant_123" \
@@ -35,35 +39,68 @@ import TryIt from '/snippets/try-it.mdx'
     }
   ]'
     ```
+
   </Tab>
   <Tab title="TypeScript">
+
     ```ts
     import fs from 'fs';
-    
+
     const uploadResult = await client.upload.uploadDocument({
-      file: fs.readFileSync("example-file.pdf"),
-      tenant_id: "tenant_1234",
-      sub_tenant_id: "sub_tenant_4567",
-      file_id: "doc_123456",
-      tenant_metadata: {},
-      document_metadata: {}
+      files: [
+        fs.readFileSync("a.pdf"),
+        fs.readFileSync("b.pdf")
+      ],
+      tenant_id: "tenant_123",
+      upsert: true,
+      file_metadata: [
+        {
+          file_id: "doc_a",
+          tenant_metadata: { dept: "sales" },
+          document_metadata: { author: "Alice" },
+          relations: false
+        },
+        {
+          file_id: "doc_b",
+          tenant_metadata: { dept: "marketing" },
+          document_metadata: { author: "Bob" },
+          relations: true
+        }
+      ]
     });
     ```
+
   </Tab>
   <Tab title="Python (Sync)">
+
     ```python
     # Async usage is similar, just use async_client and await
-    with open("example-file.pdf", 'rb') as file_obj:
-        file_data = ("example-file.pdf", file_obj)
+    with open("a.pdf", 'rb') as f1, open("b.pdf", 'rb') as f2:
+        files = [
+            ("a.pdf", f1),
+            ("b.pdf", f2)
+        ]
         upload_result = client.upload.upload_document(
-            tenant_id="tenant_1234",
-            sub_tenant_id="sub_tenant_4567",
-            file=file_data,
-            file_id="doc_123456",
-            tenant_metadata={},
-            document_metadata={}
+            tenant_id="tenant_123",
+            files=files,
+            upsert=True,
+            file_metadata=[
+                {
+                    "file_id": "doc_a",
+                    "tenant_metadata": {"dept": "sales"},
+                    "document_metadata": {"author": "Alice"},
+                    "relations": False
+                },
+                {
+                    "file_id": "doc_b",
+                    "tenant_metadata": {"dept": "marketing"},
+                    "document_metadata": {"author": "Bob"},
+                    "relations": True
+                }
+            ]
         )
     ```
+
   </Tab>
 </Tabs>
 
@@ -78,6 +115,8 @@ When uploading multiple files, you can provide metadata for each file using the 
 The `file_metadata` parameter accepts a JSON array where each object corresponds to one of the uploaded files. The order of metadata objects should match the order of files in the `files` parameter.
 
 **Structure:**
+
+
 ```json
 [
   {
@@ -88,6 +127,7 @@ The `file_metadata` parameter accepts a JSON array where each object corresponds
   }
 ]
 ```
+
 
 ### Metadata Fields
 
@@ -100,6 +140,7 @@ The `file_metadata` parameter accepts a JSON array where each object corresponds
 - **Description**: Key-value pairs that represent tenant-level metadata. This metadata is shared across all documents within the tenant and is useful for organization-wide filtering and categorization.
 - **Use Case**: Store department information, project tags, organizational units, or any tenant-scoped attributes that help organize and filter documents.
 - **Example**: 
+
   ```json
   {
     "dept": "sales",
@@ -107,12 +148,14 @@ The `file_metadata` parameter accepts a JSON array where each object corresponds
     "region": "us-west"
   }
   ```
+
 - **Note**: This metadata is indexed and can be used for filtering in search queries.
 
 #### `document_metadata` (object, optional)
 - **Description**: Key-value pairs that represent document-specific metadata. This metadata is unique to each document and provides context about the document itself.
 - **Use Case**: Store document-specific information like author, creation date, document type, version, or any attributes that describe the individual document.
 - **Example**: 
+
   ```json
   {
     "author": "Alice",
@@ -121,6 +164,7 @@ The `file_metadata` parameter accepts a JSON array where each object corresponds
     "version": "1.0"
   }
   ```
+
 - **Note**: This metadata is indexed and can be used for filtering in search queries.
 
 #### `relations` (boolean, optional)
@@ -198,17 +242,19 @@ Our system automatically handles:
 > 1. **First Priority**: If you provide a `file_id` in the `file_metadata`
 > 3. **Auto-Generation**: If neither source provides a `file_id`, the system will automatically generate a unique identifier
 
-### **Duplicate File ID Behavior**
+### When a `file_id` already exists: the `upsert` parameter (optional)
 
-When you upload a document with a `file_id` that already exists in your tenant:
+The `upsert` parameter (boolean, default `true`) controls what happens when you upload a document whose `file_id` already exists in your tenant:
 
-- **Overwrite Behavior**: The existing document with the same `file_id` will be **completely replaced** with the new document
-- **Processing**: The new document will go through the full processing pipeline (content extraction, chunking, embedding generation, indexing)
-- **Search Results**: Previous search results and embeddings from the old document will be replaced with the new document's content
-- **Idempotency**: Uploading the same document with the same `file_id` multiple times is safe and will result in the same final state
+| Value | Behavior |
+|-------|----------|
+| `true` | Replace the existing document with the new one |
+| `false` | Fail the request; do not overwrite |
+
+When `upsert` is `true` (the default), uploading again with the same `file_id` **completely replaces** the existing document: the new file is processed (content extraction, chunking, embedding generation, indexing), previous search results and embeddings for that `file_id` are replaced, and uploading the same document with the same `file_id` multiple times is safe and idempotent.
 
 <Warning>
-**Important**: When overwriting an existing document, all previous chunks, embeddings, and search indexes associated with that `file_id` will be permanently removed and replaced. This action cannot be undone.
+**Important**: When overwriting an existing document, all previous chunks, embeddings, and search indexes associated with that `file_id` are permanently removed and replaced. This cannot be undone.
 </Warning>
 
 ## Processing Status & Monitoring
@@ -217,6 +263,8 @@ After uploading, you can monitor your document's processing status:
 
 ### **Immediate Response**
 Upon successful upload, you'll receive:
+
+
 ```json
 {
   "filename": "file_abc.pdf",
@@ -224,6 +272,7 @@ Upon successful upload, you'll receive:
   "status": "queued"
 }
 ```
+
 
 ### **Processing States**
 Your document will progress through these states:

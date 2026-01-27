@@ -31,11 +31,13 @@ Install both Composio and the necessary HTTP client for Cortex:
 pip install composio-core requests
 ```
 
+
 ## Step 2: Set Up Authentication
 
 ### Composio Authentication
 
 First, set up your Composio API key:
+
 
 ```python
 import os
@@ -48,9 +50,11 @@ os.environ["COMPOSIO_API_KEY"] = "your_composio_api_key"
 composio = Composio()
 ```
 
+
 ### Cortex Configuration
 
 Configure your Cortex API settings:
+
 
 ```python
 import requests
@@ -65,11 +69,13 @@ headers = {
 }
 ```
 
+
 ## Step 3: Connect to Your Apps
 
 ### Authorize App Connections
 
 Connect to your desired applications using Composio's authorization flow:
+
 
 ```python
 def connect_to_apps(user_id: str):
@@ -109,11 +115,13 @@ user_id = "user@yourcompany.com"
 connections = connect_to_apps(user_id)
 ```
 
+
 ## Step 4: Extract Data from Apps
 
 ### Get Available Tools
 
 Retrieve the tools for your connected apps:
+
 
 ```python
 def get_available_tools(user_id: str, app_names: list):
@@ -138,9 +146,11 @@ app_names = ["googledrive", "slack", "notion"]
 available_tools = get_available_tools(user_id, app_names)
 ```
 
+
 ### Extract Data from Each App
 
 #### Google Drive Integration
+
 
 ```python
 def extract_google_drive_data(user_id: str):
@@ -190,7 +200,9 @@ google_drive_data = extract_google_drive_data(user_id)
 print(f"Extracted {len(google_drive_data)} files from Google Drive")
 ```
 
+
 #### Slack Integration
+
 
 ```python
 def extract_slack_data(user_id: str):
@@ -243,7 +255,9 @@ slack_data = extract_slack_data(user_id)
 print(f"Extracted {len(slack_data)} messages from Slack")
 ```
 
+
 #### Notion Integration
+
 
 ```python
 def extract_notion_data(user_id: str):
@@ -300,11 +314,13 @@ notion_data = extract_notion_data(user_id)
 print(f"Extracted {len(notion_data)} pages from Notion")
 ```
 
+
 ## Step 5: Store Data in Cortex
 
 ### Batch Upload to Cortex
 
 Use Cortex's app sources upload endpoint to efficiently store all your extracted data:
+
 
 ```python
 def upload_to_cortex(data_sources: list, source_type: str):
@@ -378,9 +394,11 @@ total_uploaded += upload_to_cortex(notion_data, "notion")
 print(f"Successfully uploaded {total_uploaded} items to Cortex!")
 ```
 
+
 ### Verify Processing
 
 Check if your uploaded data is ready for querying:
+
 
 ```python
 def verify_processing():
@@ -413,9 +431,11 @@ if verify_processing():
     print("Data is ready for querying!")
 ```
 
+
 ## Step 6: Query Your Integrated Data
 
 Now you can query across all your connected apps using Cortex's Q&A endpoint:
+
 
 ```python
 def query_integrated_data(question: str, session_id: str = "integration_session"):
@@ -472,11 +492,13 @@ for query in example_queries:
     print("-" * 80)
 ```
 
+
 ## Advanced Configuration
 
 ### Filtering by Source
 
 You can query specific sources using metadata filters:
+
 
 ```python
 def query_specific_source(question: str, source_type: str):
@@ -502,9 +524,11 @@ def query_specific_source(question: str, source_type: str):
 slack_result = query_specific_source("What were the latest team updates?", "slack")
 ```
 
+
 ### Setting Up Automated Sync
 
 For keeping your data fresh, you can set up periodic sync:
+
 
 ```python
 import schedule
@@ -536,6 +560,7 @@ schedule.every(6).hours.do(sync_all_apps)
 #     time.sleep(60)
 ```
 
+
 ## Best Practices
 
 ### Performance Optimization
@@ -553,6 +578,7 @@ schedule.every(6).hours.do(sync_all_apps)
 4. **Encryption**: Ensure data is encrypted in transit and at rest
 
 ### Monitoring and Maintenance
+
 
 ```python
 def get_sync_status():
@@ -586,6 +612,7 @@ def get_sync_status():
 sync_status = get_sync_status()
 ```
 
+
 ## Troubleshooting
 
 ### Common Issues
@@ -596,6 +623,7 @@ sync_status = get_sync_status()
 4. **Memory Usage**: Process large datasets in smaller chunks
 
 ### Error Handling
+
 
 ```python
 def robust_extraction(extraction_func, app_name: str, max_retries: int = 3):
@@ -615,6 +643,7 @@ def robust_extraction(extraction_func, app_name: str, max_retries: int = 3):
 # Use robust extraction
 google_drive_data = robust_extraction(extract_google_drive_data, "Google Drive")
 ```
+
 
 ## Conclusion
 

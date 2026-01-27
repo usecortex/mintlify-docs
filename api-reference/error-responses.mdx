@@ -19,12 +19,15 @@ All error responses follow this consistent structure:
 }
 ```
 
+
 ## HTTP Status Codes
 
 ### 400 Bad Request
 **When it occurs**: Invalid input parameters, malformed requests, or validation failures.
 
 **Example Response**:
+
+
 ```json
 {
   "detail": {
@@ -34,6 +37,7 @@ All error responses follow this consistent structure:
   }
 }
 ```
+
 
 **Common scenarios**:
 - Missing required parameters
@@ -46,6 +50,8 @@ All error responses follow this consistent structure:
 **When it occurs**: Invalid or missing API key, authentication required.
 
 **Example Response**:
+
+
 ```json
 {
   "detail": {
@@ -55,6 +61,7 @@ All error responses follow this consistent structure:
   }
 }
 ```
+
 
 **Common scenarios**:
 - Missing API key in headers
@@ -66,6 +73,8 @@ All error responses follow this consistent structure:
 **When it occurs**: Valid authentication but insufficient permissions for the requested resource.
 
 **Example Response**:
+
+
 ```json
 {
   "detail": {
@@ -76,6 +85,7 @@ All error responses follow this consistent structure:
 }
 ```
 
+
 **Common scenarios**:
 - API key lacks required permissions
 - Tenant access restrictions
@@ -85,6 +95,8 @@ All error responses follow this consistent structure:
 **When it occurs**: Requested resource does not exist.
 
 **Example Response**:
+
+
 ```json
 {
   "detail": {
@@ -94,6 +106,7 @@ All error responses follow this consistent structure:
   }
 }
 ```
+
 
 **Common scenarios**:
 - Tenant does not exist
@@ -106,6 +119,8 @@ All error responses follow this consistent structure:
 **When it occurs**: Resource already exists or conflicts with existing data.
 
 **Example Response**:
+
+
 ```json
 {
   "detail": {
@@ -116,6 +131,7 @@ All error responses follow this consistent structure:
 }
 ```
 
+
 **Common scenarios**:
 - Tenant ID already exists
 - Duplicate file uploads
@@ -125,6 +141,8 @@ All error responses follow this consistent structure:
 **When it occurs**: Request is well-formed but contains semantic errors.
 
 **Example Response**:
+
+
 ```json
 {
   "detail": {
@@ -134,6 +152,7 @@ All error responses follow this consistent structure:
   }
 }
 ```
+
 
 **Common scenarios**:
 - Invalid metadata schema
@@ -145,6 +164,8 @@ All error responses follow this consistent structure:
 **When it occurs**: Unexpected server-side error.
 
 **Example Response**:
+
+
 ```json
 {
   "detail": {
@@ -154,6 +175,7 @@ All error responses follow this consistent structure:
   }
 }
 ```
+
 
 <Note>
 **Error Handling**: Always check the `detail` object in error responses for the actual error information. The outer structure may vary, but the `detail` object always follows the standard format.
@@ -201,6 +223,8 @@ All error responses follow this consistent structure:
 ## Error Handling Best Practices
 
 ### Client-Side Error Handling
+
+
 ```javascript
 try {
   const response = await fetch('/api/endpoint', {
@@ -234,8 +258,10 @@ try {
 }
 ```
 
+
 ### Retry Logic
 For transient errors (5xx), implement exponential backoff:
+
 
 ```javascript
 async function retryRequest(url, options, maxRetries = 3) {
@@ -262,6 +288,7 @@ async function retryRequest(url, options, maxRetries = 3) {
   }
 }
 ```
+
 
 ## Troubleshooting Common Issues
 

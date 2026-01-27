@@ -10,6 +10,9 @@ import TryIt from '/snippets/try-it.mdx'
   <TableOfContents />
 </Panel>
 <TryIt />
+
+## Try It
+
 ### Examples
 
 <Tabs>
@@ -19,16 +22,20 @@ import TryIt from '/snippets/try-it.mdx'
       --url 'https://api.usecortex.ai/tenant/delete_sub_tenant?tenant_id=tenant_1234&sub_tenant_id=sub_tenant_4567' \
       --header 'Authorization: Bearer YOUR_API_KEY'
       ```
+
   </Tab>
   <Tab title="TypeScript">
+
     ```ts
     const result = await client.tenant.deleteSubTenant({
       tenant_id: "tenant_1234",
       sub_tenant_id: "sub_tenant_4567"
     });
     ```
+
   </Tab>
   <Tab title="Python (Sync)">
+
     ```python
     # Async usage is similar, just use async_client and await
     result = client.tenant.delete_sub_tenant(
@@ -36,6 +43,7 @@ import TryIt from '/snippets/try-it.mdx'
         sub_tenant_id="sub_tenant_4567"
     )
     ```
+
   </Tab>
 </Tabs>
 
@@ -86,21 +94,31 @@ When you delete a sub-tenant, the following occurs:
 ## Example Requests
 
 ### Delete a Department Sub-Tenant
+
+
 ```bash
 DELETE /delete_sub_tenant?tenant_id=acme_corp&sub_tenant_id=engineering
 ```
 
+
 ### Delete a User Sub-Tenant (B2C)
+
+
 ```bash
 DELETE /delete_sub_tenant?tenant_id=my_app&sub_tenant_id=user_12345
 ```
 
+
 ### Delete a Project Sub-Tenant
+
+
 ```bash
 DELETE /delete_sub_tenant?tenant_id=consulting_firm&sub_tenant_id=project_alpha
 ```
 
+
 ## Sample Response
+
 
 ```json
 {
@@ -110,6 +128,7 @@ DELETE /delete_sub_tenant?tenant_id=consulting_firm&sub_tenant_id=project_alpha
   "message": "Sub-tenant 'engineering' deleted successfully from tenant 'acme_corp'"
 }
 ```
+
 
 ## Error Responses
 

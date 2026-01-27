@@ -10,18 +10,24 @@ import TryIt from '/snippets/try-it.mdx'
   <TableOfContents />
 </Panel>
 <TryIt />
+
+## Try It
+
 ### Examples
 
 <Tabs>
   <Tab title="API Request">
+
     ```bash
     curl --request POST \
       --url 'https://api.usecortex.ai/upload/scrape_webpage?web_url=https%3A%2F%2Fwww.usecortex.ai%2F&tenant_id=tenant_1234&sub_tenant_id=sub_tenant_4567&file_id=CortexDoc1234' \
       --header 'Authorization: Bearer YOUR_API_KEY' \
       --header 'Content-Type: application/x-www-form-urlencoded'
       ```
+
   </Tab>
   <Tab title="TypeScript">
+
     ```ts
     const result = await client.upload.scrapeWebpage({
       web_url: "https://www.usecortex.ai/",
@@ -30,8 +36,10 @@ import TryIt from '/snippets/try-it.mdx'
       file_id: "CortexDoc1234"
     });
     ```
+
   </Tab>
   <Tab title="Python (Sync)">
+
     ```python
     # Async usage is similar, just use async_client and await
     result = client.upload.scrape_webpage(
@@ -41,6 +49,7 @@ import TryIt from '/snippets/try-it.mdx'
         file_id="CortexDoc1234"
     )
     ```
+
   </Tab>
 </Tabs>
 

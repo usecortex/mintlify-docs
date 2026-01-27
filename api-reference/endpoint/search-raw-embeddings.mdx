@@ -10,6 +10,9 @@ import TryIt from '/snippets/try-it.mdx'
   <TableOfContents />
 </Panel>
 <TryIt />
+
+## Try It
+
 ### Examples
 
 <Tabs>
@@ -32,8 +35,10 @@ import TryIt from '/snippets/try-it.mdx'
   ]
 }'
       ```
+
   </Tab>
   <Tab title="TypeScript">
+
     ```ts
     const results = await client.embeddings.search({
       tenant_id: "tenant_1234",
@@ -44,8 +49,10 @@ import TryIt from '/snippets/try-it.mdx'
       max_chunks: 10
     });
     ```
+
   </Tab>
   <Tab title="Python (Sync)">
+
     ```python
     # Async usage is similar, just use async_client and await
     results = client.embeddings.search(
@@ -57,6 +64,7 @@ import TryIt from '/snippets/try-it.mdx'
         max_chunks=10
     )
     ```
+
   </Tab>
 </Tabs>
 
@@ -141,34 +149,47 @@ Controls the number of results returned:
 ## Common Patterns
 
 ### Document Similarity
+
+
 ```json
 {
   "embeddings": [0.1, 0.2, 0.3, ...],
   "max_chunks": 20
 }
 ```
+
+
 Use when you want to find documents similar to a reference document.
 
 ### Concept Search
+
+
 ```json
 {
   "embeddings": [0.4, -0.1, 0.8, ...],
   "max_chunks": 10
 }
 ```
+
+
 Use when searching for content related to a specific concept or topic.
 
 ### Recommendation Engine
+
+
 ```json
 {
   "embeddings": [0.2, 0.5, -0.3, ...],
   "max_chunks": 50
 }
 ```
+
+
 Use when building recommendation systems that need many similar items.
 
 
 ## Sample Response
+
 
 ```json
 {
@@ -188,6 +209,7 @@ Use when building recommendation systems that need many similar items.
   ]
 }
 ```
+
 
 ## Error Responses
 

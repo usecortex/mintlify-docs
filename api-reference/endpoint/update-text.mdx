@@ -10,10 +10,14 @@ import TryIt from '/snippets/try-it.mdx'
   <TableOfContents />
 </Panel>
 <TryIt />
+
+## Try It
+
 ### Examples
 
 <Tabs>
   <Tab title="API Request">
+
     ```bash
     curl --request PATCH \
       --url 'https://api.usecortex.ai/upload/update_text?source_id=CortexDoc1234&tenant_id=tenant_1234&sub_tenant_id=sub_tenant_4567' \
@@ -25,8 +29,10 @@ import TryIt from '/snippets/try-it.mdx'
       "document_metadata": {}
     }'
       ```
+
   </Tab>
   <Tab title="TypeScript">
+
     ```ts
     const result = await client.upload.updateText({
       source_id: "CortexDoc1234",
@@ -39,8 +45,10 @@ import TryIt from '/snippets/try-it.mdx'
       }
     });
     ```
+
   </Tab>
   <Tab title="Python (Sync)">
+
     ```python
     # Async usage is similar, just use async_client and await
     result = client.upload.update_text(
@@ -52,6 +60,7 @@ import TryIt from '/snippets/try-it.mdx'
         document_metadata={}
     )
     ```
+
   </Tab>
 </Tabs>
 

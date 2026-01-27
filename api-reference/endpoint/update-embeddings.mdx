@@ -10,6 +10,9 @@ import TryIt from '/snippets/try-it.mdx'
   <TableOfContents />
 </Panel>
 <TryIt />
+
+## Try It
+
 ### Examples
 
 <Tabs>
@@ -38,8 +41,10 @@ import TryIt from '/snippets/try-it.mdx'
       }
     }'
       ```
+
   </Tab>
   <Tab title="TypeScript">
+
     ```ts
     const result = await client.upload.updateEmbeddings({
       tenant_id: "tenant_1234",
@@ -50,8 +55,10 @@ import TryIt from '/snippets/try-it.mdx'
       }
     });
     ```
+
   </Tab>
   <Tab title="Python (Sync)">
+
     ```python
     # Async usage is similar, just use async_client and await
     result = client.upload.update_embeddings(
@@ -63,6 +70,7 @@ import TryIt from '/snippets/try-it.mdx'
         }
     )
     ```
+
   </Tab>
 </Tabs>
 
