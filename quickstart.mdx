@@ -76,7 +76,7 @@ POST /search/qna
   "context_list": ["optional_specific_file_id"],
   "ai_generation": true,
   "highlight_chunks": true,
-  "tenant_metadata": {"source_title": "contract.pdf"}
+  "tenant_metadata": {"source_title": "contract.pdf"},
   "document_metadata": {"source_title": "contract.pdf"}
 }
 ```
@@ -91,12 +91,12 @@ curl -X POST 'https://api.usecortex.ai/search/qna' \
     "question": "Summarize the contract terms",
     "session_id": "user-123-session",
     "tenant_id": "your_tenant_id",
-    "tenant_metadata": {"source_title": "contract.pdf"}
+    "tenant_metadata": {"source_title": "contract.pdf"},
     "document_metadata": {"source_title": "contract.pdf"}
   }'
 ```
 
-### **Step 5: Display the Answer in Your App**
+### **Step 4: Display the Answer in Your App**
 
 You'll get a JSON response like:
 
@@ -123,14 +123,14 @@ You can use the `tenant_metadata` and `document_metadata` parameters to restrict
 
 For example, `{ "source_title": "contract.pdf" }` will only use sources with that title for answering the question. You can combine both metadata types for precise filtering: `{ "department": "Legal", "document_type": "contract" }` to find all legal contracts.
 
-### **Step 6: Iterate (Optional)**
+### **Step 5: Iterate (Optional)**
 
 Fine-tune the user experience with:
 
 - `AI response (true or false)`: Lets you decide if you only want the retrieved context or the AI generated response to user queries using retrieved context
-- `search_alpha (0-1)`: Prioritize keyword vs. semantic match. An Alpha of "1" means semantic match. An Alpha of "0" means exact keyword match
+- `search_alpha (0-1)`: Prioritize keyword vs. semantic match. An alpha of "1" means semantic match. An Alpha of "0" means exact keyword match
 - `recency_bias (0-1)`: Control how much you want to favour newly added knowledge. 1 you strongly favour recently added knowledge. 0 means freshness of knowledge doesn't matter.
-- `highlight_chunks`: Get the actual context/chunks can be used for generating answers for RAG or Agentic purposes
+- `highlight_chunks`: Get the actual context/chunks that can be used for generating answers for RAG or Agentic purposes
 - `stream`: for real-time, streaming answers
 
 ### 🧩 Optional Extensions

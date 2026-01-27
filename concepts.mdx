@@ -23,6 +23,7 @@ A **sub-tenant** is like a department or team within an organization. It provide
 **Simple Analogy**: If a tenant is like a company, then sub-tenants are like departments (Engineering, Sales, HR) within that company. Each department has its own space, but they're all part of the same company.
 
 **Key Benefits**:
+
 - **Complete Data Isolation**: No tenant can ever see another tenant's data
 - **Organized Workspaces**: Sub-tenants help organize data within large organizations
 - **Flexible Access Control**: Control who can access what data at both tenant and sub-tenant levels
@@ -33,11 +34,13 @@ A **sub-tenant** is like a department or team within an organization. It provide
 **Automatic Creation**: Sub-tenants are created automatically when you first use a new `sub_tenant_id` that doesn't exist yet. There's no separate API call required.
 
 **How It Works**:
+
 1. **First Upload**: When you upload content with a new `sub_tenant_id`, Cortex automatically creates that sub-tenant
 2. **Immediate Availability**: The sub-tenant is immediately available for all subsequent operations
 3. **No Setup Required**: No configuration or setup is needed - just start using the new `sub_tenant_id`
 
 **Best Practice - Use User IDs for B2C Applications**:
+
 ```javascript
 // For individual user workspaces, use user IDs as sub-tenant IDs
 sub_tenant_id: "user_12345"    // User's personal workspace
@@ -45,6 +48,7 @@ sub_tenant_id: "user_67890"    // Another user's workspace
 ```
 
 **Best Practice - Use Descriptive Names for B2B Applications**:
+
 ```javascript
 // For organizational subdivisions, use descriptive names
 sub_tenant_id: "engineering"   // Engineering department
@@ -54,7 +58,7 @@ sub_tenant_id: "hr"            // Human Resources
 
 ### Knowledge
 
-These are the atoms that power your retrievals. Any context you or your users add is treated as knowledge for the retrieval engine to search and retreive. This includes any type of documents, chats, images, webpages, presentations, reports, any form of unstructured information. Cortex can also digest CSVs.
+These are the atoms that power your retrievals. Any context you or your users add is treated as knowledge for the retrieval engine to search and retrieve. This includes any type of documents, chats, images, webpages, presentations, reports, any form of unstructured information. Cortex can also digest CSVs.
 
 Each piece of knowledge you add is meticulously cleaned, parsed using in-house parsers, chunked, embedded, and prepared for the most optimal retrieval experience.
 
@@ -62,7 +66,7 @@ Each piece of knowledge you add is meticulously cleaned, parsed using in-house p
 
 Memory is where personalization lives. Unlike static knowledge, memory is dynamic and user-specific. Cortex stores evolving insights about users, their preferences, past interactions, and contextual signals.
 
-- Think of it as a **long-term cache of user profile**—not just what they said, but what they meant and what they’ve done before. Their preferences, intentions, and statements.
+- Think of it as a long-term cache of user profiles" or "a user's profile—not just what they said, but what they meant and what they’ve done before. Their preferences, intentions, and statements.
 - Cortex memories update automatically through conversation, queries, and usage, giving your app the ability to learn, remember, and adapt.
 
 ### Querying
