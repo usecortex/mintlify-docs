@@ -120,20 +120,8 @@
             ]
           }
         ]
-      },
-      {
-        "tab": "Changelog",
-        "groups": [
-          {
-            "group": "Release History",
-            "pages": [
-              "changelog"
-            ]
-          }
-        ]
       }
-    ],
-    "global": {}
+    ]
   },
   "logo": {
     "light": "/logo/light.svg",
