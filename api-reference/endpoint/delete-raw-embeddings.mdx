@@ -1,6 +1,6 @@
 ---
-title: 'Delete Embeddings'
-openapi: 'DELETE /embeddings/delete-raw-embeddings'
+title: "Delete Embeddings"
+openapi: "DELETE /embeddings/delete-raw-embeddings"
 ---
 
 import { TableOfContents } from '/snippets/table-of-contents.jsx'
@@ -9,16 +9,18 @@ import TryIt from '/snippets/try-it.mdx'
 <Panel>
   <TableOfContents />
 </Panel>
+
 <TryIt />
+
 ### Examples
 
 <Tabs>
   <Tab title="API Request">
     ```bash
     curl -X 'DELETE' \
-  'http://127.0.0.1:8080/embeddings/delete-raw-embeddings?tenant_id=tenant_123&sub_tenant_id=sub_tenant_345&source_id=source_123' \
-  -H 'accept: application/json'
-      ```
+    'https://api.usecortex.ai/embeddings/delete-raw-embeddings?tenant_id=tenant_123&sub_tenant_id=sub_tenant_345&source_id=source_123' \
+    -H 'accept: application/json'
+    ```
   </Tab>
   <Tab title="TypeScript">
     ```ts
@@ -44,4 +46,3 @@ import TryIt from '/snippets/try-it.mdx'
 ## Error Responses
 
 All endpoints return consistent error responses following the standard format. For detailed error information, see our [Error Responses](/api-reference/error-responses) documentation.
-

@@ -23,7 +23,7 @@ Traditional travel platforms force users to think like search engines:
 
 With Cortex, travelers can plan naturally and get personalized recommendations:
 
-- **"Plan a 5-day romantic trip to Italy for my anniversary in September with a budget of $3000"**
+- **"Plan a 5-day romantic trip to Italy for my anniversary in September with a budget of \$3000"**
 - **"Find me a family-friendly resort in Bali with a kids club and water sports activities"**
 - **"I want to experience authentic local cuisine in Bangkok - suggest restaurants and food tours"**
 - **"Plan a solo backpacking trip through Southeast Asia for 3 weeks, focusing on cultural experiences"**
@@ -319,7 +319,7 @@ const handleTravelQuery = async (query, context) => {
 
 ### 4.1 Family Vacation Planning
 
-**User Query**: *"Plan a 7-day family vacation to Orlando with kids aged 8 and 12, budget $4000, we love theme parks and want kid-friendly restaurants"*
+**User Query**: _"Plan a 7-day family vacation to Orlando with kids aged 8 and 12, budget \$4000, we love theme parks and want kid-friendly restaurants"_
 
 ```javascript
 const planFamilyVacation = async (query, userProfile) => {
@@ -352,7 +352,7 @@ const planFamilyVacation = async (query, userProfile) => {
 
 ### 4.2 Business Travel Optimization
 
-**User Query**: *"I need to travel to London for business next week, find hotels near financial district with good WiFi and meeting rooms"*
+**User Query**: _"I need to travel to London for business next week, find hotels near financial district with good WiFi and meeting rooms"_
 
 ```javascript
 const planBusinessTravel = async (query, userProfile) => {
@@ -369,13 +369,13 @@ const planBusinessTravel = async (query, userProfile) => {
     }
   });
 
-  return procesBusinessTravelResponse(response);
+  return processBusinessTravelResponse(response);
 };
 ```
 
 ### 4.3 Adventure Travel Planning
 
-**User Query**: *"I want to go trekking in Nepal for 2 weeks, suggest routes for intermediate hikers with cultural experiences"*
+**User Query**: _"I want to go trekking in Nepal for 2 weeks, suggest routes for intermediate hikers with cultural experiences"_
 
 ```javascript
 const planAdventureTravel = async (query, userProfile) => {
@@ -511,18 +511,20 @@ const monitorPriceChanges = async (travelPlan) => {
 
 ### Scenario 1: Spontaneous Weekend Trip
 
-**User**: *"I want to go somewhere warm this weekend, budget $800, flying from New York"*
+**User**: _"I want to go somewhere warm this weekend, budget \$800, flying from New York"_
 
 **AI Response**: Based on your budget and preference for warm weather, I recommend:
-- **Miami, Florida**: 3-day weekend package with beachfront hotel and flights for $750
-- **Austin, Texas**: Music and food scene with boutique hotel for $680
-- **Savannah, Georgia**: Historic charm with B&B accommodation for $620
+
+- **Miami, Florida**: 3-day weekend package with beachfront hotel and flights for \$750
+- **Austin, Texas**: Music and food scene with boutique hotel for \$680
+- **Savannah, Georgia**: Historic charm with B&B accommodation for \$620
 
 ### Scenario 2: Anniversary Celebration
 
-**User**: *"Plan a romantic anniversary trip to Paris for 5 days in May, we love art museums and fine dining"*
+**User**: _"Plan a romantic anniversary trip to Paris for 5 days in May, we love art museums and fine dining"_
 
 **AI Response**: For your romantic Paris anniversary:
+
 - **Accommodation**: Hotel des Grands Boulevards in the 2nd arrondissement
 - **Day 1**: Louvre Museum morning, Seine river cruise evening
 - **Day 2**: Musée d'Orsay, dinner at L'Ambroisie (Michelin 3-star)
@@ -532,11 +534,12 @@ const monitorPriceChanges = async (travelPlan) => {
 
 ### Scenario 3: Solo Adventure Planning
 
-**User**: *"I'm planning a solo backpacking trip through Southeast Asia for a month, focusing on cultural immersion and budget-friendly options"*
+**User**: _"I'm planning a solo backpacking trip through Southeast Asia for a month, focusing on cultural immersion and budget-friendly options"_
 
 **AI Response**: Your month-long Southeast Asia adventure:
+
 - **Route**: Thailand → Vietnam → Cambodia → Laos
-- **Budget**: $2,000-2,500 total
+- **Budget**: \$2,000-2,500 total
 - **Accommodation**: Mix of hostels and homestays
 - **Cultural experiences**: Cooking classes, temple visits, local festivals
 - **Transportation**: Buses and trains for authentic experience
@@ -593,4 +596,4 @@ Key benefits of this approach:
 - **Contextual Awareness**: Multi-step reasoning considers all aspects of travel planning
 - **Seamless Integration**: Easy integration with existing booking systems and travel APIs
 
-The result is a travel planning platform that feels more like having a knowledgeable travel advisor than using a search engine, creating higher user satisfaction and better conversion rates for travel businesses. 
+The result is a travel planning platform that feels more like having a knowledgeable travel advisor than using a search engine, creating higher user satisfaction and better conversion rates for travel businesses.
