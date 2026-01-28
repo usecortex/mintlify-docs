@@ -7,22 +7,12 @@
   },
   "servers": [
     {
-      "url": "/",
-      "description": "Local",
-      "x-fern-server-name": "cortex-backend-local"
-    },
-    {
       "url": "https://api.usecortex.ai",
       "description": "Production",
       "x-fern-server-name": "cortex-prod",
       "x-fern-audiences": [
         "public"
       ]
-    },
-    {
-      "url": "https://preprod.usecortex.ai",
-      "description": "Staging",
-      "x-fern-server-name": "cortex-staging"
     }
   ],
   "paths": {

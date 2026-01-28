@@ -30,10 +30,7 @@ A **sub-tenant** is like a department or team within an organization. It provide
 - **Organized Workspaces**: Sub-tenants help organize data within large organizations
 - **Flexible Access Control**: Control who can access what data at both tenant and sub-tenant levels
 - **Scalable Architecture**: Serve unlimited organizations and their subdivisions
-
-### Creating Sub-Tenants
-
-**Automatic Creation**: Sub-tenants are created automatically when you first use a new `sub_tenant_id` that doesn't exist yet. There's no separate API call required.
+- **Automatic Creation**: Sub-tenants are created automatically when you first use a new `sub_tenant_id` that doesn't exist yet. There's no separate API call required.
 
 **How It Works**:
 
@@ -63,38 +60,23 @@ sub_tenant_id: "hr"            // Human Resources
 
 ### Knowledge
 
-These are the atoms that power your retrievals. Any context you or your users add is treated as knowledge for the retrieval engine to search and retrieve. This includes any type of documents, chats, images, webpages, presentations, reports, any form of unstructured information. Cortex can also digest CSVs.
+These are the atoms that make up the context store for your agents. This includes any type of documents, emails, messages, images, webpages, presentations, reports, any form of unstructured information. Cortex can also digest CSVs..
+Each piece of knowledge you add is meticulously cleaned, parsed using in-house parsers, prepared for the most optimal recall experience for your agents.
 
-Each piece of knowledge you add is meticulously cleaned, parsed using in-house parsers, chunked, embedded, and prepared for the most optimal retrieval experience.
+### Memory
 
-### AI Memory
+Memory is where personalization lives. This is what the AI has to remember about each individual user: preferences, past interactions, likes, dislikes, behavioral patterns, and personal context.
 
-Memory is where personalization lives. Unlike static knowledge, memory is dynamic and user-specific. Cortex stores evolving insights about users, their preferences, past interactions, and contextual signals.
+- Think of it as an ever evolving cache of user preferences, past interactions, likes, dislikes, behavioral patterns, and personal context - not just what they said, but what they meant and what they've done before.
+- Cortex memories update automatically through conversation, queries, and usage, giving your app the ability to learn, evolve, remember, and adapt.
 
-- Think of it as a long-term cache of user profiles or a user’s profile—not just what they said, but what they meant and what they’ve done before: their preferences, intentions, and statements.
-- Cortex memories update automatically through conversation, queries, and usage, giving your app the ability to learn, remember, and adapt.
+### Recall
+Recall is how you extract the most meaningful context for your agents to perform their tasks: performing actions, answering questions, or running workflows.
+Cortex gives you control over **how recall works** with a combination of parameters and recall strategies.
 
-### Querying
-
-Querying is how you extract meaningful answers from your knowledge and memory layers. Cortex gives you control over **how retrieval works**, using a combination of:
-
-- **Top-K search** across documents, passages, or snippets
-- **Alpha, recency bias, and contextual expansion:**\
-  Each query is processed deeply to determine the optimal retrieval strategy. This ensures results are not just relevant, but also personalized and self-improving over time.
-- **Memory injection** automatically infuses long-term user context (e.g. preferences, past interactions) into every query.
-- **Citations and Bounding Boxes**:\
-  Every answer returned by Cortex is backed by **verifiable citations**—with exact source snippets and optional **bounding boxes** for visual references (e.g. PDFs, slides, or structured files). This builds trust and lets users trace every insight back to its origin.
-- **Mixture-of-Experts Routing**:\
-  Cortex dynamically routes each query through a Mixture-of-Experts engine to select the best answering strategy—whether it needs to use memory, search more deeply, dynamically adjust prompts, or chain multi-hop lookups.
-
-### Metadata (& Agentic Querying)
+### Metadata
 
 Metadata allows you to structure and filter retrieval with precision. You can tag documents, pages, or entities with key-value pairs and filter results by user role, product, team, time, or any custom logic.
-
-\
-**Agentic Querying** goes a step further—enabling agents to retrieve, reason, and act autonomously based on structured metadata and memory signals. This unlocks use cases like:
-
-- **Agent workflows that chain multi-step queries**
-- **Personalized agent routing per user or org**
-- **Task-specific memory selection for copilots and assistants**\
-  Cortex makes it easy to build intelligent agents that retrieve exactly what they need, when they need it.
+- **Tenant Metadata**: Organization-level metadata that applies consistently across all documents within a tenant
+- **Memory Metadata**: Document-specific metadata that varies from memory to memory 
+- **Metadata Filtering**: Use this to filter results by any custom logic you need
