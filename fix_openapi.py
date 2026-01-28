@@ -133,6 +133,26 @@ OPEN_API_PATH = "./api-reference/openapi.json"
 with open(OPEN_API_PATH, "r") as f:
     openapi = json.load(f)
 
+def nullify_endpoint_descriptions(spec: dict) -> None:
+    """
+    For every path+method operation, set `description` to JSON null.
+    (Python `None` serializes to `null` in json.dump.)
+    """
+    paths = spec.get("paths", {})
+    if not isinstance(paths, dict):
+        return
+
+    for _, path_item in paths.items():
+        if not isinstance(path_item, dict):
+            continue
+        for method, operation in path_item.items():
+            # Skip non-operation keys allowed in a Path Item Object
+            if method in {"parameters", "summary", "description"}:
+                continue
+            if not isinstance(operation, dict):
+                continue
+            operation["description"] = None
+
 print("Adding example values to query params")
 for endpoint in openapi["paths"]:
     for method in openapi["paths"][endpoint]:
@@ -226,9 +246,8 @@ def recursive_filter(data):
 
 
 # Process the original openapi spec
+nullify_endpoint_descriptions(openapi)
 final_open_api_spec = recursive_filter(openapi)
 
 with open(OPEN_API_PATH, "w") as f:
     json.dump(final_open_api_spec, f, indent=2)
-
-print("Updated OpenAPI file")
