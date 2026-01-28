@@ -119,6 +119,7 @@ Cortex implements a flexible, schema-less metadata system that supports:
 ### Example Decision Tree:
 
 ```
+
 Is this attribute the same for ALL documents in your tenant?
 ├─ YES → Use tenant_metadata
 │  ├─ Department: "Engineering" ✅
@@ -131,9 +132,11 @@ Is this attribute the same for ALL documents in your tenant?
    └─ Tags: ["security", "api"] ✅
 ```
 
+
 ## Setting Metadata
 
 ### Basic Metadata Structure
+
 
 ```json
 {
@@ -157,6 +160,7 @@ Is this attribute the same for ALL documents in your tenant?
   }
 }
 ```
+
 
 ### Supported Data Types
 
@@ -205,6 +209,8 @@ The following keywords are **reserved** and cannot be used as keys in `tenant_me
 ### 1. Naming Conventions and Standards
 
 #### Consistent Field Naming
+
+
 ```json
 // ✅ Enterprise Standard - snake_case with descriptive names
 {
@@ -227,7 +233,10 @@ The following keywords are **reserved** and cannot be used as keys in `tenant_me
 }
 ```
 
+
 #### Semantic Field Design
+
+
 ```json
 // ✅ Good - Clear semantic meaning
 {
@@ -250,9 +259,12 @@ The following keywords are **reserved** and cannot be used as keys in `tenant_me
 }
 ```
 
+
 ### 2. Data Structure Optimization
 
 #### Hierarchical Data Organization
+
+
 ```json
 {
       "document_metadata": {
@@ -281,7 +293,10 @@ The following keywords are **reserved** and cannot be used as keys in `tenant_me
 }
 ```
 
+
 #### Array Field Design
+
+
 ```json
 {
       "document_metadata": {
@@ -308,9 +323,11 @@ The following keywords are **reserved** and cannot be used as keys in `tenant_me
 }
 ```
 
+
 ## Enterprise Use Cases
 
 ### 1. Legal and Compliance Management
+
 
 ```json
 {
@@ -338,6 +355,7 @@ The following keywords are **reserved** and cannot be used as keys in `tenant_me
 }
 ```
 
+
 **Filtering Scenarios:**
 - Active contracts by client: `client_id = "CLIENT-2024-001" AND status = "active"`
 - Expiring contracts: `expiry_date <= "2024-12-31"`
@@ -345,6 +363,7 @@ The following keywords are **reserved** and cannot be used as keys in `tenant_me
 - Pending legal review: `approval_workflow.current_stage = "legal_review"`
 
 ### 2. Engineering Documentation Management
+
 
 ```json
 {
@@ -390,6 +409,7 @@ The following keywords are **reserved** and cannot be used as keys in `tenant_me
 }
 ```
 
+
 **Filtering Scenarios:**
 - High-priority specs: `priority = "high"`
 - Component-specific docs: `component = "user_authentication"`
@@ -397,6 +417,7 @@ The following keywords are **reserved** and cannot be used as keys in `tenant_me
 - Sprint-specific work: `sprint = "S24.1"`
 
 ### 3. Human Resources Document Management
+
 
 ```json
 {
@@ -426,6 +447,7 @@ The following keywords are **reserved** and cannot be used as keys in `tenant_me
 }
 ```
 
+
 **Filtering Scenarios:**
 - Active employees: `status = "active"`
 - Department-specific contracts: `department = "Human_Resources"`
@@ -446,6 +468,8 @@ Cortex employs sophisticated indexing strategies to ensure optimal query perform
 ### Query Optimization Guidelines
 
 #### Field Selection Strategy
+
+
 ```json
 // ✅ Optimized - Specific field names
 {
@@ -466,7 +490,10 @@ Cortex employs sophisticated indexing strategies to ensure optimal query perform
 }
 ```
 
+
 #### Boolean Flag Optimization
+
+
 ```json
 // ✅ Good - Boolean flags for simple conditions
 {
@@ -488,6 +515,7 @@ Cortex employs sophisticated indexing strategies to ensure optimal query perform
   }
 }
 ```
+
 
 ### Large Dataset Considerations
 
@@ -537,6 +565,7 @@ You're indexing thousands of company files. A user asks, "Which PDF did John upl
 
 With proper metadata structure, you can create sophisticated filtering scenarios:
 
+
 ```json
 // User query: "Show me all high-priority engineering documents from last quarter"
 {
@@ -549,5 +578,6 @@ With proper metadata structure, you can create sophisticated filtering scenarios
   }
 }
 ```
+
 
 This metadata-driven approach enables precise, context-aware search that goes far beyond simple keyword matching, providing enterprise-grade document management capabilities that scale with your organization's needs.

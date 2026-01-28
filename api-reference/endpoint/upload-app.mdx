@@ -5,13 +5,10 @@ description: "Specifically built to handle knowledge from workplace apps. Parsin
 ---
 
 import { TableOfContents } from '/snippets/table-of-contents.jsx'
-import TryIt from '/snippets/try-it.mdx'
 
 <Panel>
   <TableOfContents />
 </Panel>
-
-<TryIt />
 
 ### Sample
 ``` bash expandable
@@ -88,6 +85,7 @@ curl -X 'POST' \
   "sub_tenant_id": "",
   "upsert": true
 }'
+
 ```
 
 ### SDK Examples
@@ -114,6 +112,7 @@ curl -X 'POST' \
       ]
     });
     ```
+
   </Tab>
   <Tab title="Python (Sync)">
     ```python expandable
@@ -137,6 +136,7 @@ curl -X 'POST' \
         sub_tenant_id="sub_tenant_4567"
     )
     ```
+
   </Tab>
 </Tabs>
 
@@ -232,20 +232,20 @@ Each app source is processed using specialized pipelines:
 
 > **File ID Management**: When you provide a `file_id` as a key in the `document_metadata` object, that specific ID will be used to identify your content. If no `file_id` is provided in the `document_metadata`, the system will automatically generate a unique identifier for you. This allows you to maintain consistent references to your content across your application while ensuring every piece of content has a unique identifier.
 
-### **Duplicate File ID Behavior**
+### `Upsert` parameter (optional)
 
-When you upload app sources with `file_id`s that already exist in your tenant:
+For app sources, the identifier is `file_id`. When that identifier already exists, `upsert` (boolean, default `true`) controls the behavior:
 
-- **Overwrite Behavior**: Each existing app source with a matching `file_id` will be **completely replaced** with the new source
-- **Processing**: Each new app source will go through its specialized processing pipeline independently
-- **Search Results**: Previous search results and embeddings from old app sources will be replaced with the new sources' content
-- **Idempotency**: Uploading the same app sources with the same `file_id`s multiple times is safe and will result in the same final state
+| Value | Behavior |
+|-------|----------|
+| `true` | Replace existing (default) |
+| `false` | Fail; do not overwrite |
 
-<Warning>
-**Important**: When overwriting existing app sources, all previous chunks, embeddings, and search indexes associated with those `file_id`s will be permanently removed and replaced. This action cannot be undone.
-</Warning>
+Overwriting permanently removes and replaces existing chunks, embeddings, and indexes for that identifier.
 
-**Example Success Response for Duplicate File IDs in App Upload:**
+**Example success response when overwriting by `file_id`:**
+
+
 ```json
 {
   "message": "App sources uploaded successfully. Sources with existing file_ids have been overwritten.",
@@ -255,11 +255,13 @@ When you upload app sources with `file_id`s that already exist in your tenant:
 }
 ```
 
+
 ## Attachments Field Structure
 
 The `attachments` field allows you to include additional files, documents, or content alongside your main app source. Each attachment supports multiple content formats and can contain nested structures for complex documents.
 
 ### Attachment Object Structure
+
 
 ```json
 {
@@ -286,6 +288,7 @@ The `attachments` field allows you to include additional files, documents, or co
 }
 ```
 
+
 ### When to Use Each Field
 
 **Core Identification Fields:**
@@ -311,6 +314,8 @@ Use these fields to store different types of content directly in the attachment:
 ### Content Format Guidelines
 
 **For Text Content:**
+
+
 ```json
 {
   "content": {
@@ -319,7 +324,10 @@ Use these fields to store different types of content directly in the attachment:
 }
 ```
 
+
 **For HTML Content:**
+
+
 ```json
 {
   "content": {
@@ -328,7 +336,10 @@ Use these fields to store different types of content directly in the attachment:
 }
 ```
 
+
 **For CSV Data:**
+
+
 ```json
 {
   "content": {
@@ -337,7 +348,10 @@ Use these fields to store different types of content directly in the attachment:
 }
 ```
 
+
 **For Markdown:**
+
+
 ```json
 {
   "content": {
@@ -346,7 +360,10 @@ Use these fields to store different types of content directly in the attachment:
 }
 ```
 
+
 **For File Attachments:**
+
+
 ```json
 {
   "content": {
@@ -359,6 +376,7 @@ Use these fields to store different types of content directly in the attachment:
   }
 }
 ```
+
 
 ### Best Practices
 

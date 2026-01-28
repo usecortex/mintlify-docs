@@ -9,7 +9,6 @@ tag: 'DEPRECATED'
 </Note>
 
 import { TableOfContents } from '/snippets/table-of-contents.jsx'
-import TryIt from '/snippets/try-it.mdx'
 
 <Panel>
   <TableOfContents />
@@ -18,6 +17,7 @@ import TryIt from '/snippets/try-it.mdx'
 ## Migration Guide
 
 ### Old Request Format
+
 ```bash
 curl -X 'POST' \
   'https://api.usecortex.ai/ingestion/upload-content' \
@@ -37,7 +37,10 @@ curl -X 'POST' \
 }'
 ```
 
+
 ### New Request Format (Recommended)
+
+
 ```bash
 curl -X 'POST' \
   'https://api.usecortex.ai/memories/add_memory' \
@@ -55,6 +58,7 @@ curl -X 'POST' \
   "upsert": true
 }'
 ```
+
 
 ### Key Changes
 
@@ -86,6 +90,7 @@ See the [Add Memory documentation](/api-reference/endpoint/add-memories) for ful
 
 <Tabs>
   <Tab title="API Request">
+
     ```bash
     curl -X 'POST' \
   'https://api.usecortex.ai/ingestion/upload-content' \
@@ -109,8 +114,10 @@ See the [Add Memory documentation](/api-reference/endpoint/add-memories) for ful
   "upsert": true
 }'
     ```
+
   </Tab>
   <Tab title="TypeScript">
+
     ```ts
     const result = await client.upload.uploadText({
       tenant_id: "tenant_1234",
@@ -123,8 +130,10 @@ See the [Add Memory documentation](/api-reference/endpoint/add-memories) for ful
       }
     });
     ```
+
   </Tab>
   <Tab title="Python (Sync)">
+
     ```python
     result = client.upload.upload_text(
         tenant_id="tenant_1234",
@@ -135,10 +144,22 @@ See the [Add Memory documentation](/api-reference/endpoint/add-memories) for ful
         document_metadata={}
     )
     ```
+
   </Tab>
 </Tabs>
 
 Upload text content directly to your tenant's knowledge base. The text will be processed, chunked, and indexed for search and retrieval.
+
+### `Upsert` parameter (optional)
+
+For text content, the identifier is `file_id`. When that identifier already exists, `upsert` (boolean, default `true`) controls the behavior:
+
+| Value | Behavior |
+|-------|----------|
+| `true` | Replace existing (default) |
+| `false` | Fail; do not overwrite |
+
+Overwriting permanently removes and replaces existing chunks, embeddings, and indexes for that identifier.
 
 ### Text Processing Pipeline
 

@@ -4,16 +4,16 @@ openapi: 'POST /list/list-sources-by-id'
 ---
 
 import { TableOfContents } from '/snippets/table-of-contents.jsx'
-import TryIt from '/snippets/try-it.mdx'
 
 <Panel>
   <TableOfContents />
 </Panel>
-<TryIt />
+
 ### Examples
 
 <Tabs>
   <Tab title="API Request">
+
     ```bash
    curl -X 'POST' \
   'https://api.usecortex.ai/list/list-sources-by-id' \
@@ -27,8 +27,10 @@ import TryIt from '/snippets/try-it.mdx'
   "sub_tenant_id": "string"
 }'
       ```
+
   </Tab>
   <Tab title="TypeScript">
+
     ```ts
     const specificSources = await client.sources.getByIds({
       tenant_id: "tenant_1234",
@@ -36,8 +38,10 @@ import TryIt from '/snippets/try-it.mdx'
       source_ids: ["doc_123", "doc_456"]
     });
     ```
+
   </Tab>
   <Tab title="Python (Sync)">
+
     ```python
     # Async usage is similar, just use async_client and await
     specific_sources = client.sources.get_by_ids(
@@ -46,6 +50,7 @@ import TryIt from '/snippets/try-it.mdx'
         source_ids=["doc_123", "doc_456"]
     )
     ```
+
   </Tab>
 </Tabs>
 
@@ -55,6 +60,7 @@ Retrieve specific sources by their IDs. Use this API to fetch one or more source
 
 ## Example Request
 
+
 ```json
 {
   "tenant_id": "tenant_456",
@@ -63,7 +69,9 @@ Retrieve specific sources by their IDs. Use this API to fetch one or more source
 }
 ```
 
+
 ## Example Response
+
 
 ```json
 {
@@ -82,6 +90,7 @@ Retrieve specific sources by their IDs. Use this API to fetch one or more source
   "message": "Successfully fetched sources"
 }
 ```
+
 
 ## Error Responses
 

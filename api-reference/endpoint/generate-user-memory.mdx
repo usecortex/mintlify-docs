@@ -4,16 +4,16 @@ openapi: 'POST /user_memory/generate_user_memory'
 ---
 
 import { TableOfContents } from '/snippets/table-of-contents.jsx'
-import TryIt from '/snippets/try-it.mdx'
 
 <Panel>
   <TableOfContents />
 </Panel>
-<TryIt />
+
 ### Examples
 
 <Tabs>
   <Tab title="API Request">
+
     ```bash
     curl --request POST \
       --url 'https://api.usecortex.ai/user_memory/generate_user_memory?tenant_id=tenant_1234&sub_tenant_id=sub_tenant_4567' \
@@ -24,8 +24,10 @@ import TryIt from '/snippets/try-it.mdx'
       "user_name": "<string>"
     }'
       ```
+
   </Tab>
   <Tab title="TypeScript">
+
     ```ts
     const generatedMemory = await client.userMemory.generateUserMemory({
       tenant_id: "tenant_1234",
@@ -34,8 +36,10 @@ import TryIt from '/snippets/try-it.mdx'
       context: "User mentioned they work with Python and prefer REST APIs over GraphQL"
     });
     ```
+
   </Tab>
   <Tab title="Python (Sync)">
+
     ```python
     # Async usage is similar, just use async_client and await
     generated_memory = client.user_memory.generate_user_memory(
@@ -45,6 +49,7 @@ import TryIt from '/snippets/try-it.mdx'
         context="User mentioned they work with Python and prefer REST APIs over GraphQL"
     )
     ```
+
   </Tab>
 </Tabs>
 
@@ -80,6 +85,7 @@ This API goes beyond simple memory storage by:
 
 ### Advanced Usage: Meeting Notes Processing
 
+
 ```bash
 curl -X POST "https://api.usecortex.ai/user_memory/generate_user_memory" \
   -H "Authorization: Bearer YOUR_API_KEY" \
@@ -91,6 +97,7 @@ curl -X POST "https://api.usecortex.ai/user_memory/generate_user_memory" \
     "user_name": "Sarah Johnson"
   }'
 ```
+
 
 ## Important Notes
 

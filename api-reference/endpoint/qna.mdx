@@ -10,16 +10,16 @@ tag: 'DEPRECATING'
 
 
 import { TableOfContents } from '/snippets/table-of-contents.jsx'
-import TryIt from '/snippets/try-it.mdx'
 
 <Panel>
   <TableOfContents />
 </Panel>
-<TryIt />
+
 ### Examples
 
 <Tabs>
   <Tab title="API Request">
+
     ```bash
     curl --request POST \
       --url https://api.usecortex.ai/search/qna \
@@ -41,8 +41,10 @@ import TryIt from '/snippets/try-it.mdx'
       "auto_agent_routing": true
     }'
       ```
+
   </Tab>
   <Tab title="TypeScript">
+
     ```ts
     const answer = await client.search.qna({
       question: "What is Cortex AI",
@@ -59,8 +61,10 @@ import TryIt from '/snippets/try-it.mdx'
       auto_agent_routing: true
     });
     ```
+
   </Tab>
   <Tab title="Python (Sync)">
+
     ```python
     # Async usage is similar, just use async_client and await
     answer = client.search.qna(
@@ -78,6 +82,7 @@ import TryIt from '/snippets/try-it.mdx'
         auto_agent_routing=True
     )
     ```
+
   </Tab>
 </Tabs>
 
@@ -137,6 +142,8 @@ The QnA endpoint provides intelligent question-answering with several powerful f
 
 #### Metadata Filtering
 Use the `metadata` object to filter results:
+
+
 ```json
 {
   "metadata": {
@@ -146,6 +153,7 @@ Use the `metadata` object to filter results:
   }
 }
 ```
+
 
 #### Session Management
 - **Persistent Context**: Maintain conversation history across multiple questions
@@ -196,6 +204,7 @@ When enabled, the AI can:
 
 ### Response
 Returns a JSON object containing the AI-generated answer and supporting source chunks with layout information for creating bounding boxes around cited sources.
+
 
 ```json
 {
@@ -264,6 +273,7 @@ Returns a JSON object containing the AI-generated answer and supporting source c
   }
 }
 ```
+
 
 ### 📍 Layout Field
 The layout field provides coordinates for creating bounding boxes around cited sources:

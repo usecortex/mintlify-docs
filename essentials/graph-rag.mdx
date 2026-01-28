@@ -165,6 +165,7 @@ When you search for information, Cortex automatically enhances results with grap
 }
 ```
 
+
 ### Understanding the Response Structure
 
 #### Entity Paths (`graph_relations.entity_paths`)
@@ -185,6 +186,8 @@ When passing the response to an LLM, use a Set to deduplicate triplet context ac
 
 <Tabs>
   <Tab title="JavaScript">
+
+
 ```javascript
 const response = await cortex.search.retrieve({
   query: "Who reports to Sarah?",
@@ -218,8 +221,12 @@ for (const path of graph_relations?.entity_paths || []) {
   context += `\n[Path: ${startEntity} → ${endEntity}]\n${path.combined_context}\n`;
 }
 ```
+
+
   </Tab>
   <Tab title="Python">
+
+
 ```python
 response = cortex.search.retrieve(
     query="Who reports to Sarah?",
@@ -251,6 +258,8 @@ for path in (graph_relations.entity_paths if graph_relations else []):
     end_entity = path.triplets[-1].target.name if path.triplets else None
     context += f"\n[Path: {start_entity} → {end_entity}]\n{path.combined_context}\n"
 ```
+
+
   </Tab>
 </Tabs>
 
@@ -260,6 +269,8 @@ For complex questions, `entity_paths` often provides everything you need:
 
 <Tabs>
   <Tab title="JavaScript">
+
+
 ```javascript
 // entity_paths gives you pre-computed multi-hop context
 const paths = response.graph_relations?.entity_paths || [];
@@ -274,8 +285,12 @@ for (const path of paths) {
   console.log(`${start?.name} (${start?.type}) → ... → ${end?.name} (${end?.type})`);
 }
 ```
+
+
   </Tab>
   <Tab title="Python">
+
+
 ```python
 # entity_paths gives you pre-computed multi-hop context
 paths = response.graph_relations.entity_paths if response.graph_relations else []
@@ -289,6 +304,8 @@ for path in paths:
     end = path.triplets[-1].target if path.triplets else None
     print(f"{start.name} ({start.type}) → ... → {end.name} ({end.type})")
 ```
+
+
   </Tab>
 </Tabs>
 
@@ -374,7 +391,7 @@ Each relationship in the graph stores multiple "evidences" from different docume
 1. **Do I need to enable knowledge graphs?**  
 No, they're automatically built for all content and included in all retrieval responses.
 
-2. **Can I customize entity extraction?**  
+2. **Can I customise entity extraction?**  
 The system uses advanced AI models optimized for accuracy. Custom extraction rules aren't currently exposed, but the system handles most use cases automatically.
 
 3. **How do I see all entities in my graph?**  

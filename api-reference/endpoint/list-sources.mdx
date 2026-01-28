@@ -4,31 +4,35 @@ openapi: 'GET /list/list-sources'
 ---
 
 import { TableOfContents } from '/snippets/table-of-contents.jsx'
-import TryIt from '/snippets/try-it.mdx'
 
 <Panel>
   <TableOfContents />
 </Panel>
-<TryIt />
+
 ### Examples
 
 <Tabs>
   <Tab title="API Request">
+
     ```bash
     curl -X 'GET' \
   'https://api.usecortex.ai/list/list-sources?tenant_id=tenant_123' \
   -H 'accept: application/json'
       ```
+
   </Tab>
   <Tab title="TypeScript">
+
     ```ts
     const allSources = await client.sources.getAll({
       tenant_id: "tenant_1234",
       sub_tenant_id: "sub_tenant_4567"
     });
     ```
+
   </Tab>
   <Tab title="Python (Sync)">
+
     ```python
     # Async usage is similar, just use async_client and await
     all_sources = client.sources.get_all(
@@ -36,6 +40,7 @@ import TryIt from '/snippets/try-it.mdx'
         sub_tenant_id="sub_tenant_4567"
     )
     ```
+
   </Tab>
 </Tabs>
 

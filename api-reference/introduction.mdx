@@ -13,6 +13,9 @@ Welcome to the Cortex SDK API Reference. This section documents every available 
 Authorization: Bearer <your_api_key>
 ```
 
+
+## API Overview
+
 ### Multi-Tenant Architecture
 All endpoints support Cortex's hierarchical multi-tenant system using `tenant_id` (primary organization) and `sub_tenant_id` (departments/teams). This enables secure data isolation for enterprise applications.
 
@@ -63,7 +66,7 @@ Retrieve answers and information from your knowledge base.
 
 - `/search/qna` — Main search endpoint with AI-powered responses. Supports optional `metadata` parameter to filter sources by `source_title` or `source_type`.
 - `/search/retrieve` — Hybrid search without AI generation. Returns structured search results for custom processing.
-– `/search/full-text-search` – Perform a full text search without AI generation. Allows you to use operators like logical `AND`, `OR`
+- `/search/full-text-search` — Perform a full text search without AI generation. Allows you to use operators like logical `AND`, `OR`
 
 ### **Knowledge Management**
 

@@ -9,14 +9,18 @@ Get started with our fully-typed SDKs that provide a seamless developer experien
 
 <Tabs>
   <Tab title="TypeScript / Node.js">
+
     ```bash
     npm i @usecortex_ai/node
     ```
+
   </Tab>
   <Tab title="Python">
+
     ```bash
     pip install usecortex-ai
     ```
+
   </Tab>
 </Tabs>
 
@@ -24,6 +28,7 @@ Get started with our fully-typed SDKs that provide a seamless developer experien
 
 <Tabs>
   <Tab title="TypeScript">
+
     ```ts
     import { CortexAIClient } from "@usecortex_ai/node";
 
@@ -31,8 +36,10 @@ Get started with our fully-typed SDKs that provide a seamless developer experien
       token: process.env.CORTEX_API_KEY,
     });
     ```
+
   </Tab>
   <Tab title="Python">
+
     ```python
     import os
     from usecortex_ai import CortexAI, AsyncCortexAI
@@ -45,6 +52,7 @@ Get started with our fully-typed SDKs that provide a seamless developer experien
     # Async client (for async/await usage)
     async_client = AsyncCortexAI(token=api_key)
     ```
+
   </Tab>
 </Tabs>
 
@@ -79,6 +87,15 @@ The SDKs provide exact type parity with the API specification:
 - **TypeScript**: camelCase method names (`uploadText`, `getAll`) with full TypeScript interfaces
 - **Python**: snake_case method names (`upload_text`, `get_all`) with type hints and dataclasses
 
+### Parameter Naming
+
+The REST API uses **snake_case** for all request and response body fields (e.g. `tenant_id`, `sub_tenant_id`, `max_chunks`). The SDKs handle naming as follows:
+
+- **TypeScript SDK**: Uses **camelCase** for parameter names (e.g. `tenantId`, `subTenantId`, `maxChunks`) to match JavaScript conventions. The SDK maps these to the API's snake_case when sending requests.
+- **Python SDK**: Uses **snake_case** for parameters, matching the API.
+
+When calling the REST API directly (e.g. with curl), use snake_case. In TypeScript examples throughout the docs, we show the SDK's camelCase parameters.
+
 <Info>
 This means you can rely on your IDE's autocomplete and type checking. If a parameter is optional in the API docs, it's optional in the SDK. If a response contains a specific field, your IDE will know about it.
 </Info>
@@ -91,6 +108,7 @@ Let's walk through a complete example from creating a tenant to searching your d
 
 <Tabs>
   <Tab title="TypeScript">
+
     ```ts
     async function createTenant() {
       const tenantCreationResponse = await client.user.createTenant({
@@ -99,18 +117,23 @@ Let's walk through a complete example from creating a tenant to searching your d
       return tenantCreationResponse;
     }
     ```
+
   </Tab>
   <Tab title="Python (Sync)">
+
     ```python
     def create_tenant():
         return client.user.create_tenant(tenant_id="my-company")
     ```
+
   </Tab>
   <Tab title="Python (Async)">
+
     ```python
     async def create_tenant():
         return await async_client.user.create_tenant(tenant_id="my-company")
     ```
+
   </Tab>
 </Tabs>
 
@@ -126,6 +149,7 @@ Now let's upload some content to make it searchable:
 
 <Tabs>
   <Tab title="TypeScript">
+
     ```ts
     // Upload text content
     async function uploadText() {
@@ -152,8 +176,10 @@ Now let's upload some content to make it searchable:
       return uploadResult;
     }
     ```
+
   </Tab>
   <Tab title="Python (Sync)">
+
     ```python
     # Upload text content
     def upload_text():
@@ -175,8 +201,10 @@ Now let's upload some content to make it searchable:
                 file_id="company-handbook.pdf"
             )
     ```
+
   </Tab>
   <Tab title="Python (Async)">
+
     ```python
     # Upload text content
     async def upload_text():
@@ -198,6 +226,7 @@ Now let's upload some content to make it searchable:
                 file_id="company-handbook.pdf"
             )
     ```
+
   </Tab>
 </Tabs>
 
@@ -209,6 +238,7 @@ Now let's upload some content to make it searchable:
 
 <Tabs>
   <Tab title="TypeScript">
+
     ```ts
     // Semantic search with retrieval
     const results = await client.search.retrieve({
@@ -231,8 +261,10 @@ Now let's upload some content to make it searchable:
       source_ids: ["api-docs-rate-limits", "company-handbook"]
     });
     ```
+
   </Tab>
   <Tab title="Python (Sync)">
+
     ```python
     # Semantic search with retrieval
     results = client.search.retrieve(
@@ -255,8 +287,10 @@ Now let's upload some content to make it searchable:
         source_ids=["api-docs-rate-limits", "company-handbook"]
     )
     ```
+
   </Tab>
   <Tab title="Python (Async)">
+
     ```python
     # Semantic search with retrieval
     results = await async_client.search.retrieve(
@@ -279,6 +313,7 @@ Now let's upload some content to make it searchable:
         source_ids=["api-docs-rate-limits", "company-handbook"]
     )
     ```
+
   </Tab>
 </Tabs>
 
@@ -333,6 +368,7 @@ This works universally because our SDKs are fully typed with comprehensive docum
 
 <Tabs>
   <Tab title="TypeScript">
+
     ```ts
     // Start typing and your IDE will guide you through everything:
     client.search.  // - Shows: retrieve, fullTextSearch, qna
@@ -347,8 +383,10 @@ This works universally because our SDKs are fully typed with comprehensive docum
       personalise_search: true
     })
     ```
+
   </Tab>
   <Tab title="Python">
+
     ```python
     # Identical experience - your IDE shows everything:
     client.search.  # - Shows: retrieve, full_text_search, qna
@@ -363,6 +401,7 @@ This works universally because our SDKs are fully typed with comprehensive docum
         personalise_search=True
     )
     ```
+
   </Tab>
 </Tabs>
 
