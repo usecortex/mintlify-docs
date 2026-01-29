@@ -162,7 +162,7 @@ Create a unified data format for all sources:
 ```javascript
 // Unified data structure for Cortex app upload
 const normalizedData = {
-  id: 'unique_source_id',
+  id: 'unique_id',
   title: 'Document/Message Title',
   type: 'slack_message', // Required: gmail, slack_message, notion_page, document, etc.
   timestamp: '2024-01-01T00:00:00Z', // Required: ISO timestamp
@@ -177,7 +177,7 @@ const normalizedData = {
   cortex_metadata: {}, // Optional: custom metadata for Cortex processing
   meta: {
     author: 'user@company.com',
-    source_id: 'original_source_id',
+    id: 'original_id',
     tags: ['project-a', 'urgent', 'meeting-notes'],
     permissions: ['user1@company.com', 'user2@company.com']
   }
@@ -223,8 +223,8 @@ class CortexDataIngestion {
     const uploadResult = await this.uploadBatch(sources, subTenantId);
     
     // Verify processing for each source
-    if (uploadResult.source_ids) {
-      for (const sourceId of uploadResult.source_ids) {
+    if (uploadResult.ids) {
+      for (const sourceId of uploadResult.ids) {
         const status = await this.verifyProcessing(sourceId);
         if (status.indexing_status === 'errored') {
           throw new Error(`Processing failed for source ${sourceId}`);
@@ -955,7 +955,7 @@ const SearchResults = ({ results }) => {
 };
 
 const SourceCard = ({ source, chunks }) => {
-  const sourceChunks = chunks?.filter(chunk => chunk.source_id === source.source_id) || [];
+  const sourceChunks = chunks?.filter(chunk => chunk.id === source.id) || [];
 
   return (
     <div className="source-card">
@@ -1059,7 +1059,7 @@ class DataSyncManager {
       description: item.description,
       cortex_metadata: {}, // Keep empty or for custom data
       meta: {
-        source_id: item.id,
+        id: item.id,
         author: item.author || item.user,
         tags: item.tags || [],
         created_at: item.created_at,
@@ -1088,7 +1088,7 @@ app.post('/webhooks/slack', async (req, res) => {
       },
       metadata: {
         source_type: 'slack_message',
-        source_id: event.ts,
+        id: event.ts,
         author: event.user,
         created_at: new Date(event.ts * 1000).toISOString(),
         channel: event.channel

@@ -1,15 +1,14 @@
 ---
 title: 'Create Tenant'
+description: 'Creating a tenant space where you can store your memories'
 openapi: 'POST /tenants/create'
 ---
 
 import { TableOfContents } from '/snippets/table-of-contents.jsx'
 
-<Panel>
-  <TableOfContents />
-</Panel>
 
-Create a new tenant. If you pass `tenant_id` as a query parameter, that ID will be used. If not provided, the service generates a new `tenant_id` and returns it.
+If you pass `tenant_id` as a query parameter, that ID will be used. If not provided, the service generates a new `tenant_id` and returns it.
+
 
 ### Examples
 
@@ -117,7 +116,7 @@ sub_tenant_id: "client_acme_corp"
 
 The following keywords are **reserved** and cannot be used as keys in `tenant_metadata_schema`:
 
-- `source_id`
+- `id`
 - `source_title`
 - `source_url`
 - `source_type`

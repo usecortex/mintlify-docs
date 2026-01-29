@@ -1,0 +1,163 @@
+---
+title: "AI Memories"
+description: "Store, retrieve, and personalize user experiences with dynamic AI memories that evolve over time—enabling your app to remember preferences, context, and past interactions for smarter, more adaptive responses."
+---
+
+# AI Memories
+
+**Store, retrieve, and personalize user experiences with dynamic AI memories that evolve over time—enabling your app to remember preferences, context, and past interactions for smarter, more adaptive responses.**
+
+Cortex's AI Memories feature lets your application remember what matters. Unlike static knowledge, AI memories are dynamic, user-specific, and continuously updated as users interact with your app. This means your AI can recall preferences, past actions, and contextual signals—enabling truly personalized, adaptive experiences that get smarter with every use.
+
+Think of AI memories as a **second brain for each user**: a continuously evolving profile that captures not just what users say, but what they mean, their intentions, and their unique behaviors.
+
+---
+
+## What are AI Memories?
+
+AI memories are personal, contextual information stored for individual users that help your AI system:
+
+- **Remember user preferences** and past interactions  
+- **Provide personalized responses** based on user history  
+- **Adapt behavior over time** as user patterns change  
+- **Improve relevance and accuracy** across every interaction  
+
+Unlike traditional memory (logs, chat history, or static profiles), AI memories are **living state**. They are updated, enriched, and reused automatically by your agents.
+
+---
+
+## Self-Improving Personalization
+
+### The compounding effect of memory
+
+This is where AI memories become powerful.
+
+Cortex doesn’t just store information — it **learns from it**. The system observes:
+
+- How users ask questions  
+- What formats they prefer (tables, bullets, summaries)  
+- Which content types they interact with (docs, slides, spreadsheets)  
+- Which answers were actually useful  
+
+Over time, the AI builds a **behavioral model per user** and uses it to shape future responses.
+
+### What you get
+
+- Responses feel **tailored, not generic**  
+- The AI naturally **matches user style**  
+- Better outcomes with **less prompting**  
+- A **habit-forming experience** that improves automatically  
+
+In other words: every interaction makes the next one better.
+
+---
+
+## How It Works
+
+### 1. Memory Creation
+
+Memories can be created in multiple ways:
+
+- **Unified API**: Use the [Add Memory](/api-reference/endpoint/add-memories) endpoint to add text, markdown, or conversation pairs with optional inference.
+- **Automatic Generation**: Use the [Generate User Memory](/api-reference/endpoint/generate-user-memory) endpoint to automatically extract multiple memories from user queries or conversations.
+
+The **Add Memory** API supports:
+
+- Raw text and markdown  
+- User/assistant conversation pairs  
+- **Inference mode** (`infer=true`): Extracts implicit preferences and insights  
+- **Direct mode** (`infer=false`): Stores content as-is for faster processing  
+
+### 2. Memory Storage
+
+All memories are stored in a vector database that enables:
+
+- **Semantic search** (meaning, not keywords)  
+- **Contextual retrieval** for downstream reasoning  
+- **Tenant isolation** for privacy and security  
+
+### 3. Memory Retrieval
+
+Use the [Retrieve User Memory](/api-reference/endpoint/retrieve-user-memory) endpoint to:
+
+- Pull **relevant context before generation**  
+- Personalize responses using **real user history**
+
+### 4. Memory Management
+
+- Remove outdated memories with [Delete Memory](/api-reference/endpoint/delete-memory)  
+- Track ingestion using [Verify Processing](/api-reference/endpoint/verify-processing)  
+- Periodically clean and refresh memory state  
+
+---
+
+## Tenant Provisioning
+
+> **Important**: If you receive an error stating  
+> "Tenant-id/sub-tenant-id combination either does not exist or is not provisioned for user memory",  
+> this means the tenant/sub-tenant combination hasn’t been set up yet.
+
+**Automatic Provisioning**: The tenant/sub-tenant combination is automatically provisioned the first time you add or generate a user memory. No manual setup required.
+
+---
+
+## Use Cases & Scenarios
+
+### Sales Assistant
+Alex prefers bullet points and always wants XLSX files. Over time, the AI automatically:
+- Responds in bullet points  
+- Prioritizes spreadsheet sources  
+- Skips long prose  
+
+The assistant starts to feel like it *knows Alex personally*.
+
+### Customer Support
+The system remembers:
+- User’s technical level  
+- Past issues  
+- Preferred communication style  
+
+So it avoids repeating solved problems and adjusts explanation depth automatically.
+
+### Learning Platform
+Tracks:
+- Learning pace  
+- Weak areas  
+- Preferred content formats  
+
+And adapts teaching style for each student.
+
+### Project Management
+Remembers:
+- Team roles  
+- Expertise areas  
+- Communication preferences  
+
+So updates and suggestions are always context-aware.
+
+---
+
+## Getting Started
+
+1. Add your first memory using [Add Memory](/api-reference/endpoint/add-memories)  
+2. Generate memories from conversations with [Generate User Memory](/api-reference/endpoint/generate-user-memory)  
+3. Retrieve context with [Retrieve User Memory](/api-reference/endpoint/retrieve-user-memory)  
+4. Delete or manage with [Delete Memory](/api-reference/endpoint/delete-memory)  
+
+### Quick Example
+
+```bash
+curl -X POST 'https://api.usecortex.ai/memories/add_memory' \
+  -H 'Authorization: Bearer <token>' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "memories": [
+    {
+      "text": "User prefers dark mode and detailed explanations",
+      "infer": true,
+      "user_name": "John"
+    }
+  ],
+  "tenant_id": "tenant-01",
+  "sub_tenant_id": ""
+}'

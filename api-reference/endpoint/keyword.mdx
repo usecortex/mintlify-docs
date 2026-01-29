@@ -1,0 +1,155 @@
+---
+title: 'Full Text Search'
+description: 'Perform full text search for exact matches within your indexed sources or memories.'
+openapi: 'POST /search/full-text-search'
+---
+
+import { TableOfContents } from '/snippets/table-of-contents.jsx'
+
+<Panel>
+  <TableOfContents />
+</Panel>
+
+### Examples
+
+<Tabs>
+  <Tab title="API Request">
+
+    ```bash
+    curl --request POST \
+      --url https://api.usecortex.ai/search/full-text-search \
+      --header 'Authorization: Bearer <token>' \
+      --header 'Content-Type: application/json' \
+      --data '{
+      "query": "John Smith Jake",
+      "tenant_id": "tenant_1234",
+      "sub_tenant_id": "sub_tenant_4567",
+      "max_chunks": 25,
+      "operator": "and"
+    }'
+      ```
+
+  </Tab>
+  <Tab title="TypeScript">
+
+    ```ts
+    const results = await client.search.fullTextSearch({
+      query: "John Smith Jake",
+      tenantId: "tenant_1234",
+      subTenantId: "sub_tenant_4567",
+      maxChunks: 25,
+      operator: "and"
+    });
+    ```
+
+  </Tab>
+  <Tab title="Python (Sync)">
+
+    ```python
+    # Async usage is similar, just use async_client and await
+    results = client.search.full_text_search(
+        query="John Smith Jake",
+        tenant_id="tenant_1234",
+        sub_tenant_id="sub_tenant_4567",
+        max_chunks=25,
+        operator="and"
+    )
+    ```
+
+  </Tab>
+</Tabs>
+
+<Info>
+**TypeScript SDK**: Examples use camelCase parameters (`tenantId`, `subTenantId`, etc.). The REST API uses snake_case. See [Parameter naming](/api-reference/sdks#parameter-naming) in the SDK docs.
+</Info>
+
+## Search Options
+
+The Full Text Search endpoint provides various operators and search capabilities to help you find exactly what you're looking for in your indexed content.
+
+### Boolean Operators
+
+#### AND Operator
+- **Usage**: `"operator": "and"`
+- **Behavior**: All search terms must be present in the document for it to match
+- **Best for**: Precise searches where you need all keywords to be present
+- **Example**: Searching for "machine learning algorithms" with AND will only return documents containing both "machine" AND "learning" AND "algorithms"
+
+#### OR Operator  
+- **Usage**: `"operator": "or"`
+- **Behavior**: At least one search term must be present in the document for it to match
+- **Best for**: Broad searches to find documents containing any of the specified terms
+- **Example**: Searching for "python javascript react" with OR will return documents containing any of these programming languages
+
+### Search Optimization Tips
+
+#### For Better Precision
+- Use the **AND operator** when you need all terms to be present
+- Use **specific terminology** rather than generic terms
+
+#### For Broader Results
+- Use the **OR operator** to find documents with any of the search terms
+- Try **synonyms and related terms** to expand your search
+
+
+### Response
+Returns an array of relevant content chunks from your indexed sources based on the full text search query.
+
+
+```json
+[
+  {
+    "chunk_uuid": "CortexDoc37e854b429784b148d4fc910812bdc581753761779_20_v1",
+    "id": "CortexDoc37e854b429784b148d4fc910812bdc581753761779",
+    "source_title": "IEEE Transactions LaTeX Templates.pdf",
+    "chunk_content": "JOURNAL OF LATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2015 12 Fig. 10: Comparison of models with 4bit precision on Medical QA dataset...",
+    "source_url": "ToayuCogoBdxZVoZQ1ft8ZoRzCO2/Hello/Hello/local_source/CortexDoc37e854b429784b148d4fc910812bdc581753761779",
+    "source_upload_time": "1753761802.079415",
+    "source_collection": [],
+    "source_type": "file",
+    "layout": "{\"coordinates\": {\"x\": 48.96399688720703, \"y\": 26.49277114868164, \"width\": 514.0717697143555, \"height\": 721.1119651794434}, \"page\": 12}",
+    "version": "v1",
+    "source_last_updated_time": "",
+    "relevancy_score": 0.8363813161849976,
+    "rerank_score": null
+  },
+  {
+    "chunk_uuid": "CortexDoc04d73ba38fd54325800a74ec17aed9041753761993_4_v1",
+    "id": "CortexDoc04d73ba38fd54325800a74ec17aed9041753761993",
+    "source_title": "IEEE Transactions LaTeX Templates.pdf",
+    "chunk_content": "III. METHODOLOGY Our proposed framework integrates federated learning (FL) with blockchain technology to fine-tune Large Language Mod-",
+    "source_url": "ToayuCogoBdxZVoZQ1ft8ZoRzCO2/Hello/Hello/local_source/CortexDoc04d73ba38fd54325800a74ec17aed9041753761993",
+    "source_upload_time": "1753762013.1677928",
+    "source_collection": [],
+    "source_type": "file",
+    "layout": "{\"coordinates\": {\"x\": 311.9779968261719, \"y\": 712.3123168945312, \"width\": 251.05746459960938, \"height\": 35.72357177734375}, \"page\": 2}",
+    "version": "v1",
+    "source_last_updated_time": "",
+    "relevancy_score": 0.800000011920929,
+    "rerank_score": null
+  }
+]
+```
+
+
+> **Note:** This API performs full text search with configurable operators for precise text matching. For conversational Q&A with AI-generated responses, use the `/search/qna` API instead.
+
+### Operator Parameter
+The `operator` parameter controls how the search terms are combined:
+
+- **OR operator** (default): At least one token must be present in the document
+- **AND operator**: All tokens must be present in the document
+
+### Max Chunks Parameter
+The `max_chunks` parameter controls the maximum number of results returned:
+- Must be between 1 and 1001
+- Defaults to the system limit if not specified
+
+### Use Cases
+- **Precise keyword matching**: Use AND operator when you need all search terms to be present
+- **Broad search**: Use OR operator to find documents containing any of the search terms
+- **Exact phrase matching**: Ideal for finding specific terminology or phrases in your documents 
+## Error Responses
+
+All endpoints return consistent error responses following the standard format. For detailed error information, see our [Error Responses](/api-reference/error-responses) documentation.
+

@@ -580,7 +580,7 @@ class PersonalizedRecruitingSearch extends AIRecruitingSearch {
       
       questions.push({
         candidate_name: candidate.title?.split(' - ')[1] || 'Candidate',
-        candidate_id: candidate.source_id,
+        candidate_id: candidate.id,
         suggested_questions: candidateQuestions
       });
     });

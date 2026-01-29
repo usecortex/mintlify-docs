@@ -24,7 +24,7 @@ defaults = {
     "max_count": 5,
     "web_url": "https://www.usecortex.ai/",
     "file_id": "CortexDoc1234",
-    "source_id": "CortexDoc1234",
+    "id": "CortexDoc1234",
     "user_name": "John Doe",
     # "message": "<string>",÷
     "embeddings": [[0.123413, 0.655367, 0.987654, 0.123456, 0.789012], [0.123413, 0.655367, 0.987654, 0.123456, 0.789012]],
@@ -55,7 +55,7 @@ defaults = {
     # "tenant_metadata": "{}",
     # "document_metadata": "{}",
     "sub_tenant_ids": ["sub_tenant_1234", "sub_tenant_4567"],
-    "source_ids": ["CortexDoc1234", "CortexDoc4567"],
+    "ids": ["CortexDoc1234", "CortexDoc4567"],
     "chunk_ids": ["CortexEmbeddings123_0", "CortexEmbeddings123_1"],
     "user_memories": [
         {
