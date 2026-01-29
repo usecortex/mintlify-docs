@@ -1,0 +1,57 @@
+---
+title: 'Delete Sources'
+description: 'API reference for Delete Sources.'
+openapi: 'DELETE /delete/delete-sources'
+---
+
+import { TableOfContents } from '/snippets/table-of-contents.jsx'
+
+<Panel>
+  <TableOfContents />
+</Panel>
+
+### Examples
+
+<Tabs>
+  <Tab title="API Request">
+
+    ```bash
+    curl --request DELETE \
+      --url https://api.usecortex.ai/delete/delete-sources \
+      --header 'Authorization: Bearer YOUR_API_KEY' \
+      --header 'Content-Type: application/json' \
+      --data '{
+      "sub_tenant_id": ""
+    }'
+      ```
+
+  </Tab>
+  <Tab title="TypeScript">
+
+    ```ts
+    const result = await client.upload.deleteSource({
+      tenant_id: "tenant_1234",
+      sub_tenant_id: "sub_tenant_4567",
+      ids: ["doc_123", "doc_456"]
+    });
+    ```
+
+  </Tab>
+  <Tab title="Python (Sync)">
+
+    ```python
+    # Async usage is similar, just use async_client and await
+    result = client.upload.delete_source(
+        tenant_id="tenant_1234",
+        sub_tenant_id="sub_tenant_4567",
+        ids=["doc_123", "doc_456"]
+    )
+    ```
+
+  </Tab>
+</Tabs>
+
+## Error Responses
+
+All endpoints return consistent error responses following the standard format. For detailed error information, see our [Error Responses](/api-reference/error-responses) documentation.
+

@@ -13,6 +13,9 @@ All endpoints require an API key sent as a Bearer token in the `Authorization` h
 Authorization: Bearer <your_api_key>
 ```
 
+
+## Quick Start
+
 ### Prerequisites
 
 - Node.js / Python (or any backend language)
@@ -34,6 +37,7 @@ You can upload:
 POST /upload/upload_document
 ```
 
+
 **Form Data:**
 
 - `file`: your document
@@ -50,6 +54,7 @@ curl -X POST 'https://api.usecortex.ai/upload/scrape_webpage?web_url=https://exa
   -H "Authorization: Bearer <your_api_key>"
 ```
 
+
 ### **Step 2 (Optional): Verify Processing**
 
 Check if the document is fully indexed:
@@ -58,6 +63,7 @@ Check if the document is fully indexed:
 POST /upload/verify_processing?file_id=YOUR_FILE_ID
 ```
 
+
 Returns success once the document is ready for querying.
 
 ### **Step 3: Ask Questions Using the AI Retrieval API**
@@ -65,6 +71,7 @@ Returns success once the document is ready for querying.
 ```mdx
 POST /search/qna
 ```
+
 
 **Request Body:**
 
@@ -81,6 +88,7 @@ POST /search/qna
 }
 ```
 
+
 **Example (cURL):**
 
 ```mdx
@@ -96,6 +104,7 @@ curl -X POST 'https://api.usecortex.ai/search/qna' \
   }'
 ```
 
+
 ### **Step 4: Display the Answer in Your App**
 
 You'll get a JSON response like:
@@ -107,6 +116,7 @@ You'll get a JSON response like:
   "chunks": [...]
 }
 ```
+
 
 Render the answer in your UI and include clickable citations if desired. Citations can reference:
 

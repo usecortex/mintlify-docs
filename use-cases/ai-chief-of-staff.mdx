@@ -1,5 +1,5 @@
 ---
-title: "Building an AI Chief of Staff with Cortex - n8n with NLP"
+title: "Building an AI Chief of Staff - n8n in Natural Language"
 description: "Guide to creating an autonomous AI that orchestrates actions across all workplace applications using Cortex's function-calling capabilities."
 ---
 
@@ -7,11 +7,11 @@ description: "Guide to creating an autonomous AI that orchestrates actions acros
 
 This guide walks you through designing an **AI Chief of Staff**—an _AI version of n8n_—powered by Cortex. Instead of only _answering_ questions, this assistant can **_take actions_** across every app in your workspace by selecting and executing the correct function at the right time.
 
-> **Note**: All code examples in this guide are for demonstration purposes. They show the concepts and patterns you can use when building your own Glean-like application with Cortex APIs. Follow the [actual API documentation](https://docs.usecortex.ai/api-reference/introduction) to adapt these examples to your specific use case, technology stack, and requirements.
+> **Note**: All code examples in this guide are for demonstration purposes. They show the concepts and patterns you can use when building your own AI Chief of Staff with Cortex APIs. Follow the [actual API documentation](https://docs.usecortex.ai/api-reference/introduction) to adapt these examples to your specific use case, technology stack, and requirements.
 
-> **Goal**: Let any agent ask Cortex _"What should I do next?"_ and receive a structured function call (plus parameters) that your execution layer can run.
+> **Goal**: Let any agent ask Cortex _“What should I do next?”_ and receive a structured function call (plus parameters) that your execution layer can run.
 
-## The "Second Brain" Concept
+## The “Second Brain” Concept
 
 Think of Cortex as your AI agent's **second brain**—a reasoning layer that transforms natural language requests into precise function calls. Your primary AI agent handles conversation and context, while Cortex becomes the **function selection oracle** that knows:
 
@@ -20,13 +20,13 @@ Think of Cortex as your AI agent's **second brain**—a reasoning layer that tra
 - **How** to adapt based on user preferences and historical patterns
 - **Why** certain approaches work better for specific users or scenarios
 
-This separation of concerns means your AI agent doesn't need to maintain complex decision trees or hardcoded workflows. Instead, it can focus on understanding user intent while delegating the "how to execute" decisions to Cortex's reasoning engine.
+This separation of concerns means your AI agent doesn't need to maintain complex decision trees or hardcoded workflows. Instead, it can focus on understanding user intent while delegating the “how to execute” decisions to Cortex's reasoning engine.
 
 ### The Power of Intelligent Function Routing
 
 Unlike traditional automation platforms where you build rigid if-then workflows, Cortex enables **dynamic function routing**. Your AI agent can say:
 
-> _"The user wants to 'prepare for tomorrow's client meeting'—what should I do?"_
+> _“The user wants to 'prepare for tomorrow's client meeting'—what should I do?”_
 
 Cortex responds with context-aware suggestions:
 
@@ -57,6 +57,7 @@ graph LR
     B -->|"feedback / events / memories"| A
 ```
 
+
 - **Action Orchestrator**: Your runtime that receives function suggestions from Cortex and executes them.
 - **Cortex**: Stores **function definitions** & performs reasoning to decide _which_ function (if any) solves the task.
 - **Workspace Apps**: Anything with an API—CRM, calendar, ticketing, HRIS.
@@ -67,13 +68,13 @@ graph LR
 
 ### AI Memories for Function Learning
 
-Cortex's **AI Memories** don't just remember user preferences—they learn **function effectiveness patterns**. When a user frequently chooses certain functions for specific types of tasks, Cortex builds a personalized "function preference profile." This means your AI agent gets smarter suggestions over time without any manual training.
+Cortex's **AI Memories** don't just remember user preferences—they learn **function effectiveness patterns**. When a user frequently chooses certain functions for specific types of tasks, Cortex builds a personalized “function preference profile.” This means your AI agent gets smarter suggestions over time without any manual training.
 
 **Example**: If Sarah always prefers Slack notifications over email for urgent updates, Cortex learns this pattern and automatically suggests `send_slack_message` instead of `send_email` for her urgent notifications.
 
 ### Multi-Step Reasoning for Complex Workflows
 
-Simple tasks require one function call. Complex business processes require **orchestrated sequences**. Cortex's multi-step reasoning automatically decomposes requests like _"Onboard the new hire"_ into:
+Simple tasks require one function call. Complex business processes require **orchestrated sequences**. Cortex's multi-step reasoning automatically decomposes requests like _“Onboard the new hire”_ into:
 
 1. Create accounts across systems
 2. Send welcome materials
@@ -103,6 +104,7 @@ This isn't just about security—it's about **cognitive focus**. By limiting fun
 
 Cortex treats each callable as a **knowledge object**. The minimal schema:
 
+
 ```jsonc
 {
   "id": "send_slack_message",
@@ -124,9 +126,11 @@ Cortex treats each callable as a **knowledge object**. The minimal schema:
 }
 ```
 
+
 ### 1.2 Upload to Cortex
 
-Use the _same_ `/upload/upload_app_sources` endpoint you already know—set `type: "function"`.
+Use the _same_ `/upload/upload_app_sources` endpoint you already know—set `type: “function”`.
+
 
 ```js
 await cortex.uploadBatch([
@@ -142,6 +146,7 @@ await cortex.uploadBatch([
 ]);
 ```
 
+
 > **Tip**: Keep function **descriptions** natural-language and goal-oriented—Cortex uses them during reasoning.
 
 ### 1.3 Versioning & Deprecation
@@ -153,6 +158,7 @@ Store new versions with `id: functionName_v2`. Mark old versions' `cortex_metada
 ## Step 2 — Build the Action Orchestrator
 
 The orchestrator bridges Cortex ↔ real APIs.
+
 
 ```ts
 class Orchestrator {
@@ -186,10 +192,11 @@ class Orchestrator {
 }
 ```
 
+
 > **Notable Flags**
 >
 > - `auto_agent_routing`: Lets Cortex choose between _answering_ vs _acting_.
-> - `multi_step_reasoning`: Enables plans like _"create Zoom, then email invite"_.
+> - `multi_step_reasoning`: Enables plans like _“create Zoom, then email invite”_.
 
 ---
 
@@ -201,7 +208,7 @@ class Orchestrator {
 
 **Traditional Approach**: Support agent manually coordinates with sales, schedules demo, updates CRM, sends confirmations.
 
-**AI Chief of Staff Approach**: Your AI agent tells Cortex _"Customer Jane from Acme Corp wants a demo of our new reporting feature."_
+**AI Chief of Staff Approach**: Your AI agent tells Cortex _“Customer Jane from Acme Corp wants a demo of our new reporting feature.”_
 
 Cortex suggests:
 
@@ -215,9 +222,9 @@ All triggered by one natural language request, all personalized to Jane's accoun
 
 ### Executive Assistant Workflows
 
-**Scenario**: CEO says _"Prepare for board meeting next Tuesday"_
+**Scenario**: CEO says _“Prepare for board meeting next Tuesday”_
 
-Without hardcoding what "prepare" means, Cortex can suggest:
+Without hardcoding what “prepare” means, Cortex can suggest:
 
 - `compile_kpi_dashboard` → Gather latest metrics
 - `review_action_items` → Check previous meeting follow-ups
@@ -225,11 +232,11 @@ Without hardcoding what "prepare" means, Cortex can suggest:
 - `send_agenda_reminder` → Notify board members 24 hours prior
 - `prepare_presentation_materials` → Compile slide deck from templates
 
-The beauty is that **each executive's "preparation" style is different**—Cortex learns these patterns through AI Memories and adapts accordingly.
+The beauty is that **each executive's “preparation” style is different**—Cortex learns these patterns through AI Memories and adapts accordingly.
 
 ### DevOps Incident Response
 
-**Scenario**: Monitoring alert triggers: _"Database response time degraded"_
+**Scenario**: Monitoring alert triggers: _“Database response time degraded”_
 
 Your AI agent asks Cortex for the appropriate response. Based on severity, time of day, and historical patterns, Cortex might suggest:
 
@@ -254,22 +261,25 @@ Same trigger, different responses based on learned patterns and context.
 
 Your Chief of Staff should react to:
 
-1. **Direct Commands** – "Book me a 30-min call with Alice next week."
-2. **Scheduled Jobs** – Daily stand-up summary at 9 AM.
-3. **System Events** – New ticket in Jira → triage.
+1. **Direct Commands** — “Book me a 30-min call with Alice next week.”
+2. **Scheduled Jobs** — Daily stand-up summary at 9 AM.
+3. **System Events** — New ticket in Jira → triage.
 
 Create a thin wrapper per event source that forwards the _natural-language_ description to the orchestrator.
+
 
 ```bash
 # Slack slash-command → cloud-function
 /ai book meeting with @alice next tuesday
 ```
 
+
 ---
 
 ## Step 4 — Planning & Multi-Step Execution
 
 Sometimes the task requires **multiple** calls.
+
 
 ```mermaid
 flowchart TD
@@ -279,7 +289,8 @@ flowchart TD
   D --> E[Return summary]
 ```
 
-1. **Plan Generation**: Ask Cortex "return a JSON array of functions to execute sequentially."
+
+1. **Plan Generation**: Ask Cortex “return a JSON array of functions to execute sequentially.”
 2. **Dependency Resolution**: Inject outputs of earlier steps into later ones.
 3. **Rollback / Compensation**: If step n fails, undo steps ≤ n-1.
 
@@ -289,7 +300,7 @@ flowchart TD
 
 Your function library becomes part of Cortex's **knowledge base**. This means function selection isn't just based on keywords—it's **semantic understanding**.
 
-When a user says _"I need to tell the team about the delay,"_ Cortex understands this could map to:
+When a user says _“I need to tell the team about the delay,”_ Cortex understands this could map to:
 
 - `send_slack_announcement` for immediate updates
 - `update_project_timeline` for formal documentation
@@ -301,6 +312,7 @@ The **retrieval engine** finds semantically similar past requests and suggests f
 ### Context-Aware Function Metadata
 
 Use Cortex's **metadata filtering** to make function suggestions context-aware:
+
 
 ```jsonc
 {
@@ -314,6 +326,7 @@ Use Cortex's **metadata filtering** to make function suggestions context-aware:
 }
 ```
 
+
 When a finance manager requests expense approval during business hours, Cortex automatically considers these constraints in its function selection logic.
 
 ---
@@ -321,8 +334,8 @@ When a finance manager requests expense approval during business hours, Cortex a
 ## Step 5 — Security, Auth & Governance
 
 - **OAuth Vault**: Store per-user tokens; Orchestrator injects correct token at runtime.
-- **Policy Engine**: Prevent "_"delete all records"_ unless requester ∈ `admins`.
-- **Approval Workflow**: For risky actions, route through Slack message "Approve / Reject".
+- **Policy Engine**: Prevent _“delete all records”_ unless requester ∈ `admins`.
+- **Approval Workflow**: For risky actions, route through Slack message “Approve / Reject”.
 - **Audit Log**: Persist `task → function → result` for compliance.
 
 ---
@@ -337,6 +350,7 @@ When a finance manager requests expense approval during business hours, Cortex a
 
 Auto-tune by feeding metrics back to Cortex's memory:
 
+
 ```js
 await cortex.feedback({
   functionId: "create_calendar_event",
@@ -344,6 +358,7 @@ await cortex.feedback({
   details: { p95_ms: 2500 }
 });
 ```
+
 
 ---
 
