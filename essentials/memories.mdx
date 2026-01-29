@@ -59,7 +59,7 @@ In other words: every interaction makes the next one better.
 Memories can be created in multiple ways:
 
 - **Unified API**: Use the [Add Memory](/api-reference/endpoint/add-memories) endpoint to add text, markdown, or conversation pairs with optional inference.
-- **Automatic Generation**: Use the [Generate User Memory](/api-reference/endpoint/generate-user-memory) endpoint to automatically extract multiple memories from user queries or conversations.
+- **From conversations**: Use the Add Memory API with `user_assistant_pairs` and `infer=true` to extract memories from user/assistant dialogue.
 
 The **Add Memory** API supports:
 
@@ -78,16 +78,16 @@ All memories are stored in a vector database that enables:
 
 ### 3. Memory Retrieval
 
-Use the [Retrieve User Memory](/api-reference/endpoint/retrieve-user-memory) endpoint to:
+Retrieve relevant memories at query time using the [Smart Recall](/api-reference/endpoint/smart) or [Keyword](/api-reference/endpoint/keyword) endpoints to:
 
-- Pull **relevant context before generation**  
+- Pull **relevant context before generation**
 - Personalize responses using **real user history**
 
 ### 4. Memory Management
 
-- Remove outdated memories with [Delete Memory](/api-reference/endpoint/delete-memory)  
-- Track ingestion using [Verify Processing](/api-reference/endpoint/verify-processing)  
-- Periodically clean and refresh memory state  
+- Remove outdated memories with [Delete Memory](/api-reference/delete-memory)
+- Track ingestion using the result IDs returned from Add Memory; processing is asynchronous.
+- Periodically clean and refresh memory state
 
 ---
 
@@ -140,9 +140,9 @@ So updates and suggestions are always context-aware.
 ## Getting Started
 
 1. Add your first memory using [Add Memory](/api-reference/endpoint/add-memories)  
-2. Generate memories from conversations with [Generate User Memory](/api-reference/endpoint/generate-user-memory)  
-3. Retrieve context with [Retrieve User Memory](/api-reference/endpoint/retrieve-user-memory)  
-4. Delete or manage with [Delete Memory](/api-reference/endpoint/delete-memory)  
+2. Add conversation pairs with `infer=true` to extract memories from dialogue  
+3. Retrieve context at query time with [Smart Recall](/api-reference/endpoint/smart) or [Keyword](/api-reference/endpoint/keyword)  
+4. Delete or manage with [Delete Memory](/api-reference/delete-memory)  
 
 ### Quick Example
 

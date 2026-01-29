@@ -26,7 +26,9 @@
             "pages": [
               "index",
               "concepts",
-              "quickstart"
+              "core-concepts",
+              "quickstart",
+              "continuity-assurance"
             ]
           },
           {
@@ -74,7 +76,8 @@
             "pages": [
               "api-reference/endpoint/add-memories",
               "api-reference/endpoint/add-knowledge-memories",
-              "api-reference/endpoint/add-hive-memories"
+              "api-reference/endpoint/add-hive-memories",
+              "api-reference/delete-memory"
             ]
           },
           {

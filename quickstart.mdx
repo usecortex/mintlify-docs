@@ -23,18 +23,29 @@ Authorization: Bearer <your_api_key>
 - An API key from [Cortex](https://usecortex.ai/) (`Authorization: Bearer <your_api_key>`)
 - A document or webpage you want your AI to read
 
+### **Step 0: Create a tenant (if needed)**
+
+Create a tenant space for your data:
+
+```mdx
+POST /tenants/create
+```
+
+```mdx
+curl -X POST 'https://api.usecortex.ai/tenants/create' \
+  -H "Authorization: Bearer <your_api_key>" \
+  -H "Content-Type: application/json" \
+  -d '{"tenant_id": "your_tenant_id"}'
+```
+
 ### **Step 1: Upload Your Knowledge Source**
 
-You can upload:
-
-- A public webpage
-- A document (PDF, DOCX, etc.)
-- Multiple documents in bulk
+You can upload documents (PDF, DOCX, etc.) or use the memories API for text/markdown.
 
 #### Option A: Upload a document
 
 ```mdx
-POST /upload/upload_document
+POST /ingestion/upload-document
 ```
 
 
@@ -43,24 +54,23 @@ POST /upload/upload_document
 - `file`: your document
 - `tenant_id`: your unique tenant ID
 
-#### Option B: Upload a webpage
-
 ```mdx
-POST /upload/scrape_webpage
+curl -X POST 'https://api.usecortex.ai/ingestion/upload-document' \
+  -H "Authorization: Bearer <your_api_key>" \
+  -F "file=@/path/to/your/document.pdf" \
+  -F "tenant_id=your_tenant_id"
 ```
 
-```mdx
-curl -X POST 'https://api.usecortex.ai/upload/scrape_webpage?web_url=https://example.com&tenant_id=your_tenant_id' \
-  -H "Authorization: Bearer <your_api_key>"
-```
+#### Option B: Add text or markdown via Memories API
 
+Use [Add Memory](/api-reference/endpoint/add-memories) or [Add Knowledge Memories](/api-reference/endpoint/add-knowledge-memories) for text, markdown, or structured content.
 
 ### **Step 2 (Optional): Verify Processing**
 
 Check if the document is fully indexed:
 
 ```mdx
-POST /upload/verify_processing?file_id=YOUR_FILE_ID
+POST /ingestion/verify-processing?file_id=YOUR_FILE_ID&tenant_id=your_tenant_id
 ```
 
 
@@ -145,6 +155,6 @@ Fine-tune the user experience with:
 
 ### 🧩 Optional Extensions
 
-- **Batch Upload**: `/upload/batch_upload` for multiple files
-- **Delete Memory**: `/delete_source` to remove documents
-- **List Sources**: `/list/sources` to display all uploaded documents
+- **Delete sources**: `POST /delete/delete-sources` to remove documents
+- **List sources**: `POST /list/list-sources` to display all uploaded documents
+- **Recall**: Use [Smart Recall](/api-reference/endpoint/smart) or [Keyword](/api-reference/endpoint/keyword) for semantic or keyword search

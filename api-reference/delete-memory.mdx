@@ -1,7 +1,7 @@
 ---
 title: 'Delete User Memory'
 description: 'API reference for Delete User Memory.'
-openapi: 'DELETE /memories/delete-memory'
+openapi: 'DELETE /memories/delete_memory'
 ---
 
 import { TableOfContents } from '/snippets/table-of-contents.jsx'
@@ -15,10 +15,10 @@ import { TableOfContents } from '/snippets/table-of-contents.jsx'
 
     ```bash
     curl -X 'DELETE' \
-      'https://api.usecortex.ai/memories/delete-memory?tenant_id=tenant_123&memory_id=memory_123' \
-      -H 'accept: application/json'
-      --header 'Authorization: Bearer YOUR_API_KEY'
-      ```
+      'https://api.usecortex.ai/memories/delete_memory?tenant_id=tenant_123&memory_id=memory_123' \
+      -H 'accept: application/json' \
+      -H 'Authorization: Bearer YOUR_API_KEY'
+    ```
 
   </Tab>
   <Tab title="TypeScript">
@@ -74,20 +74,16 @@ The Delete User Memory endpoint allows you to remove specific memories from a us
 </Warning>
 
 <Note>
-**Memory ID Source**: Memory IDs (id) can be obtained from the [List User Memories](/api-reference/endpoint/list-user-memories) endpoint or from the response of [Add User Memory](/api-reference/endpoint/add-user-memory) and [Generate User Memory](/api-reference/endpoint/generate-user-memory) endpoints.
+**Memory ID Source**: Memory IDs (`id`) are returned in the response when you add memories via [Add Memory](/api-reference/endpoint/add-memories). Store these IDs in your application so you can reference them for deletion.
 </Note>
 
 <Info>
 **Best Practices**:
-- Always verify the memory content before deletion using the List endpoint
+- Store memory IDs from Add Memory responses for later deletion
 - Consider implementing user confirmation for memory deletion
 - Log deletion activities for audit purposes
 - Provide users with a way to review their memories before deletion
 </Info>
-
-<Tip>
-**Pro Tip**: For bulk memory management, you can combine this API with the List API to create a memory management interface that allows users to review and selectively delete their memories.
-</Tip>
 
 ## Response Fields
 
