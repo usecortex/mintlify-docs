@@ -380,8 +380,7 @@ Each item in the `memories` array can have the following fields:
 
 ## Processing Status
 
-Processing is asynchronous. The response includes a `results` array with an `id` and `status` for each item. Use these to track progress:
-
+After submitting content, use the [Verify Processing](/api-reference/endpoint/verify-processing) endpoint to check status:
 
 ```bash
 # Example: check status via ingestion verify-processing (when using file_id from ingestion flows)
