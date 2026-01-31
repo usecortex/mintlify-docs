@@ -324,7 +324,7 @@ For any form of memories, the identifier is `id`. When that identifier already e
 | `true` | Replace existing (default) |
 | `false` | Fail; do not overwrite |
 
-Overwriting permanently removes and replaces existing memmory for that identifier.
+Overwriting permanently removes and replaces existing memory for that identifier.
 
 ### `id` (optional)
 
@@ -384,6 +384,7 @@ After submitting content, use the [Verify Processing](/api-reference/endpoint/ve
 
 
 ```bash
+# Example: check status via ingestion verify-processing (when using file_id from ingestion flows)
 curl -X POST \
   'https://api.usecortex.ai/ingestion/verify-processing?file_id=<id>&tenant_id=<tenant_id>' \
   -H 'Authorization: Bearer <token>'
