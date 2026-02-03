@@ -1,7 +1,7 @@
 ---
-title: 'List Sources By ID'
-description: 'Retrieve specific sources by their IDs.'
-openapi: 'POST /list/list-sources-by-id'
+title: "List By ID"
+description: "Retrieve specific sources by their IDs."
+openapi: "POST /list/list-sources-by-id"
 ---
 
 import { TableOfContents } from '/snippets/table-of-contents.jsx'
@@ -14,24 +14,21 @@ import { TableOfContents } from '/snippets/table-of-contents.jsx'
 
 <Tabs>
   <Tab title="API Request">
-
     ```bash
-   curl -X 'POST' \
-  'https://api.usecortex.ai/list/list-sources-by-id' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -d '{
-  "ids": [
+    curl -X 'POST' \
+    'https://api.usecortex.ai/list/list-sources-by-id' \
+    -H 'accept: application/json' \
+    -H 'Content-Type: application/json' \
+    -d '{
+    "ids": [
     "string"
-  ],
-  "tenant_id": "string",
-  "sub_tenant_id": "string"
-}'
-      ```
-
+    ],
+    "tenant_id": "string",
+    "sub_tenant_id": "string"
+    }'
+    ```
   </Tab>
   <Tab title="TypeScript">
-
     ```ts
     const specificSources = await client.sources.getByIds({
       tenant_id: "tenant_1234",
@@ -39,10 +36,8 @@ import { TableOfContents } from '/snippets/table-of-contents.jsx'
       ids: ["doc_123", "doc_456"]
     });
     ```
-
   </Tab>
   <Tab title="Python (Sync)">
-
     ```python
     # Async usage is similar, just use async_client and await
     specific_sources = client.sources.get_by_ids(
@@ -51,7 +46,6 @@ import { TableOfContents } from '/snippets/table-of-contents.jsx'
         ids=["doc_123", "doc_456"]
     )
     ```
-
   </Tab>
 </Tabs>
 
@@ -61,7 +55,6 @@ Retrieve specific sources by their IDs. Use this API to fetch one or more source
 
 ## Example Request
 
-
 ```json
 {
   "tenant_id": "tenant_456",
@@ -70,11 +63,9 @@ Retrieve specific sources by their IDs. Use this API to fetch one or more source
 }
 ```
 
-
 ## Example Response
 
-
-```json
+````json
 {
   "sources": [
     {
@@ -90,10 +81,8 @@ Retrieve specific sources by their IDs. Use this API to fetch one or more source
   "success": true,
   "message": "Successfully fetched sources"
 }
-```
-
+````
 
 ## Error Responses
 
 All endpoints return consistent error responses following the standard format. For detailed error information, see our [Error Responses](/api-reference/error-responses) documentation.
-

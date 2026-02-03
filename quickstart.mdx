@@ -5,14 +5,13 @@ description: "Start building amazing LLM experiences in under 5 minutes"
 
 > Base URL: `https://api.usecortex.ai`
 >
-> Contact us to get your API key at [founders@usecortex.ai](mailto:founders@usecortex.ai)
+> Sign up on the platform for setting up your workspace or contact us to get your API key at [founders@usecortex.ai](mailto:founders@usecortex.ai) for a personalized onboarding
 
 All endpoints require an API key sent as a Bearer token in the `Authorization` header.
 
 ```mdx
 Authorization: Bearer <your_api_key>
 ```
-
 
 ## Quick Start
 
@@ -21,9 +20,9 @@ Authorization: Bearer <your_api_key>
 - Node.js / Python (or any backend language)
 - Basic knowledge of HTTP requests
 - An API key from [Cortex](https://usecortex.ai/) (`Authorization: Bearer <your_api_key>`)
-- A document or webpage you want your AI to read
+- A user conversation with an LLM assistant (or use our sample content)
 
-### **Step 0: Create a tenant (if needed)**
+### Step 1: Create a tenant
 
 Create a tenant space for your data:
 
@@ -38,34 +37,33 @@ curl -X POST 'https://api.usecortex.ai/tenants/create' \
   -d '{"tenant_id": "your_tenant_id"}'
 ```
 
-### **Step 1: Upload Your Knowledge Source**
+### **Step 2: Upload memories**
 
-You can upload documents (PDF, DOCX, etc.) or use the memories API for text/markdown.
+You can upload messages, emails, PDFs, DOCXs, or use the memories API for text/markdown.
 
-#### Option A: Upload a document
+#### Option A: Upload a knowledge memory
 
 ```mdx
-POST /ingestion/upload-document
+POST /ingestion/upload-knowledge
 ```
 
-
-- `file`: your document
+- `memory`: your document
 - `tenant_id`: your unique tenant ID
 
 ```mdx
-curl -X POST 'https://api.usecortex.ai/ingestion/upload-document' \
+curl -X POST 'https://api.usecortex.ai/ingestion/upload-knowledge' \
   -H "Authorization: Bearer <your_api_key>" \
   -F "file=@/path/to/your/document.pdf" \
   -F "tenant_id=your_tenant_id"
 ```
 
-#### Option B: Add text or markdown via Memories API
+#### Option B: Upload user memories
 
-Use [Add Memory](/api-reference/endpoint/add-memories) or [Add Knowledge Memories](/api-reference/endpoint/add-knowledge-memories) for text, markdown, or structured content.
+Use [Add Memory](/api-reference/endpoint/add-memories) for uploading user conversations, user-LLM pairs, texts, or markdowns
 
-### **Step 2 (Optional): Verify Processing**
+### **(Optional): Verify Processing**
 
-Check if the document is fully indexed:
+Check if the memories are fully indexed:
 
 ```mdx
 POST /ingestion/verify-processing?file_id=YOUR_FILE_ID&tenant_id=your_tenant_id
@@ -75,17 +73,13 @@ POST /ingestion/verify-processing?file_id=YOUR_FILE_ID&tenant_id=your_tenant_id
 
 ```json
 {
-  "question": "What did the document say about pricing?",
+  "question": "What did the team say about pricing?",
   "session_id": "user-session-123",
   "tenant_id": "your_tenant_id",
   "context_list": ["optional_specific_file_id"],
-  "ai_generation": true,
-  "highlight_chunks": true,
-  "tenant_metadata": {"source_title": "contract.pdf"},
-  "document_metadata": {"source_title": "contract.pdf"}
+  "tenant_metadata": {"source_title": "contract.pdf"}
 }
 ```
-
 
 **Example (cURL):**
 
@@ -102,30 +96,10 @@ curl -X POST 'https://api.usecortex.ai/search/qna' \
   }'
 ```
 
+### **Step 3: Give context to your agents**
 
-### **Step 4: Display the Answer in Your App**
+You'll get a JSON response:
 
-You'll get a JSON response like:
+### **Step 4: Give context to your agents**
 
-```json
-{
-  "answer": "The contract specifies a 12-month term with a 30-day opt-out period...",
-  "sources": [...],
-  "chunks": [...]
-}
-```
-
-Render the answer in your UI and include clickable citations if desired. Citations can reference:
-
-- **Source filename** (e.g., `contract.pdf`)
-- **Page number**
-- **Snippet preview**
-
-If available, use the `bounding_box` to enable clickable highlights or coordinate-based jumping in PDFs.
-
-You can use the `tenant_metadata` and `document_metadata` parameters to restrict the context to only sources matching specific criteria:
-
-- **`tenant_metadata`**: Filter by organizational attributes (department, compliance framework) that apply to all documents in your tenant
-- **`document_metadata`**: Filter by document-specific attributes (title, author, document type) that vary per document
-
-For example, `{ "source_title": "contract.pdf" }` will only use sources with that title for answering the question. You can combine both metadata types for precise filtering: `{ "department": "Legal", "document_type": "contract" }` to find all legal contracts.
+What should the agent know about the world, the user, and the task before acting? 

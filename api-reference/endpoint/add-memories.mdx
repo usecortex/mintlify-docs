@@ -1,14 +1,8 @@
 ---
-title: 'User Memory'
-description: 'Add memories to Cortex that can be used by your agents for learning about your users. This API allows you to ingest memories in various formats including text, markdown, and user-assistant pairs.'
-openapi: 'POST /memories/add_memory'
+title: "User Memory"
+description: "Add memories to Cortex that can be used by your agents for learning about your users. This API allows you to ingest memories in various formats including text, markdown, and user-assistant pairs."
+openapi: "POST /memories/add_memory"
 ---
-
-import { TableOfContents } from '/snippets/table-of-contents.jsx'
-
-<Panel>
-  <TableOfContents />
-</Panel>
 
 ### Sample Request
 
@@ -33,6 +27,7 @@ curl -X 'POST' \
 ```
 
 ### Examples
+
 <Tabs>
   <Tab title="API Request">
     ```bash expandable
@@ -143,7 +138,6 @@ curl -X 'POST' \
       "upsert": true
     }'
     ```
-
   </Tab>
   <Tab title="TypeScript">
     ```ts expandable
@@ -194,7 +188,6 @@ curl -X 'POST' \
       upsert: true
     });
     ```
-
   </Tab>
   <Tab title="Python (Sync)">
     ```python expandable
@@ -249,7 +242,6 @@ curl -X 'POST' \
         upsert=True
     )
     ```
-
   </Tab>
 </Tabs>
 
@@ -259,7 +251,6 @@ The API supports three types of content input:
 
 ### Text
 
-
 ```json
 {
   "text": "Your text content here",
@@ -267,9 +258,7 @@ The API supports three types of content input:
 }
 ```
 
-
 ### Markdown
-
 
 ```json
 {
@@ -279,9 +268,7 @@ The API supports three types of content input:
 }
 ```
 
-
 ### User-Assistant Pairs
-
 
 ```json
 {
@@ -292,37 +279,38 @@ The API supports three types of content input:
 }
 ```
 
-
 ## Key Parameters
 
 ### `infer` (boolean)
 
 Controls whether Cortex extracts insights, likes, dislikes, preferences, and outcomes from the content:
 
-| Value | Behavior |
-|-------|----------|
-| `false` | Content is ingested as-is (faster processing) |
-| `true` | Content is analyzed to extract information, preferences, and insights |
+| Value   | Behavior                                                              |
+| ------- | --------------------------------------------------------------------- |
+| `false` | Content is ingested as-is (faster processing)                         |
+| `true`  | Content is analyzed to extract information, preferences, and insights |
 
 <Info>
-**When to use `infer=true`:**
-- Storing user conversations to extract preferences
-- Processing feedback or reviews
-- Extracting insights from unstructured text
+  **`When to use infer=true:`**
 
-**When to use `infer=false`:**
-- Uploading documents, policies, or factual content
-- Storing deterministic data that doesn't need interpretation
+  - Storing user conversations to extract preferences
+  - Processing feedback or reviews
+  - Extracting insights from unstructured text
+
+  **`When to use infer=false:`**
+
+  - Uploading documents, policies, or factual content
+  - Storing deterministic data that doesn't need interpretation
 </Info>
 
 ### `Upsert` parameter (optional)
 
 For any form of memories, the identifier is `id`. When that identifier already exists, `upsert` (boolean, default `true`) controls the behavior:
 
-| Value | Behavior |
-|-------|----------|
-| `true` | Replace existing (default) |
-| `false` | Fail; do not overwrite |
+| Value   | Behavior                   |
+| ------- | -------------------------- |
+| `true`  | Replace existing (default) |
+| `false` | Fail; do not overwrite     |
 
 Overwriting permanently removes and replaces existing memory for that identifier.
 
@@ -338,26 +326,25 @@ Time-to-live in seconds. Memories will be automatically forgotten after this dur
 
 Each item in the `memories` array can have the following fields:
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `text` | string | * | Raw text or markdown content |
-| `user_assistant_pairs` | array | * | Array of conversation pairs |
-| `is_markdown` | boolean | No | Whether text is markdown formatted |
-| `infer` | boolean | No | Enable inference processing (default: false) |
-| `custom_instructions` | string | No | Guide inference processing |
-| `user_name` | string | No | User's name for personalization |
-| `id` | string | No | Custom unique identifier |
-| `title` | string | No | Display title for the memory |
-| `expiry_time` | integer | No | TTL in seconds |
-| `tenant_metadata` | string | No | JSON string of tenant-level metadata |
-| `document_metadata` | string | No | JSON string of document-level metadata |
+| Field                  | Type    | Required | Description                                  |
+| ---------------------- | ------- | -------- | -------------------------------------------- |
+| `text`                 | string  | \*       | Raw text or markdown content                 |
+| `user_assistant_pairs` | array   | \*       | Array of conversation pairs                  |
+| `is_markdown`          | boolean | No       | Whether text is markdown formatted           |
+| `infer`                | boolean | No       | Enable inference processing (default: false) |
+| `custom_instructions`  | string  | No       | Guide inference processing                   |
+| `user_name`            | string  | No       | User's name for personalization              |
+| `id`                   | string  | No       | Custom unique identifier                     |
+| `title`                | string  | No       | Display title for the memory                 |
+| `expiry_time`          | integer | No       | TTL in seconds                               |
+| `tenant_metadata`      | string  | No       | JSON string of tenant-level metadata         |
+| `document_metadata`    | string  | No       | JSON string of document-level metadata       |
 
 <Note>
-**\*** Either `text` OR `user_assistant_pairs` must be provided, but not both.
+  **\*** Either `text` OR `user_assistant_pairs` must be provided, but not both.
 </Note>
 
 ## Response Format
-
 
 ```json
 {
@@ -377,11 +364,9 @@ Each item in the `memories` array can have the following fields:
 }
 ```
 
-
 ## Processing Status
 
 After submitting content, use the [Verify Processing](/api-reference/endpoint/verify-processing) endpoint to check status:
-
 
 ```bash
 # Example: check status via ingestion verify-processing (when using file_id from ingestion flows)
@@ -390,42 +375,40 @@ curl -X POST \
   -H 'Authorization: Bearer <token>'
 ```
 
-
 ### Status Values
 
-| Status | Description |
-|--------|-------------|
-| `queued` | Content is waiting to be processed |
-| `processing` | Content is being chunked and embedded |
-| `graph_creation` | Knowledge graph is being built |
-| `completed` | Content is fully indexed and searchable |
-| `errored` | Processing failed (check error_code) |
-
-
+| Status           | Description                             |
+| ---------------- | --------------------------------------- |
+| `queued`         | Content is waiting to be processed      |
+| `processing`     | Content is being chunked and embedded   |
+| `graph_creation` | Knowledge graph is being built          |
+| `completed`      | Content is fully indexed and searchable |
+| `errored`        | Processing failed (check error_code)    |
 
 <Note>
-**Batch Uploads**: 
-You can include multiple items in a single request for efficient bulk ingestion. Each item can have different `infer` settings.
+  **Batch Uploads**: You can include multiple items in a single request for efficient bulk ingestion. Each item can have different `infer` settings.
 
-**Processing Time**: 
-- `infer=false`: Typically 1-3 minutes
-- `infer=true`: May take longer due to LLM inference processing
-- Large batches: Processing time scales with content volume
+  **Processing Time**:
+
+  - `infer=false`: Typically 1-3 minutes
+  - `infer=true`: May take longer due to LLM inference processing
+  - Large batches: Processing time scales with content volume
 </Note>
 
 ## Migration from Previous APIs
 
 This endpoint replaces and unifies:
+
 - `/memories/add-memories` (deprecated)
 - `/ingestion/upload-content` (deprecated)
 
 ### Key Changes
 
-| Old API | New API |
-|---------|---------|
-| `raw_text` | `text` |
+| Old API                   | New API                       |
+| ------------------------- | ----------------------------- |
+| `raw_text`                | `text`                        |
 | `content` in body wrapper | `memories` array at top level |
-| Separate endpoints | Single unified endpoint |
+| Separate endpoints        | Single unified endpoint       |
 
 ## Error Responses
 

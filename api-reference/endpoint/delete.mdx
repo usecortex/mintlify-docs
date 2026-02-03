@@ -1,7 +1,7 @@
 ---
-title: 'Delete Sources'
-description: 'API reference for Delete Sources.'
-openapi: 'POST /delete/delete-sources'
+title: "Delete"
+description: "API reference for Delete Sources."
+openapi: "POST /delete/delete-sources"
 ---
 
 import { TableOfContents } from '/snippets/table-of-contents.jsx'
@@ -14,7 +14,6 @@ import { TableOfContents } from '/snippets/table-of-contents.jsx'
 
 <Tabs>
   <Tab title="API Request">
-
     ```bash
     curl -X POST \
       'https://api.usecortex.ai/delete/delete-sources' \
@@ -26,10 +25,8 @@ import { TableOfContents } from '/snippets/table-of-contents.jsx'
         "ids": ["CortexDoc1234", "CortexDoc4567"]
       }'
     ```
-
   </Tab>
   <Tab title="TypeScript">
-
     ```ts
     const result = await client.upload.deleteSource({
       tenant_id: "tenant_1234",
@@ -37,10 +34,8 @@ import { TableOfContents } from '/snippets/table-of-contents.jsx'
       ids: ["doc_123", "doc_456"]
     });
     ```
-
   </Tab>
   <Tab title="Python (Sync)">
-
     ```python
     # Async usage is similar, just use async_client and await
     result = client.upload.delete_source(
@@ -49,19 +44,17 @@ import { TableOfContents } from '/snippets/table-of-contents.jsx'
         ids=["doc_123", "doc_456"]
     )
     ```
-
   </Tab>
 </Tabs>
 
 ## Request Body
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `tenant_id` | string | Yes | Your tenant identifier |
-| `sub_tenant_id` | string | No | Sub-tenant identifier; omit or use `""` for the default sub-tenant |
-| `ids` | array of strings | Yes | Source IDs to delete (e.g. from upload response or [List Sources](/api-reference/endpoint/list)). At least one ID required. |
+| Field           | Type             | Required | Description                                                                                                                 |
+| --------------- | ---------------- | -------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `tenant_id`     | string           | Yes      | Your tenant identifier                                                                                                      |
+| `sub_tenant_id` | string           | No       | Sub-tenant identifier; omit or use `""` for the default sub-tenant                                                          |
+| `ids`           | array of strings | Yes      | Source IDs to delete (e.g. from upload response or [List Sources](/api-reference/endpoint/list)). At least one ID required. |
 
 ## Error Responses
 
 All endpoints return consistent error responses following the standard format. For detailed error information, see our [Error Responses](/api-reference/error-responses) documentation.
-

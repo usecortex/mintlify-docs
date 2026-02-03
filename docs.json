@@ -35,7 +35,6 @@
               "essentials/recall",
               "essentials/memories",
               "essentials/context-graph",
-              "essentials/multi-step",
               "essentials/multi-tenant",
               "essentials/metadata"
             ]
@@ -62,7 +61,7 @@
             ]
           },
           {
-            "group": "Tenant Spaces",
+            "group": "Tenants",
             "pages": [
               "api-reference/endpoint/create-tenant",
               "api-reference/endpoint/monitor-tenant",
@@ -74,7 +73,7 @@
             "pages": [
               "api-reference/endpoint/add-memories",
               "api-reference/endpoint/add-knowledge-memories",
-              "api-reference/endpoint/add-hive-memories", 
+              "api-reference/endpoint/add-hive-memories",
               "api-reference/delete-memory"
             ]
           },
@@ -86,7 +85,7 @@
             ]
           },
           {
-            "group": "Manage",
+            "group": "Manage Memories",
             "pages": [
               "api-reference/endpoint/delete",
               "api-reference/endpoint/list",
@@ -96,7 +95,7 @@
             ]
           },
           {
-            "group": "Embeddings",
+            "group": "Custom Embeddings",
             "pages": [
               "api-reference/endpoint/create-embeddings-tenant",
               "api-reference/endpoint/add-embeddings",

@@ -1,82 +1,143 @@
 ---
-title: "Retrievals"
-description: "Fine-tune your AI retrievals with complete control over parameters like recency bias and search alpha to get more accurate, relevant, and high-quality results."
+title: "Recall"
+description: "Recall is the hardest problem in memory systems. Storing data is easy. Knowing what to retrieve, when to retrieve it, and why is what makes an AI system feel intelligent."
 ---
 
-Cortex gives you complete control over how your AI retrieves and ranks results. You can adjust parameters like `recency_bias` to prefer newer documents, or `search_alpha` to balance between exact keyword matches and more flexible semantic understanding.
+Most AI systems today rely on naive retrieval: embed everything, run a vector search, and hope the right context shows up. This breaks down quickly in real applications - results are noisy, outdated, irrelevant, or lack personalization. Most nuances in context cannot be captured with embeddings. Read more on limitations on vector databases here by Google DeepMind here: https://arxiv.org/abs/2508.21038
 
-## Search Capabilities
+Cortex is built around a different idea:
 
-Cortex delivers blazing fast hybrid search, filter, and rerank over billions of vectors. With compute-storage separation for up to 100x savings, Cortex supports vector, full-text, regex, and metadata search. Develop locally and scale to petabytes in the cloud backed by object storage. Serverless search and retrieval that is accurate, fast, and built for AI.
+> We believe retrieval shouldn't be vector search first. Recall should be **intelligent, personalized, and context-aware**, not just semantic search over embeddings.
 
-### Hybrid Search Architecture
+## What Developers Usually Struggle With
 
-Cortex's search engine combines multiple search methodologies to deliver the most relevant results:
+If you’ve built RAG systems, you’ve likely hit these problems:
 
-- **Vector Search**: Semantic understanding using embeddings
-- **Full-Text Search**: Traditional keyword-based search
-- **Regex Search**: Pattern-based text matching
-- **Metadata Search**: Structured data filtering and querying
+- Too many irrelevant chunks returned
+- No way to enforce deterministic filters
+- No personalization across users or agents
+- Hard to mix structured data with embeddings
+- Painful latency at scale
+- Constant tuning of ranking heuristics
 
-## Metadata Search
+Cortex exists to remove this entire class of problems.
 
-Cortex delivers a highly optimised, two-stage hybrid search pipeline that combines metadata search, keyword search, and vector search—each tailored to work in harmony for maximum context and precision. At the heart of our architecture is a flexible metadata engine built on fully dynamic schemas, allowing users to define arbitrary key-value pairs—like status: approved, owner: nishkarsh@usecortex.in, or created_on: 03-10-2025—without being locked into predefined fields. Metadata is ingested and stored separately from document content, enabling fast, index-free filtering and complex relational querying.
+## How Cortex Recall Works (High Level)
 
-Our pipeline operates in two stages:
+When an agent queries Cortex, the system doesn’t just return the closest vectors. Instead, Cortex runs a **multi-stage recall pipeline** that:
 
-### Stage 1: Metadata-Based Candidate Retrieval
+- Understands the **intent of the query**
+- Considers the **user, tenant, and agent context**
+- Traverses the **memory graph** to understand relationships and outcomes
+- Weighs **recency, relevance, frequency, and semantic similarity**
+- Ranks memories based on **how useful they are for the current task**
 
-When a user submits a natural language query—e.g., "show me all the emails by nishkarsh@usecortex.in on 03-10-2025" or "what all drafts have been marked as status 'approved'"—we run the query through a custom query understanding module. This model extracts potential metadata keys and values, and using statistical sampling, pre-indexed metadata maps, and frequency analysis, we intelligently generate the most likely filter combinations.
+The goal is not “what is similar?”\
+The goal is: **“what context will help this agent succeed right now?”**
 
-These filters are used to query the metadata database directly, returning a scoped set of high-confidence candidate results. This drastically reduces the search space, ensures relevance from the outset, and avoids brute-force full-text or embedding scans across the entire corpus.
+## Why This Beats Traditional RAG
 
-### Stage 2: Context-Aware Semantic Retrieval
+Traditional RAG systems treat memory like a flat database.\
+Cortex treats memory like a **living context graph**.
 
-The second stage takes the metadata-filtered results and uses them to query the vector store for semantically rich, conceptually related chunks or documents. Instead of naïvely searching the entire vector space, we condition the vector queries using the Stage 1 candidates—essentially saying: "Find me content that is not only semantically relevant, but also contextually related to these filtered results."
+Each recall operation takes into account:
 
-This hybrid strategy allows us to go beyond traditional semantic search. For instance, if the Stage 1 metadata narrowed the results to 100 documents tagged as finance reports from last month, Stage 2 ensures we extract meaningful passages within those docs—even if they don't share exact keywords—surfacing deeper, latent context aligned with the user's intent.
+- **Who** is asking (user personalization)
+- **Which agent** is asking (agent role)
+- **What they’re trying to do** (task intent)
+- **What has worked before** (historical outcomes)
 
-This staged architecture offers several critical advantages:
+This means two users can ask the same question and get **different, personalized context**.
 
-- **Reduced noise** by filtering early with structured data
-- **Increased precision** by anchoring vector search to scoped metadata hits
-- **Improved recall** through embedding-driven context expansion
-- **Sub-second latency** thanks to narrowed query scope and parallelisation
+## Adaptive & Personalized Retrieval
 
-All components are tied together with a hybrid scoring and ranking algorithm that merges structured signals (from metadata) with unstructured semantic relevance (from embeddings). Built on a distributed, low-latency architecture with caching and multi-tenant support, Cortex delivers an intelligent, contextually aware search experience that scales effortlessly with your data.
+Over time, Cortex learns which memories are actually useful.
 
-The result isn't just fast search—it's search that understands your structure, your semantics, and your intent. Rebuilding this from scratch would take a team, a year, and a lot of pain. We did that already—so you don't have to.
+This enables:
 
-## Fine-Tuning Your Retrievals
+- **Personalized ranking** – different users see different context
+- **Implicit feedback loops** – useful memories get boosted
+- **Contextual pruning** – low-signal memories fade away
 
-**What it is:**  
-Cortex gives you complete control over how your AI retrieves and ranks results. You can adjust parameters like `recency_bias` to prefer newer documents, or `search_alpha` to balance between exact keyword matches and more flexible semantic understanding. This tuning ensures that your search behavior fits the specific context of your application—whether you're building a chatbot, search engine, or intelligent assistant.
+Think of Cortex less like search, and more like a:
 
-**Benefit:**  
-You get more accurate, relevant, and high-quality results every time. Users won't be shown outdated or irrelevant information. Instead, they receive answers that match both what they *say* and what they *mean*. This builds trust and improves task success.
+> **Personalized context engine that continuously optimizes what your agents see.**
 
-**Use Case & Scenario:**  
-Imagine you're building a support chatbot for a SaaS product. A user asks, "Why was my payment declined?" Instead of retrieving every document with the word "payment," the bot prioritizes recent tickets that semantically match issues related to failed billing. The user gets an instant, relevant response without sifting through old or off-topic results.
+## Fine-Tuning Your Retrievals (Advanced)
 
-## Search Types
+Cortex gives you explicit control over recall behavior.
 
-### Vector Search
-Semantic search using embeddings to understand meaning and context beyond exact keyword matches. Perfect for finding conceptually related content even when the exact words don't match.
+You can tune parameters like:
 
-### Full-Text Search
-Traditional keyword-based search that finds exact matches and partial matches in document content. Ideal for precise term searching and phrase matching.
+- `recency_bias` – prefer newer memories
+- `search_alpha` – balance semantic vs lexical
+- custom scoring functions
+- metadata constraints
 
-### Regex Search
-Pattern-based text matching using regular expressions. Useful for finding specific text patterns, formats, or structured data within documents.
+This lets you build:
 
-### Metadata Search
-Structured data filtering and querying using key-value pairs. Enables filtering by document properties, tags, categories, and other structured attributes.
+- Deterministic enterprise systems
+- Highly adaptive consumer agents
+- Or anything in between
+
+Without rewriting your retrieval stack.
+
+## Beyond Vector Search
+
+Pure vector search consistently fails in real-world systems:
+
+- Returns semantically similar but useless results
+- Cannot enforce structure or constraints
+- Breaks with compliance, access control, and workflows
+- Does not personalize well across users
+
+Cortex is built on the belief that:
+
+> Vector databases are **necessary but not sufficient** for memory.
+
+Every agent needs a **personalized recall layer** that combines:
+
+- Semantic understanding
+- Structured metadata
+- Behavioral feedback
+- Graph relationships
+
+The result is not just faster search.
+
+It’s recall that feels closer to a:
+
+> **Personalized PageRank for memory**\
+> than a traditional vector database.
 
 ## Performance & Scalability
 
-- **Compute-Storage Separation**: Up to 100x cost savings
-- **Petabyte Scale**: Built for massive datasets
-- **Sub-Second Latency**: Optimized for real-time applications
-- **Multi-Tenant Support**: Secure isolation between users
-- **Local Development**: Develop and test locally before scaling to cloud
+Cortex recall is built for production-scale systems:
 
+- **Compute–Storage Separation** → up to 10× cost savings
+- **Petabyte Scale** → billions of memories
+- **Sub-Second Latency** → real-time agents
+- **Multi-Tenant Isolation** → enterprise ready
+- **Local Development** → test locally, scale globally
+
+This is the infrastructure layer for **memory-driven AI systems**.
+
+## The Real Value Proposition (For Developers)
+
+If you didn’t use Cortex, you would need to build:
+
+- Vector pipelines
+- Metadata engines
+- Ranking heuristics
+- Feedback systems
+- Graph traversal logic
+- Caching layers
+- Compliance filters
+- Personalization logic
+
+And keep them all in sync.
+
+That’s a year of work for a team.
+
+Cortex already did that.
+
+So your agents can focus on **thinking**, not **searching**.

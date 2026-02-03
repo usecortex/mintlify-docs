@@ -1,26 +1,20 @@
 ---
-title: 'SDKs - Node and Python'
-description: 'Official TypeScript/Node.js and Python SDKs so that you can integrate Cortex AI into your application with ease.'
+title: "SDKs - Node and Python"
+description: "Official TypeScript/Node.js and Python SDKs so that you can integrate Cortex AI into your application with ease."
 ---
-
-Get started with our fully-typed SDKs that provide a seamless developer experience for integrating Cortex AI into your applications.
 
 ## Installation
 
 <Tabs>
   <Tab title="TypeScript / Node.js">
-
     ```bash
     npm i @usecortex_ai/node
     ```
-
   </Tab>
   <Tab title="Python">
-
     ```bash
     pip install usecortex-ai
     ```
-
   </Tab>
 </Tabs>
 
@@ -28,40 +22,32 @@ Get started with our fully-typed SDKs that provide a seamless developer experien
 
 <Tabs>
   <Tab title="TypeScript">
-
     ```ts
     import { CortexAIClient } from "@usecortex_ai/node";
-
+    
     const client = new CortexAIClient({
       token: process.env.CORTEX_API_KEY,
     });
     ```
-
   </Tab>
   <Tab title="Python">
-
     ```python
     import os
     from usecortex_ai import CortexAI, AsyncCortexAI
-
+    
     api_key = os.environ["CORTEX_API_KEY"]
-
+    
     # Sync client
     client = CortexAI(token=api_key)
-
+    
     # Async client (for async/await usage)
     async_client = AsyncCortexAI(token=api_key)
     ```
-
   </Tab>
 </Tabs>
 
-<Warning>
-Always use environment variables for API keys. Never hardcode credentials in your source code.
-</Warning>
-
 <Info>
-**Python developers**: We provide both synchronous and asynchronous clients. Use `AsyncCortexAI` for async/await patterns and `CortexAI` for traditional synchronous operations.
+  **Python**: We provide both synchronous and asynchronous clients. Use `AsyncCortexAI` for async/await patterns and `CortexAI` for traditional synchronous operations.
 </Info>
 
 ## SDK Method Structure & Type Safety
@@ -69,9 +55,9 @@ Always use environment variables for API keys. Never hardcode credentials in you
 Our SDKs follow a predictable pattern that mirrors the API structure while providing full type safety:
 
 <Note>
-**Method Mapping**: `client.<group>.<function_name>` mirrors `api.usecortex.ai/<group>/<function_name>`
+  **Method Mapping**: `client.<group>.<function_name>` mirrors `api.usecortex.ai/<group>/<function_name>`
 
-For example: `client.upload.uploadText()` corresponds to `POST /upload/upload_text`
+  For example: `client.upload.addMemory()` corresponds to `POST /upload/add_memory`
 </Note>
 
 ### Input and Output Type Matching
@@ -84,23 +70,20 @@ The SDKs provide exact type parity with the API specification:
 - **Nested Objects**: Complex nested parameters and responses maintain their full structure and typing
 
 **Language Conventions**:
-- **TypeScript**: camelCase method names (`uploadText`, `getAll`) with full TypeScript interfaces
-- **Python**: snake_case method names (`upload_text`, `get_all`) with type hints and dataclasses
+
+- **TypeScript**: camelCase method names (`addMemory`) with full TypeScript interfaces
+- **Python**: snake_case method names (`add_memory`) with type hints and dataclasses
 
 ### Parameter Naming
 
-The REST API uses **snake_case** for all request and response body fields (e.g. `tenant_id`, `sub_tenant_id`, `max_chunks`). The SDKs handle naming as follows:
+The REST API uses **snake_case** for all request and response body fields (e.g. `tenant_id`, `sub_tenant_id`). The SDKs handle naming as follows:
 
-- **TypeScript SDK**: Uses **camelCase** for parameter names (e.g. `tenantId`, `subTenantId`, `maxChunks`) to match JavaScript conventions. The SDK maps these to the API's snake_case when sending requests.
+- **TypeScript SDK**: Uses **camelCase** for parameter names (e.g. `tenantId`, `subTenantId`) to match JavaScript conventions. The SDK maps these to the API's snake_case when sending requests.
 - **Python SDK**: Uses **snake_case** for parameters, matching the API.
 
-When calling the REST API directly (e.g. with curl), use snake_case. In TypeScript examples throughout the docs, we show the SDK's camelCase parameters.
+When calling the REST API directly (e.g. with curl), use snake_case. In TypeScript examples throughout the docs, we show the SDK's camelCase parameters. This means you can rely on your IDE's autocomplete and type checking. If a parameter is optional in the API docs, it's optional in the SDK. If a response contains a specific field, your IDE will know about it.
 
-<Info>
-This means you can rely on your IDE's autocomplete and type checking. If a parameter is optional in the API docs, it's optional in the SDK. If a response contains a specific field, your IDE will know about it.
-</Info>
-
-## Getting Started: Complete Workflow
+## Getting Started
 
 Let's walk through a complete example from creating a tenant to searching your data.
 
@@ -108,7 +91,6 @@ Let's walk through a complete example from creating a tenant to searching your d
 
 <Tabs>
   <Tab title="TypeScript">
-
     ```ts
     async function createTenant() {
       const tenantCreationResponse = await client.user.createTenant({
@@ -117,31 +99,24 @@ Let's walk through a complete example from creating a tenant to searching your d
       return tenantCreationResponse;
     }
     ```
-
   </Tab>
   <Tab title="Python (Sync)">
-
     ```python
     def create_tenant():
         return client.user.create_tenant(tenant_id="my-company")
     ```
-
   </Tab>
   <Tab title="Python (Async)">
-
     ```python
     async def create_tenant():
         return await async_client.user.create_tenant(tenant_id="my-company")
     ```
-
   </Tab>
 </Tabs>
 
 <Info>
-**For a more detailed explanation** of tenant creation, including metadata schemas, sub-tenant management, and advanced configuration options, refer to the [Create Tenant endpoint documentation](https://docs.usecortex.ai/api-reference/endpoint/create-tenant).
+  **For a more detailed explanation** of tenant creation, including metadata schemas, sub-tenant management, and advanced configuration options, refer to the [Create Tenant endpoint documentation](https://docs.usecortex.ai/api-reference/endpoint/create-tenant).
 </Info>
-
-
 
 ### Step 2: Index Your Data
 
@@ -149,7 +124,6 @@ Now let's upload some content to make it searchable:
 
 <Tabs>
   <Tab title="TypeScript">
-
     ```ts
     // Upload text content
     async function uploadText() {
@@ -164,7 +138,7 @@ Now let's upload some content to make it searchable:
       });
       return res;
     }
-
+    
     // Upload a document file
     async function uploadFile() {
       const uploadResult = await client.upload.uploadDocument({
@@ -176,10 +150,8 @@ Now let's upload some content to make it searchable:
       return uploadResult;
     }
     ```
-
   </Tab>
   <Tab title="Python (Sync)">
-
     ```python
     # Upload text content
     def upload_text():
@@ -190,7 +162,7 @@ Now let's upload some content to make it searchable:
             file_id="api-docs-rate-limits",
             tenant_metadata={"sub_tenant_id": "engineering"}
         )
-
+    
     # Upload document file
     def upload_file():
         with open("company-handbook.pdf", 'rb') as file_obj:
@@ -201,10 +173,8 @@ Now let's upload some content to make it searchable:
                 file_id="company-handbook.pdf"
             )
     ```
-
   </Tab>
   <Tab title="Python (Async)">
-
     ```python
     # Upload text content
     async def upload_text():
@@ -215,7 +185,7 @@ Now let's upload some content to make it searchable:
             file_id="api-docs-rate-limits",
             tenant_metadata={"sub_tenant_id": "engineering"}
         )
-
+    
     # Upload document file
     async def upload_file():
         with open("company-handbook.pdf", 'rb') as file_obj:
@@ -226,19 +196,17 @@ Now let's upload some content to make it searchable:
                 file_id="company-handbook.pdf"
             )
     ```
-
   </Tab>
 </Tabs>
 
 <Info>
-**For a more detailed explanation** of document upload, including supported file formats, processing pipeline, metadata handling, and advanced configuration options, refer to the [Upload Document endpoint documentation](https://docs.usecortex.ai/api-reference/endpoint/upload-document).
+  **For a more detailed explanation** of document upload, including supported file formats, processing pipeline, metadata handling, and advanced configuration options, refer to the [Upload Document endpoint documentation](https://docs.usecortex.ai/api-reference/endpoint/upload-document).
 </Info>
 
 ### Step 3: Search and Retrieve
 
 <Tabs>
   <Tab title="TypeScript">
-
     ```ts
     // Semantic search with retrieval
     const results = await client.search.retrieve({
@@ -247,13 +215,13 @@ Now let's upload some content to make it searchable:
       sub_tenant_id: "engineering",
       max_chunks: 10
     });
-
+    
     // List all sources
     const allSources = await client.sources.getAll({
         tenant_id: "my-company",
         sub_tenant_id: "engineering"
     });
-
+    
     // Get specific sources by ID
     const specificSources = await client.sources.getByIds({
       tenant_id: "my-company",
@@ -261,10 +229,8 @@ Now let's upload some content to make it searchable:
       ids: ["api-docs-rate-limits", "company-handbook"]
     });
     ```
-
   </Tab>
   <Tab title="Python (Sync)">
-
     ```python
     # Semantic search with retrieval
     results = client.search.retrieve(
@@ -273,13 +239,13 @@ Now let's upload some content to make it searchable:
         sub_tenant_id="engineering",
         max_chunks=10
     )
-
+    
     # List all sources
     all_sources = client.sources.get_all(
         tenant_id="my-company",
         sub_tenant_id="engineering",
     )
-
+    
     # Get specific sources by ID
     specific_sources = client.sources.get_by_ids(
         tenant_id="my-company",
@@ -287,10 +253,8 @@ Now let's upload some content to make it searchable:
         ids=["api-docs-rate-limits", "company-handbook"]
     )
     ```
-
   </Tab>
   <Tab title="Python (Async)">
-
     ```python
     # Semantic search with retrieval
     results = await async_client.search.retrieve(
@@ -299,13 +263,13 @@ Now let's upload some content to make it searchable:
         sub_tenant_id="engineering",
         max_chunks=10
     )
-
+    
     # List all sources
     all_sources = await async_client.sources.get_all(
         tenant_id="my-company",
         sub_tenant_id="engineering",
     )
-
+    
     # Get specific sources by ID
     specific_sources = await async_client.sources.get_by_ids(
         tenant_id="my-company",
@@ -313,12 +277,11 @@ Now let's upload some content to make it searchable:
         ids=["api-docs-rate-limits", "company-handbook"]
     )
     ```
-
   </Tab>
 </Tabs>
 
 <Info>
-**For a more detailed explanation** of search and retrieval, including query parameters, scoring mechanisms, result structure, and advanced search features, refer to the [Search endpoint documentation](https://docs.usecortex.ai/api-reference/endpoint/search).
+  **For a more detailed explanation** of search and retrieval, including query parameters, scoring mechanisms, result structure, and advanced search features, refer to the [Search endpoint documentation](https://docs.usecortex.ai/api-reference/endpoint/search).
 </Info>
 
 ## Special Endpoints
@@ -326,24 +289,23 @@ Now let's upload some content to make it searchable:
 ### List Sources
 
 <Info>
-The `/list` endpoints use special naming in the SDKs for better developer experience:
+  The `/list` endpoints use special naming in the SDKs for better developer experience:
 
-- `/list/sources` → `sources.getAll()` / `sources.get_all()`
-- `/list/sources_by_id` → `sources.getByIds()` / `sources.get_by_ids()`
+  - `/list/sources` → `sources.getAll()` / `sources.get_all()`
+  - `/list/sources_by_id` → `sources.getByIds()` / `sources.get_by_ids()`
 </Info>
 
 This avoids conflicts with language keywords while providing intuitive method names.
 
-
 ## Type Safety
 
 <Check>
-All SDKs are fully typed with TypeScript definitions and Python type hints. Your IDE will provide:
+  All SDKs are fully typed with TypeScript definitions and Python type hints. Your IDE will provide:
 
-- **Autocomplete** for all method names and parameters
-- **Type checking** for request and response objects  
-- **Inline documentation** for each parameter
-- **Error prevention** through compile-time validation
+  - **Autocomplete** for all method names and parameters
+  - **Type checking** for request and response objects
+  - **Inline documentation** for each parameter
+  - **Error prevention** through compile-time validation
 </Check>
 
 ## Error Handling
@@ -353,7 +315,7 @@ Both SDKs throw exceptions for API errors. The error objects contain the same st
 ## The Complete Guide: Your IDE Knows Everything
 
 <Check>
-**Everything you need is at your fingertips**: The examples and patterns shown above are sufficient for understanding our SDK. Your IDE's autocomplete is your most powerful tool.
+  **Everything you need is at your fingertips**: The examples and patterns shown above are sufficient for understanding our SDK. Your IDE's autocomplete is your most powerful tool.
 </Check>
 
 ### The Universal CMD+Space Approach
@@ -361,14 +323,13 @@ Both SDKs throw exceptions for API errors. The error objects contain the same st
 Whether you're using **TypeScript**, **Python**, **VS Code**, **PyCharm**, or **any modern IDE**, the approach is identical:
 
 1. **Type the method name** → See all available methods
-2. **Open the parentheses** → See all required and optional parameters  
+2. **Open the parentheses** → See all required and optional parameters
 3. **Press Cmd+Space (Mac) or Ctrl+Space (Windows/Linux)** → Get instant documentation
 
 This works universally because our SDKs are fully typed with comprehensive documentation.
 
 <Tabs>
   <Tab title="TypeScript">
-
     ```ts
     // Start typing and your IDE will guide you through everything:
     client.search.  // - Shows: retrieve, fullTextSearch, qna
@@ -383,10 +344,8 @@ This works universally because our SDKs are fully typed with comprehensive docum
       personalise_search: true
     })
     ```
-
   </Tab>
   <Tab title="Python">
-
     ```python
     # Identical experience - your IDE shows everything:
     client.search.  # - Shows: retrieve, full_text_search, qna
@@ -401,7 +360,6 @@ This works universally because our SDKs are fully typed with comprehensive docum
         personalise_search=True
     )
     ```
-
   </Tab>
 </Tabs>
 
@@ -415,7 +373,7 @@ Our SDKs are auto-generated from the same API specification that powers this doc
 - **Live Examples**: The @example annotations in our type definitions show real usage
 
 <Info>
-**The examples you've seen above demonstrate every pattern you'll encounter.** Once you understand the tenant/sub-tenant concept and the resource organization (`client.upload.uploadText`, `client.search.retrieve`, etc.), your IDE will handle the rest.
+  **The examples you've seen above demonstrate every pattern you'll encounter.** Once you understand the tenant/sub-tenant concept and the resource organization (`client.upload.uploadText`, `client.search.retrieve`, etc.), your IDE will handle the rest.
 </Info>
 
 ### Resource Organization
@@ -423,10 +381,9 @@ Our SDKs are auto-generated from the same API specification that powers this doc
 Our SDK follows a predictable structure that mirrors the API endpoints.
 
 <Warning>
-**Don't overthink it**: The patterns shown in our complete workflow example cover 90% of use cases. For anything else, trust your IDE's autocomplete - it knows the exact structure and will guide you perfectly.
+  **Don't overthink it**: The patterns shown in our complete workflow example cover 90% of use cases. For anything else, trust your IDE's autocomplete - it knows the exact structure and will guide you perfectly.
 </Warning>
 
-
 <Tip>
-**For in-depth explanations of each function**: While your IDE's autocomplete will guide you through the basic usage, refer to the next sections of this documentation for detailed explanations of every API endpoint, parameter options, and advanced use cases.
+  **For in-depth explanations of each function**: While your IDE's autocomplete will guide you through the basic usage, refer to the next sections of this documentation for detailed explanations of every API endpoint, parameter options, and advanced use cases.
 </Tip>

@@ -1,14 +1,10 @@
 ---
-title: 'Create Tenant'
-description: 'Creating a tenant space where you can store your memories'
-openapi: 'POST /tenants/create'
+title: "Create Tenant"
+description: "Creating a tenant (space) where you can store your memories"
+openapi: "POST /tenants/create"
 ---
 
-import { TableOfContents } from '/snippets/table-of-contents.jsx'
-
-
-If you pass `tenant_id` as a query parameter, that ID will be used. If not provided, the service generates a new `tenant_id` and returns it.
-
+If you pass `tenant_id` as a query parameter, that ID will be used. If not provided, the service generates a new `tenant_id` and returns it. 
 
 ### Examples
 
@@ -16,15 +12,14 @@ If you pass `tenant_id` as a query parameter, that ID will be used. If not provi
   <Tab title="API Request">
     ```bash expandable
     curl -X 'POST' \
-  'https://api.usecortex.ai/tenants/create' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -H 'Authorization: Bearer <token>' \
-  -d '{
-  "tenant_id": "string"
-  }'
+    'https://api.usecortex.ai/tenants/create' \
+    -H 'accept: application/json' \
+    -H 'Content-Type: application/json' \
+    -H 'Authorization: Bearer <token>' \
+    -d '{
+    "tenant_id": "string"
+    }'
     ```
-
   </Tab>
   <Tab title="Python (Sync)">
     ```python expandable
@@ -53,12 +48,11 @@ If you pass `tenant_id` as a query parameter, that ID will be used. If not provi
         ]
     )
     ```
-
   </Tab>
 </Tabs>
 
 <Note>
-**Important**: When a tenant is created, Cortex automatically creates a **DEFAULT sub-tenant** that acts as a global space for that tenant. Any documents ingested or API calls made with the `tenant_id` but without specifying a `sub_tenant_id` will automatically reference this default sub-tenant.
+  **Important**: When a tenant is created, Cortex automatically creates a **DEFAULT sub-tenant** that acts as a global space for that tenant. Any documents ingested or API calls made with the `tenant_id` but without specifying a `sub_tenant_id` will automatically reference this default sub-tenant.
 </Note>
 
 ## Creating Additional Sub-Tenants
@@ -75,16 +69,13 @@ If you pass `tenant_id` as a query parameter, that ID will be used. If not provi
 
 **For B2C Applications (Individual Users):**
 
-
 ```javascript
 // Use user IDs as sub-tenant IDs for personal workspaces
 sub_tenant_id: "user_12345"
 sub_tenant_id: "user_67890"
 ```
 
-
 **For B2B Applications (Departments/Teams):**
-
 
 ```javascript
 // Use descriptive department or team names
@@ -94,9 +85,7 @@ sub_tenant_id: "hr"
 sub_tenant_id: "marketing"
 ```
 
-
 **For Project-Based Organizations:**
-
 
 ```javascript
 // Use project identifiers
@@ -104,13 +93,12 @@ sub_tenant_id: "project_alpha"
 sub_tenant_id: "client_acme_corp"
 ```
 
-
 <Info>
-**Naming Convention**: Use consistent prefixes like `user_`, `dept_`, or `project_` to make the purpose of each sub-tenant clear. Avoid special characters and keep names descriptive but concise.
+  **Naming Convention**: Use consistent prefixes like `user_`, `dept_`, or `project_` to make the purpose of each sub-tenant clear. Avoid special characters and keep names descriptive but concise.
 </Info>
 
 <Warning>
-**Important**: Tenant metadata keys are **immutable** once set during tenant creation. Choose your keys carefully as they cannot be modified later. Document metadata remains fully flexible and can be set per document during upload.
+  **Important**: Tenant metadata keys are **immutable** once set during tenant creation. Choose your keys carefully as they cannot be modified later. Document metadata remains fully flexible and can be set per document during upload.
 </Warning>
 
 ## Reserved Keywords
@@ -150,29 +138,31 @@ Each schema object in the `tenant_metadata_schema` array should specify:
 Cortex supports a comprehensive range of data types for metadata fields:
 
 ### Primitive Types
-| Type | Description | Example Values | Use Cases |
-|------|-------------|----------------|-----------|
-| **string** | Text data | `"Engineering"`, `"SOC2"`, `"confidential"` | Categorical data, identifiers, labels |
-| **number** | Numeric values | `5`, `100.5`, `2024` | Quantitative metrics, versions, priorities |
-| **boolean** | True/false values | `true`, `false` | Binary flags, status indicators |
-| **date** | Date/time values | `"2024-01-15T10:30:00Z"` | Temporal data, audit trails |
+
+| Type        | Description       | Example Values                              | Use Cases                                  |
+| ----------- | ----------------- | ------------------------------------------- | ------------------------------------------ |
+| **string**  | Text data         | `"Engineering"`, `"SOC2"`, `"confidential"` | Categorical data, identifiers, labels      |
+| **number**  | Numeric values    | `5`, `100.5`, `2024`                        | Quantitative metrics, versions, priorities |
+| **boolean** | True/false values | `true`, `false`                             | Binary flags, status indicators            |
+| **date**    | Date/time values  | `"2024-01-15T10:30:00Z"`                    | Temporal data, audit trails                |
 
 ### Complex Types
-| Type | Description | Example Values | Use Cases |
-|------|-------------|----------------|-----------|
-| **object** | Structured data | `{"city": "SF", "country": "USA"}` | Hierarchical relationships, nested data |
-| **array** | Multiple values | `["security", "api", "compliance"]` | Multi-value attributes, tags, categories |
+
+| Type       | Description     | Example Values                      | Use Cases                                |
+| ---------- | --------------- | ----------------------------------- | ---------------------------------------- |
+| **object** | Structured data | `{"city": "SF", "country": "USA"}`  | Hierarchical relationships, nested data  |
+| **array**  | Multiple values | `["security", "api", "compliance"]` | Multi-value attributes, tags, categories |
 
 ## Searchable vs Filterable Flags
 
 Understanding the difference between `searchable` and `filterable` is crucial for optimal metadata design:
 
 **1. Searchable Fields**
+
 - **Purpose**: Fields that can be used in **semantic search queries** and **QnA operations**
 - **Behavior**: Content is indexed for AI-powered search and question answering
 - **Use When**: You want users to find documents by asking questions about these fields
 - **Example**: `"Which documents are from the Engineering department?"`
-
 
 ```json
 {
@@ -183,13 +173,12 @@ Understanding the difference between `searchable` and `filterable` is crucial fo
 }
 ```
 
-
 **2. Filterable Fields**
+
 - **Purpose**: Fields that can be used for **precise filtering** and **exact matching**
 - **Behavior**: Content is indexed for fast exact-match filtering operations
 - **Use When**: You want to narrow down results with precise criteria
 - **Example**: `department = "Engineering" AND status = "active"`
-
 
 ```json
 {
@@ -200,9 +189,7 @@ Understanding the difference between `searchable` and `filterable` is crucial fo
 }
 ```
 
-
 **3. Combined Usage**
-
 
 ```json
 {
@@ -213,11 +200,9 @@ Understanding the difference between `searchable` and `filterable` is crucial fo
 }
 ```
 
-
 ## Comprehensive Examples
 
 **Enterprise Setup - Multi-Department Organization**
-
 
 ```json
 [
@@ -266,9 +251,7 @@ Understanding the difference between `searchable` and `filterable` is crucial fo
 ]
 ```
 
-
 **Legal Firm Setup - Client and Case Management**
-
 
 ```json
 [
@@ -311,9 +294,7 @@ Understanding the difference between `searchable` and `filterable` is crucial fo
 ]
 ```
 
-
 **Engineering Team Setup - Project and Component Management**
-
 
 ```json
 [
@@ -356,9 +337,7 @@ Understanding the difference between `searchable` and `filterable` is crucial fo
 ]
 ```
 
-
 **Simple Setup - Basic Organization**
-
 
 ```json
 [
@@ -383,15 +362,16 @@ Understanding the difference between `searchable` and `filterable` is crucial fo
 ]
 ```
 
-
 ## Metadata Best Practices
 
 **1. Naming Conventions**
+
 - **Use snake_case**: `business_unit` instead of `businessUnit`
 - **Be descriptive**: `data_classification_level` instead of `classification`
 - **Use consistent prefixes**: `compliance_*`, `security_*`, `business_*`
 
 **2. Type Selection Guidelines**
+
 - **Strings**: For categorical data, identifiers, and labels
 - **Numbers**: For quantitative metrics, versions, and priorities
 - **Booleans**: For binary flags and status indicators
@@ -400,12 +380,14 @@ Understanding the difference between `searchable` and `filterable` is crucial fo
 - **Objects**: For structured, hierarchical data
 
 **3. Searchable vs Filterable Strategy**
+
 - **Make searchable**: Fields users will ask questions about
 - **Make filterable**: Fields used for precise result narrowing
 - **Combine both**: For fields used in both semantic search and filtering
 - **Filterable only**: For sensitive data or exact-match requirements
 
 **4. Performance Considerations**
+
 - **Limit total fields**: Keep metadata schema focused and purposeful
 - **Use appropriate types**: Choose the most specific type for your data
 - **Consider query patterns**: Design for your most common use cases
@@ -416,8 +398,8 @@ Understanding the difference between `searchable` and `filterable` is crucial fo
 Once you've defined your tenant metadata schema, here's how it works with your documents:
 
 ### Document Upload with Metadata
-When you upload documents, you'll provide both tenant and document metadata:
 
+When you upload documents, you'll provide both tenant and document metadata:
 
 ```json
 {
@@ -440,7 +422,6 @@ When you upload documents, you'll provide both tenant and document metadata:
 }
 ```
 
-
 ### Query Examples
 
 With the metadata schema defined above, users can perform sophisticated queries:
@@ -451,7 +432,6 @@ With the metadata schema defined above, users can perform sophisticated queries:
 
 "Find all engineering documents about security compliance"
 ```
-
 
 - Searches through `department` (searchable: true)
 - Searches through `compliance_framework` (searchable: true)
@@ -464,7 +444,6 @@ With the metadata schema defined above, users can perform sophisticated queries:
 department = "Engineering" AND data_classification = "internal" AND is_confidential = false
 ```
 
-
 - Exact match on `department` (filterable: true)
 - Exact match on `data_classification` (filterable: true)
 - Exact match on `is_confidential` (filterable: true)
@@ -476,26 +455,22 @@ department = "Engineering" AND data_classification = "internal" AND is_confident
 "Show me all SOC2 compliance documents from the Product business unit"
 ```
 
-
 - Semantic search for "SOC2 compliance" (searchable fields)
 - Precise filter: `business_unit = "Product"` (filterable: true)
 
 ### Real-World Use Cases
 
 #### 1. Legal Document Management
-**Schema**: Practice area, client ID, confidentiality level, jurisdiction
-**Query**: "Find all corporate law documents for client ACME that are not confidential"
-**Filter**: `practice_area = "corporate_law" AND client_id = "ACME" AND confidentiality_level != "confidential"`
+
+**Schema**: Practice area, client ID, confidentiality level, jurisdiction **Query**: "Find all corporate law documents for client ACME that are not confidential" **Filter**: `practice_area = "corporate_law" AND client_id = "ACME" AND confidentiality_level != "confidential"`
 
 #### 2. Engineering Documentation
-**Schema**: Product line, team, component, priority, tags
-**Query**: "Show me all high-priority API documentation from the backend team"
-**Filter**: `product_line = "API" AND team = "backend" AND priority >= 4`
+
+**Schema**: Product line, team, component, priority, tags **Query**: "Show me all high-priority API documentation from the backend team" **Filter**: `product_line = "API" AND team = "backend" AND priority >= 4`
 
 #### 3. HR Document Management
-**Schema**: Department, employee type, salary band, status
-**Query**: "Find all active full-time employees in the Engineering department"
-**Filter**: `department = "Engineering" AND employee_type = "full_time" AND status = "active"`
+
+**Schema**: Department, employee type, salary band, status **Query**: "Find all active full-time employees in the Engineering department" **Filter**: `department = "Engineering" AND employee_type = "full_time" AND status = "active"`
 
 ### Metadata Inheritance
 
@@ -509,18 +484,19 @@ All documents in your tenant automatically inherit the tenant metadata schema yo
 ### Migration and Updates
 
 <Warning>
-**Schema Immutability**: Once you create a tenant with a metadata schema, the keys cannot be changed. However, you can:
-- Add new fields to document metadata (fully flexible)
-- Update values for existing tenant metadata fields
-- Create new sub-tenants with different schemas if needed
+  **Schema Immutability**: Once you create a tenant with a metadata schema, the keys cannot be changed. However, you can:
+
+  - Add new fields to document metadata (fully flexible)
+  - Update values for existing tenant metadata fields
+  - Create new sub-tenants with different schemas if needed
 </Warning>
 
 > **Note:**
+>
 > - The `tenant_metadata_schema` field in the request body is optional but recommended for enterprise setups. It defines immutable tenant-level metadata keys that will apply to all documents in this tenant.
 > - For more detailed information about metadata usage, filtering, and querying, see our [Metadata documentation](/essentials/metadata).
 
 ## Sample Response
-
 
 ```json
 {
@@ -530,8 +506,8 @@ All documents in your tenant automatically inherit the tenant metadata schema yo
 }
 ```
 
-
 ### Functionality
+
 - Accepts an optional `tenant_id` via query
 - Generates a new `tenant_id` if none is provided
 - Creates and persists the tenant
@@ -542,4 +518,3 @@ All documents in your tenant automatically inherit the tenant metadata schema yo
 ## Error Responses
 
 All endpoints return consistent error responses following the standard format. For detailed error information, see our [Error Responses](/api-reference/error-responses) documentation.
-

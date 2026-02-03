@@ -1,28 +1,21 @@
 ---
-title: 'Delete User Memory'
-description: 'API reference for Delete User Memory.'
-openapi: 'DELETE /memories/delete_memory'
+title: "Delete User Memory"
+description: "API reference for Delete User Memory."
+openapi: "DELETE /memories/delete_memory"
 ---
 
 import { TableOfContents } from '/snippets/table-of-contents.jsx'
 
-<Panel>
-  <TableOfContents />
-</Panel>
-
 <Tabs>
   <Tab title="API Request">
-
     ```bash
     curl -X 'DELETE' \
       'https://api.usecortex.ai/memories/delete_memory?tenant_id=tenant_123&memory_id=memory_123' \
       -H 'accept: application/json' \
       -H 'Authorization: Bearer YOUR_API_KEY'
     ```
-
   </Tab>
   <Tab title="TypeScript">
-
     ```ts
     const result = await client.userMemory.deleteUserMemory({
       tenant_id: "tenant_1234",
@@ -30,10 +23,8 @@ import { TableOfContents } from '/snippets/table-of-contents.jsx'
       sub_tenant_id: "sub_tenant_4567"
     });
     ```
-
   </Tab>
-  <Tab title="Python (Sync)">
-
+  <Tab title="Python">
     ```python
     # Async usage is similar, just use async_client and await
     result = client.user_memory.delete_user_memory(
@@ -42,7 +33,6 @@ import { TableOfContents } from '/snippets/table-of-contents.jsx'
         sub_tenant_id="sub_tenant_4567"
     )
     ```
-
   </Tab>
 </Tabs>
 
@@ -66,45 +56,44 @@ The Delete User Memory endpoint allows you to remove specific memories from a us
 - **Error Correction**: Delete memories that were added incorrectly
 - **User Control**: Give users the ability to manage their own memory data
 
-
 ## Important Notes
 
 <Warning>
-**Permanent Deletion**: Once a memory is deleted, it cannot be recovered. Make sure you have the correct memory ID before proceeding with deletion.
+  **Permanent Deletion**: Once a memory is deleted, it cannot be recovered. Make sure you have the correct memory ID before proceeding with deletion.
 </Warning>
 
 <Note>
-**Memory ID**: Memory IDs (`id`) are returned in the response when you add memories via [Add Memory](/api-reference/endpoint/add-memories). Store these IDs in your application so you can reference them for deletion.
+  **Memory ID**: Memory IDs (`id`) are returned in the response when you add memories via [Add Memory](/api-reference/endpoint/add-memories). Store these IDs in your application so you can reference them for deletion.
 </Note>
 
 <Info>
-**Best Practices**:
-- Store memory IDs from Add Memory responses for later deletion
-- Consider implementing user confirmation for memory deletion
-- Log deletion activities for audit purposes
-- Provide users with a way to review their memories before deletion
+  **Best Practices**:
+
+  - Store memory IDs from Add Memory responses for later deletion
+  - Consider implementing user confirmation for memory deletion
+  - Log deletion activities for audit purposes
+  - Provide users with a way to review their memories before deletion
 </Info>
 
 <Tip>
-**Pro Tip**: For bulk memory management, you can combine this API with the List API to create a memory management interface that allows users to review and selectively delete their memories.
+  **Pro Tip**: For bulk memory management, you can combine this API with the List API to create a memory management interface that allows users to review and selectively delete their memories.
 </Tip>
 
 ## Response Fields
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `success` | boolean | Indicates whether the operation was successful |
+| Field                 | Type    | Description                                                   |
+| --------------------- | ------- | ------------------------------------------------------------- |
+| `success`             | boolean | Indicates whether the operation was successful                |
 | `user_memory_deleted` | boolean | Confirms whether the specific memory was successfully deleted |
 
 ## Parameters
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `tenant_id` | string | Yes | Primary organizational identifier |
-| `sub_tenant_id` | string | No | Secondary organizational identifier; if omitted, defaults to the default sub-tenant for the tenant |
-| `memory_id` | string | Yes | Unique identifier of the memory to delete |
+| Parameter       | Type   | Required | Description                                                                                        |
+| --------------- | ------ | -------- | -------------------------------------------------------------------------------------------------- |
+| `tenant_id`     | string | Yes      | Primary organizational identifier                                                                  |
+| `sub_tenant_id` | string | No       | Secondary organizational identifier; if omitted, defaults to the default sub-tenant for the tenant |
+| `memory_id`     | string | Yes      | Unique identifier of the memory to delete                                                          |
 
 ## Error Responses
 
 All endpoints return consistent error responses following the standard format. For detailed error information, see our [Error Responses](/api-reference/error-responses) documentation.
-
