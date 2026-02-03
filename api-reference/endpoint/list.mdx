@@ -1,28 +1,22 @@
 ---
 title: "List"
-description: "Retrieve all sources for a specific tenant and subtenant combination."
+description: "Retrieve all memories or knowledge for a specific tenant and subtenant combination"
 openapi: "GET /list/list-sources"
 ---
 
-import { TableOfContents } from '/snippets/table-of-contents.jsx'
-
-<Panel>
-  <TableOfContents />
-</Panel>
-
-### Examples
+### List memories
 
 <Tabs>
   <Tab title="API Request">
     ```bash
     curl -X 'GET' \
-    'https://api.usecortex.ai/list/list-sources?tenant_id=tenant_123' \
+    'https://api.usecortex.ai/list/list_memories?tenant_id=tenant_123' \
     -H 'accept: application/json'
     ```
   </Tab>
   <Tab title="TypeScript">
     ```ts
-    const allSources = await client.sources.getAll({
+    const allSources = await client.memories.getAll({
       tenant_id: "tenant_1234",
       sub_tenant_id: "sub_tenant_4567"
     });
@@ -31,7 +25,7 @@ import { TableOfContents } from '/snippets/table-of-contents.jsx'
   <Tab title="Python (Sync)">
     ```python
     # Async usage is similar, just use async_client and await
-    all_sources = client.sources.get_all(
+    all_sources = client.memories.get_all(
         tenant_id="tenant_1234",
         sub_tenant_id="sub_tenant_4567"
     )
@@ -39,6 +33,14 @@ import { TableOfContents } from '/snippets/table-of-contents.jsx'
   </Tab>
 </Tabs>
 
-## Error Responses
+### List Knowledge
 
-All endpoints return consistent error responses following the standard format. For detailed error information, see our [Error Responses](/api-reference/error-responses) documentation.
+<Tabs>
+  <Tab title="API Request">
+    ```bash
+    curl -X 'GET' \
+    'https://api.usecortex.ai/list/list_knowledge?tenant_id=tenant_123' \
+    -H 'accept: application/json'
+    ```
+  </Tab>
+</Tabs>

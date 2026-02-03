@@ -1,14 +1,8 @@
 ---
-title: 'Search Embeddings'
-description: 'Find similar chunks using an embedding vector.'
-openapi: 'POST /embeddings/search-raw-embeddings'
+title: "Search Embeddings"
+description: "Find similar chunks using an embedding vector."
+openapi: "POST /embeddings/search-raw-embeddings"
 ---
-
-import { TableOfContents } from '/snippets/table-of-contents.jsx'
-
-<Panel>
-  <TableOfContents />
-</Panel>
 
 ### Examples
 
@@ -16,26 +10,24 @@ import { TableOfContents } from '/snippets/table-of-contents.jsx'
   <Tab title="API Request">
     ```bash expandable
     curl -X 'POST' \
-  'https://api.usecortex.ai/embeddings/search-raw-embeddings' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -d '{
-  "tenant_id": "string",
-  "sub_tenant_id": "string",
-  "query_embedding": [
+    'https://api.usecortex.ai/embeddings/search-raw-embeddings' \
+    -H 'accept: application/json' \
+    -H 'Content-Type: application/json' \
+    -d '{
+    "tenant_id": "string",
+    "sub_tenant_id": "string",
+    "query_embedding": [
     0
-  ],
-  "limit": 10,
-  "filter_expr": "string",
-  "output_fields": [
+    ],
+    "limit": 10,
+    "filter_expr": "string",
+    "output_fields": [
     "string"
-  ]
-}'
-      ```
-
+    ]
+    }'
+    ```
   </Tab>
   <Tab title="TypeScript">
-
     ```ts
     const results = await client.embeddings.search({
       tenant_id: "tenant_1234",
@@ -46,10 +38,8 @@ import { TableOfContents } from '/snippets/table-of-contents.jsx'
       max_chunks: 10
     });
     ```
-
   </Tab>
   <Tab title="Python (Sync)">
-
     ```python
     # Async usage is similar, just use async_client and await
     results = client.embeddings.search(
@@ -61,29 +51,31 @@ import { TableOfContents } from '/snippets/table-of-contents.jsx'
         max_chunks=10
     )
     ```
-
   </Tab>
 </Tabs>
-
 
 Search for similar content using vector embeddings by comparing your input embedding against the vector database to find the most similar content chunks.
 
 ## Vector Search Concepts
 
 ### What are Embeddings?
+
 Embeddings are high-dimensional vector representations of text that capture semantic meaning:
+
 - **Semantic Understanding**: Similar concepts have similar vector representations
 - **Mathematical Distance**: Content similarity is measured by vector distance
 - **Language Agnostic**: Works across different languages and formats
 - **Context Preservation**: Maintains meaning and relationships between concepts
 
 ### How Vector Search Works
+
 1. **Input Processing**: Your embedding vector is compared against all stored embeddings
 2. **Similarity Calculation**: Cosine similarity or other distance metrics are computed
 3. **Ranking**: Results are ranked by similarity score (higher = more similar)
 4. **Retrieval**: Most similar chunks are returned with their similarity scores
 
 ### Embedding Dimensions
+
 - **Standard Dimensions**: Most embeddings use 384, 512, 768, or 1536 dimensions
 - **Quality vs Speed**: Higher dimensions = better quality, slower search
 - **Compatibility**: Ensure your embedding model matches Cortex's expected format
@@ -91,15 +83,18 @@ Embeddings are high-dimensional vector representations of text that capture sema
 ## Search Parameters
 
 ### Max Chunks
+
 Controls the number of results returned:
+
 - **Range**: 1-200 chunks
 - **Default**: 10 chunks
-- **Recommendation**: 
+- **Recommendation**:
   - Start with 10-20 for most use cases
   - Use 50-100 for comprehensive searches
   - Use 1-5 for precise, top results only
 
 ### Embedding Format
+
 - **Type**: Single embedding vector (1D array of numeric values)
 - **Values**: Floating-point numbers (typically between -1 and 1)
 - **Length**: Must match the embedding model's dimension size
@@ -108,17 +103,20 @@ Controls the number of results returned:
 ## Use Cases
 
 ### Semantic Similarity Search
+
 - **Content Discovery**: Find documents similar to a reference document
 - **Recommendation Systems**: Suggest related content based on user interests
 - **Duplicate Detection**: Identify similar or duplicate content
 - **Content Clustering**: Group related documents together
 
 ### Cross-Language Search
+
 - **Multilingual Content**: Find similar content across different languages
 - **Translation Support**: Search for content in one language using another
 - **Global Knowledge**: Access information regardless of original language
 
 ### Advanced Retrieval
+
 - **Conceptual Search**: Find content based on meaning, not exact keywords
 - **Context-Aware Search**: Retrieve content that matches conceptual context
 - **Fuzzy Matching**: Find content even with different wording or phrasing
@@ -126,18 +124,21 @@ Controls the number of results returned:
 ## Best Practices
 
 ### Embedding Quality
+
 - **Use High-Quality Models**: Choose well-trained embedding models (OpenAI, Cohere, etc.)
 - **Consistent Models**: Use the same embedding model for both indexing and searching
 - **Preprocessing**: Clean and normalize text before generating embeddings
 - **Batch Processing**: Generate embeddings in batches for better performance
 
 ### Search Optimization
+
 - **Appropriate Max Chunks**: Start with 10-20, adjust based on your needs
 - **Similarity Thresholds**: Set minimum similarity scores to filter low-quality matches
 - **Multiple Queries**: Try different embedding representations of the same concept
 - **Hybrid Approaches**: Combine vector search with keyword search for better results
 
 ### Performance Considerations
+
 - **Vector Size**: Larger vectors provide better quality but slower search
 - **Index Size**: More indexed content = longer search times
 - **Batch Requests**: Process multiple embeddings simultaneously when possible
@@ -147,7 +148,6 @@ Controls the number of results returned:
 
 ### Document Similarity
 
-
 ```json
 {
   "embeddings": [0.1, 0.2, 0.3, ...],
@@ -155,11 +155,9 @@ Controls the number of results returned:
 }
 ```
 
-
 Use when you want to find documents similar to a reference document.
 
 ### Concept Search
-
 
 ```json
 {
@@ -168,11 +166,9 @@ Use when you want to find documents similar to a reference document.
 }
 ```
 
-
 Use when searching for content related to a specific concept or topic.
 
 ### Recommendation Engine
-
 
 ```json
 {
@@ -181,12 +177,9 @@ Use when searching for content related to a specific concept or topic.
 }
 ```
 
-
 Use when building recommendation systems that need many similar items.
 
-
 ## Sample Response
-
 
 ```json
 {
@@ -206,9 +199,3 @@ Use when building recommendation systems that need many similar items.
   ]
 }
 ```
-
-
-## Error Responses
-
-All endpoints return consistent error responses following the standard format. For detailed error information, see our [Error Responses](/api-reference/error-responses) documentation.
-

@@ -1,29 +1,20 @@
 ---
 title: "Delete Embeddings"
-description: 'Delete embedding chunks by chunk ID.'
+description: "Delete embedding chunks by chunk ID."
 openapi: "DELETE /embeddings/delete-raw-embeddings"
 ---
-
-import { TableOfContents } from '/snippets/table-of-contents.jsx'
-
-<Panel>
-  <TableOfContents />
-</Panel>
 
 ### Examples
 
 <Tabs>
   <Tab title="API Request">
-
     ```bash
     curl -X 'DELETE' \
     'https://api.usecortex.ai/embeddings/delete-raw-embeddings?tenant_id=tenant_123&sub_tenant_id=sub_tenant_345&id=source_123' \
     -H 'accept: application/json'
     ```
-
   </Tab>
   <Tab title="TypeScript">
-
     ```ts
     const result = await client.embeddings.delete({
       tenant_id: "tenant_1234",
@@ -31,10 +22,8 @@ import { TableOfContents } from '/snippets/table-of-contents.jsx'
       chunk_ids: ["chunk_001", "chunk_002"]
     });
     ```
-
   </Tab>
   <Tab title="Python (Sync)">
-
     ```python
     # Async usage is similar, just use async_client and await
     result = client.embeddings.delete(
@@ -43,10 +32,5 @@ import { TableOfContents } from '/snippets/table-of-contents.jsx'
         chunk_ids=["chunk_001", "chunk_002"]
     )
     ```
-
   </Tab>
 </Tabs>
-
-## Error Responses
-
-All endpoints return consistent error responses following the standard format. For detailed error information, see our [Error Responses](/api-reference/error-responses) documentation.

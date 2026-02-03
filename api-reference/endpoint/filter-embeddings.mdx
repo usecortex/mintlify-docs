@@ -1,42 +1,33 @@
 ---
-title: 'Filter Raw Embeddings'
-description: 'Retrieve embeddings for specific chunk IDs.'
-openapi: 'POST /embeddings/filter-raw-embeddings'
+title: "Filter Raw Embeddings"
+description: "Retrieve embeddings for specific chunk IDs."
+openapi: "POST /embeddings/filter-raw-embeddings"
 ---
-
-import { TableOfContents } from '/snippets/table-of-contents.jsx'
-
-<Panel>
-  <TableOfContents />
-</Panel>
 
 ### Examples
 
 <Tabs>
   <Tab title="API Request">
-
     ```bash
     curl -X 'POST' \
-  'https://api.usecortex.ai/embeddings/filter-raw-embeddings' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -d '{
-  "tenant_id": "string",
-  "sub_tenant_id": "string",
-  "id": "string",
-  "chunk_ids": [
+    'https://api.usecortex.ai/embeddings/filter-raw-embeddings' \
+    -H 'accept: application/json' \
+    -H 'Content-Type: application/json' \
+    -d '{
+    "tenant_id": "string",
+    "sub_tenant_id": "string",
+    "id": "string",
+    "chunk_ids": [
     "string"
-  ],
-  "output_fields": [
+    ],
+    "output_fields": [
     "string"
-  ],
-  "limit": 100
-}'
-      ```
-
+    ],
+    "limit": 100
+    }'
+    ```
   </Tab>
   <Tab title="TypeScript">
-
     ```ts
     const embeddings = await client.embeddings.getByChunkIds({
       tenant_id: "tenant_1234",
@@ -44,10 +35,8 @@ import { TableOfContents } from '/snippets/table-of-contents.jsx'
       chunk_ids: ["chunk_001", "chunk_002", "chunk_003"]
     });
     ```
-
   </Tab>
   <Tab title="Python (Sync)">
-
     ```python
     # Async usage is similar, just use async_client and await
     embeddings = client.embeddings.get_by_chunk_ids(
@@ -56,24 +45,23 @@ import { TableOfContents } from '/snippets/table-of-contents.jsx'
         chunk_ids=["chunk_001", "chunk_002", "chunk_003"]
     )
     ```
-
   </Tab>
 </Tabs>
 
 Retrieve embedding vectors for specific chunk IDs that you previously obtained from uploading embeddings or searching.
 
 ### Requirements
+
 - **chunk_ids**: Array of valid chunk ID strings (cannot be empty)
 - **tenant_id**: Required for multi-tenancy support
 - **sub_tenant_id**: Optional, defaults to tenant_id if not provided
 
 ### Response Details
+
 - **embeddings**: Dictionary mapping chunk IDs to their embedding vectors
 - **not_found_chunk_ids**: Array of chunk IDs that were not found in the system
 
-
 ## Sample Response
-
 
 ```json
 {
@@ -108,9 +96,3 @@ Retrieve embedding vectors for specific chunk IDs that you previously obtained f
   ]
 }
 ```
-
-
-## Error Responses
-
-All endpoints return consistent error responses following the standard format. For detailed error information, see our [Error Responses](/api-reference/error-responses) documentation.
-

@@ -4,7 +4,7 @@ description: "Creating a tenant (space) where you can store your memories"
 openapi: "POST /tenants/create"
 ---
 
-If you pass `tenant_id` as a query parameter, that ID will be used. If not provided, the service generates a new `tenant_id` and returns it. 
+If you pass `tenant_id` as a query parameter, that ID will be used. If not provided, the service generates a new `tenant_id` and returns it.
 
 ### Examples
 
@@ -12,7 +12,7 @@ If you pass `tenant_id` as a query parameter, that ID will be used. If not provi
   <Tab title="API Request">
     ```bash expandable
     curl -X 'POST' \
-    'https://api.usecortex.ai/tenants/create' \
+    'https://api.usecortex.ai/tenant/create_tenant' \
     -H 'accept: application/json' \
     -H 'Content-Type: application/json' \
     -H 'Authorization: Bearer <token>' \
@@ -352,12 +352,6 @@ Understanding the difference between `searchable` and `filterable` is crucial fo
     "type": "string", 
     "searchable": true, 
     "filterable": true
-  },
-  {
-    "key": "version", 
-    "type": "string", 
-    "searchable": false, 
-    "filterable": true
   }
 ]
 ```
@@ -392,35 +386,6 @@ Understanding the difference between `searchable` and `filterable` is crucial fo
 - **Use appropriate types**: Choose the most specific type for your data
 - **Consider query patterns**: Design for your most common use cases
 - **Plan for growth**: Design schema to accommodate future needs
-
-## How Metadata Works in Practice
-
-Once you've defined your tenant metadata schema, here's how it works with your documents:
-
-### Document Upload with Metadata
-
-When you upload documents, you'll provide both tenant and document metadata:
-
-```json
-{
-  "tenant_metadata": {
-    "department": "Engineering",
-    "compliance_framework": "SOC2",
-    "data_classification": "internal",
-    "business_unit": "Product",
-    "retention_period": 7,
-    "is_confidential": false,
-    "created_date": "2024-01-15T10:30:00Z"
-  },
-  "document_metadata": {
-    "title": "API Security Guidelines v2.1",
-    "author": "Dr. Sarah Chen",
-    "document_type": "technical_specification",
-    "version": "2.1.0",
-    "status": "approved"
-  }
-}
-```
 
 ### Query Examples
 

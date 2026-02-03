@@ -4,29 +4,7 @@ description: "Add memories to Cortex that can be used by your agents for learnin
 openapi: "POST /memories/add_memory"
 ---
 
-### Sample Request
-
-```bash
-curl -X 'POST' \
-  'https://api.usecortex.ai/memories/add_memory' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -H 'Authorization: Bearer <token>' \
-  -d '{
-  "memories": [
-    {
-      "text": "User prefers dark mode and detailed explanations",
-      "infer": true,
-      "user_name": "John"
-    }
-  ],
-  "tenant_id": "tenant-01",
-  "sub_tenant_id": "",
-  "upsert": true
-}'
-```
-
-### Examples
+### Sample Requests
 
 <Tabs>
   <Tab title="API Request">
@@ -45,8 +23,7 @@ curl -X 'POST' \
         }
       ],
       "tenant_id": "tenant-01",
-      "sub_tenant_id": "",
-      "upsert": true
+      "sub_tenant_id": ""
     }'
     
     # Text with inference enabled
@@ -63,9 +40,7 @@ curl -X 'POST' \
           "custom_instructions": "Extract user preferences and habits"
         }
       ],
-      "tenant_id": "tenant-01",
-      "sub_tenant_id": "",
-      "upsert": true
+      "tenant_id": "tenant-01"
     }'
     
     # Markdown content
@@ -82,9 +57,7 @@ curl -X 'POST' \
           "title": "Q3 Planning Meeting"
         }
       ],
-      "tenant_id": "tenant-01",
-      "sub_tenant_id": "",
-      "upsert": true
+      "tenant_id": "tenant-01"
     }'
     
     # User-assistant conversation pairs
@@ -103,9 +76,7 @@ curl -X 'POST' \
           "user_name": "John"
         }
       ],
-      "tenant_id": "tenant-01",
-      "sub_tenant_id": "",
-      "upsert": true
+      "tenant_id": "tenant-01"
     }'
     
     # Batch upload - multiple items with mixed settings
@@ -133,9 +104,7 @@ curl -X 'POST' \
           "user_name": "John"
         }
       ],
-      "tenant_id": "tenant-01",
-      "sub_tenant_id": "",
-      "upsert": true
+      "tenant_id": "tenant-01"
     }'
     ```
   </Tab>
@@ -283,7 +252,7 @@ The API supports three types of content input:
 
 ### `infer` (boolean)
 
-Controls whether Cortex extracts insights, likes, dislikes, preferences, and outcomes from the content:
+Controls whether Cortex extracts insights, likes, dislikes, preferences, and outcomes from the content. If it nothing is specified, default behaviour is `true`
 
 | Value   | Behavior                                                              |
 | ------- | --------------------------------------------------------------------- |
@@ -299,7 +268,7 @@ Controls whether Cortex extracts insights, likes, dislikes, preferences, and out
 
   **`When to use infer=false:`**
 
-  - Uploading documents, policies, or factual content
+  - Uploading factual statements
   - Storing deterministic data that doesn't need interpretation
 </Info>
 
@@ -340,10 +309,6 @@ Each item in the `memories` array can have the following fields:
 | `tenant_metadata`      | string  | No       | JSON string of tenant-level metadata         |
 | `document_metadata`    | string  | No       | JSON string of document-level metadata       |
 
-<Note>
-  **\*** Either `text` OR `user_assistant_pairs` must be provided, but not both.
-</Note>
-
 ## Response Format
 
 ```json
@@ -366,12 +331,10 @@ Each item in the `memories` array can have the following fields:
 
 ## Processing Status
 
-After submitting content, use the [Verify Processing](/api-reference/endpoint/verify-processing) endpoint to check status:
-
 ```bash
 # Example: check status via ingestion verify-processing (when using file_id from ingestion flows)
 curl -X POST \
-  'https://api.usecortex.ai/ingestion/verify-processing?file_id=<id>&tenant_id=<tenant_id>' \
+  'https://api.usecortex.ai/ingestion/verify_processing?id=<id>&tenant_id=<tenant_id>' \
   -H 'Authorization: Bearer <token>'
 ```
 
@@ -390,9 +353,8 @@ curl -X POST \
 
   **Processing Time**:
 
-  - `infer=false`: Typically 1-3 minutes
-  - `infer=true`: May take longer due to LLM inference processing
-  - Large batches: Processing time scales with content volume
+  - `infer=false`: Typically 1-3 minutes. We update all nodes in your graph with new information
+  - `infer=true`: May take slightly longer due to LLM inference processing
 </Note>
 
 ## Migration from Previous APIs
@@ -409,7 +371,3 @@ This endpoint replaces and unifies:
 | `raw_text`                | `text`                        |
 | `content` in body wrapper | `memories` array at top level |
 | Separate endpoints        | Single unified endpoint       |
-
-## Error Responses
-
-All endpoints return consistent error responses following the standard format. For detailed error information, see our [Error Responses](/api-reference/error-responses) documentation.

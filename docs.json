@@ -73,8 +73,7 @@
             "pages": [
               "api-reference/endpoint/add-memories",
               "api-reference/endpoint/add-knowledge-memories",
-              "api-reference/endpoint/add-hive-memories",
-              "api-reference/delete-memory"
+              "api-reference/endpoint/add-hive-memories"
             ]
           },
           {
@@ -91,7 +90,9 @@
               "api-reference/endpoint/list",
               "api-reference/endpoint/list-by-id",
               "api-reference/endpoint/fetch-content",
-              "api-reference/endpoint/relations"
+              "api-reference/endpoint/relations",
+              "api-reference/delete-memory",
+              "api-reference/delete-memory-copied-1"
             ]
           },
           {
