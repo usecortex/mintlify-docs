@@ -1,7 +1,7 @@
 ---
 title: "Knowledge Base"
 description: "Your users won't tell AI everything. But their Slack messages, Notion docs, emails, and drives already contain the context your agents need. Knowledge Memories lets you ingest, store, and recall all of this - creating a unified context layer for every user. When combined with User Memories, your agents deliver hyper-personalized responses with the right context."
-openapi: "POST /ingestion/upload-document"
+openapi: "POST /ingestion/upload_document"
 ---
 
 ### Examples
@@ -15,13 +15,13 @@ openapi: "POST /ingestion/upload-document"
     -F "files=@b.pdf" \
     -F 'file_metadata=[
     {
-      "source_id": "doc_a",
+      "id": "doc_a",
       "tenant_metadata": { "dept": "sales" },
       "document_metadata": { "author": "Alice" },
       "relations": false
     },
     {
-      "source_id": "doc_b",
+      "id": "doc_b",
       "tenant_metadata": { "dept": "marketing" },
       "document_metadata": { "author": "Bob" },
       "relations": true
@@ -41,13 +41,13 @@ openapi: "POST /ingestion/upload-document"
       tenant_id: "tenant_123",
       file_metadata: [
         {
-          source_id: "doc_a",
+          id: "doc_a",
           tenant_metadata: { dept: "sales" },
           document_metadata: { author: "Alice" },
           relations: false
         },
         {
-          source_id: "doc_b",
+          id: "doc_b",
           tenant_metadata: { dept: "marketing" },
           document_metadata: { author: "Bob" },
           relations: true
@@ -69,13 +69,13 @@ openapi: "POST /ingestion/upload-document"
             files=files,
             file_metadata=[
                 {
-                    "source_id": "doc_a",
+                    "id": "doc_a",
                     "tenant_metadata": {"dept": "sales"},
                     "document_metadata": {"author": "Alice"},
                     "relations": False
                 },
                 {
-                    "source_id": "doc_b",
+                    "id": "doc_b",
                     "tenant_metadata": {"dept": "marketing"},
                     "document_metadata": {"author": "Bob"},
                     "relations": True
@@ -101,7 +101,7 @@ The `file_metadata` parameter accepts a JSON array where each object corresponds
 ```json
 [
   {
-    "source_id": "string",
+    "id": "string",
     "tenant_metadata": {},
     "document_metadata": {},
     "relations": boolean
@@ -111,7 +111,7 @@ The `file_metadata` parameter accepts a JSON array where each object corresponds
 
 ### Metadata Fields
 
-#### `source_id` (string, optional)
+#### `id` (string, optional)
 
 - **Description**: A unique identifier for the document. If not provided, the system will auto-generate one.
 - **Use Case**: Use this to reference the document later, enable idempotent uploads, or maintain your own document naming scheme.
@@ -181,7 +181,7 @@ When you upload content to Cortex, it is securely accepted and queued for proces
 
 ### `Upsert` parameter (optional)
 
-For documents, the identifier is `source_id`. When that identifier already exists, `upsert` (boolean, default `true`) controls the behavior:
+For documents, the identifier is `id`. When that identifier already exists, `upsert` (boolean, default `true`) controls the behavior:
 
 | Value   | Behavior                   |
 | ------- | -------------------------- |
@@ -255,5 +255,5 @@ Your document will progress through these states:
 - For unsupported formats, you'll receive a `400` error with the message: `"Unsupported file format: [filename]. Please check our supported file formats documentation."`
 
 <Info>
-  **Need Help?** If a document fails to process or you're experiencing issues, contact our support team with the `source_id` for assistance.
+  **Need Help?** If a document fails to process or you're experiencing issues, contact our support team with the `id` for assistance.
 </Info>

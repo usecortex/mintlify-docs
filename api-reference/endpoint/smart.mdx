@@ -1,5 +1,5 @@
 ---
-openapi: "POST /search/hybrid-search"
+openapi: "POST /search/hybrid_search"
 title: "Full Recall"
 description: "Fetch personalized context that your agent needs to perform an action from its store"
 ---
@@ -10,7 +10,7 @@ description: "Fetch personalized context that your agent needs to perform an act
   <Tab title="API Request">
     ```bash
     curl -X 'POST' \
-    'https://api.usecortex.ai/recall/full-recall' \
+    'https://api.usecortex.ai/recall/full_recall' \
     -H 'accept: application/json' \
     -H 'Content-Type: application/json' \
     -d '{
@@ -30,8 +30,7 @@ description: "Fetch personalized context that your agent needs to perform an act
       tenantId: "tenant_1234",
       subTenantId: "sub_tenant_4567",
       alpha: 0.8,
-      recencyBias: 0,
-      personaliseSearch: true
+      recencyBias: 0
     });
     ```
   </Tab>
@@ -43,8 +42,7 @@ description: "Fetch personalized context that your agent needs to perform an act
         tenant_id="tenant_1234",
         sub_tenant_id="sub_tenant_4567",
         alpha=0.8,
-        recency_bias=0,
-        personalise_search=True
+        recency_bias=0
     )
     ```
   </Tab>

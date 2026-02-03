@@ -123,7 +123,7 @@ Now let's upload some context:
         sub_tenant_id: "engineering",
         body: {
           content: "Our API rate limits are 1000 requests per minute for premium accounts.",
-          file_id: "api-docs-rate-limits",
+          id: "api-docs-rate-limits",
           tenant_metadata: { sub_tenant_id: "engineering" }
         }
       });
@@ -139,7 +139,7 @@ Now let's upload some context:
             tenant_id="my-company-py-sync",
             sub_tenant_id="engineering",
             content="Our API rate limits are 1000 requests per minute for premium accounts.",
-            file_id="api-docs-rate-limits",
+            id="api-docs-rate-limits",
             tenant_metadata={"sub_tenant_id": "engineering"}
         )
     
@@ -150,7 +150,7 @@ Now let's upload some context:
             return client.upload.upload_document(
                 tenant_id="my-company",
                 file=file_data,
-                file_id="company-handbook.pdf"
+                id="company-handbook.pdf"
             )
     ```
   </Tab>
@@ -162,7 +162,7 @@ Now let's upload some context:
             tenant_id="my-company",
             sub_tenant_id="engineering",
             content="Our API rate limits are 1000 requests per minute for premium accounts.",
-            file_id="api-docs-rate-limits",
+            id="api-docs-rate-limits",
             tenant_metadata={"sub_tenant_id": "engineering"}
         )
     
@@ -173,7 +173,7 @@ Now let's upload some context:
             return await async_client.upload.upload_document(
                 tenant_id="my-company",
                 file=file_data,
-                file_id="company-handbook.pdf"
+                id="company-handbook.pdf"
             )
     ```
   </Tab>
@@ -285,9 +285,7 @@ This works universally because our SDKs are fully typed with comprehensive docum
     client.recall({
       // - Cmd+Space here shows all parameters with documentation
       query: "your search query",
-      tenant_id: "required-tenant-id",
-      // Your IDE knows these are optional:
-      personalise_recall: true
+      tenant_id: "required-tenant-id"
     })
     ```
   </Tab>
@@ -300,8 +298,7 @@ This works universally because our SDKs are fully typed with comprehensive docum
         tenant_id="required-tenant-id",
         # Python IDE knows these are optional too:
         max_chunks=10,
-        alpha=0.7,
-        personalise_search=True
+        alpha=0.7
     )
     ```
   </Tab>

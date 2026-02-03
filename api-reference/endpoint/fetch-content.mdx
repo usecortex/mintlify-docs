@@ -1,7 +1,7 @@
 ---
 title: "Fetch Content"
 description: "Fetch the content of a memory or knowledge item ingested"
-openapi: "POST /fetch/fetch-source-content"
+openapi: "POST /fetch/fetch_source_content"
 ---
 
 ### Fetch memory contents
@@ -45,7 +45,7 @@ openapi: "POST /fetch/fetch-source-content"
   <Tab title="TypeScript">
     ```ts
     const content = await client.fetch.fetchContent({
-      file_id: "CortexDoc1234",
+      id: "CortexDoc1234",
       file_type: "pdf",
       tenant_id: "tenant_1234",
       return_content: true,
@@ -57,7 +57,7 @@ openapi: "POST /fetch/fetch-source-content"
     ```python
     # Async usage is similar, just use async_client and await
     content = client.fetch.fetch_content(
-        file_id="CortexDoc1234",
+        id="CortexDoc1234",
         file_type="pdf",
         tenant_id="tenant_1234",
         return_content=True,

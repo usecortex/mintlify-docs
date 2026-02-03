@@ -332,7 +332,7 @@ Each item in the `memories` array can have the following fields:
 ## Processing Status
 
 ```bash
-# Example: check status via ingestion verify-processing (when using file_id from ingestion flows)
+# Example: check status via ingestion verify_processing (when using id from ingestion flows)
 curl -X POST \
   'https://api.usecortex.ai/ingestion/verify_processing?id=<id>&tenant_id=<tenant_id>' \
   -H 'Authorization: Bearer <token>'
@@ -361,8 +361,8 @@ curl -X POST \
 
 This endpoint replaces and unifies:
 
-- `/memories/add-memories` (deprecated)
-- `/ingestion/upload-content` (deprecated)
+- `/memories/add_memories` (deprecated)
+- `/ingestion/upload_content` (deprecated)
 
 ### Key Changes
 

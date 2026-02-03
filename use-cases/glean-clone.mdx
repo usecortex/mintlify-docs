@@ -236,7 +236,7 @@ class CortexDataIngestion {
   }
 
   async verifyProcessing(fileId) {
-    const url = `${this.baseUrl}/upload/verify_processing?file_id=${fileId}`;
+    const url = `${this.baseUrl}/upload/verify_processing?id=${fileId}`;
     
     const response = await fetch(url, {
       method: 'POST',

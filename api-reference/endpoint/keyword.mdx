@@ -1,7 +1,7 @@
 ---
 title: "Boolean Recall"
 description: "Perform a deterministic / full text search for exact matches within your indexed sources or memories"
-openapi: "POST /search/full-text-search"
+openapi: "POST /search/full_text_search"
 ---
 
 ### Examples
@@ -10,7 +10,7 @@ openapi: "POST /search/full-text-search"
   <Tab title="API Request">
     ```bash
     curl --request POST \
-      --url https://api.usecortex.ai/search/full-text-search \
+      --url https://api.usecortex.ai/search/full_text_search \
       --header 'Authorization: Bearer <token>' \
       --header 'Content-Type: application/json' \
       --data '{
@@ -98,7 +98,3 @@ The `max_chunks` parameter controls the maximum number of results returned:
 - **Precise keyword matching**: Use AND operator when you need all search terms to be present
 - **Broad search**: Use OR operator to find documents containing any of the search terms
 - **Exact phrase matching**: Ideal for finding specific terminology or phrases in your documents
-
-## Error Responses
-
-All endpoints return consistent error responses following the standard format. For detailed error information, see our [Error Responses](/api-reference/error-responses) documentation.

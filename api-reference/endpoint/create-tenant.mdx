@@ -479,7 +479,3 @@ All documents in your tenant automatically inherit the tenant metadata schema yo
 - Returns the final `tenant_id` and a confirmation message
 
 > Note: If your use case is to directly upload and search embeddings (without document/text ingestion), use the dedicated embeddings-tenant endpoint instead: `/embeddings/create_tenant`. This sets `sub_tenant_id = tenant_id` and prepares the tenant for embeddings-first workloads.
-
-## Error Responses
-
-All endpoints return consistent error responses following the standard format. For detailed error information, see our [Error Responses](/api-reference/error-responses) documentation.

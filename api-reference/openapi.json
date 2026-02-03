@@ -29,7 +29,7 @@
         }
       }
     },
-    "/ingestion/upload-document": {
+    "/ingestion/upload_document": {
       "post": {
         "tags": [
           "ingestion"
@@ -132,7 +132,7 @@
         ]
       }
     },
-    "/ingestion/upload-app": {
+    "/ingestion/upload_app": {
       "post": {
         "tags": [
           "ingestion"
@@ -235,7 +235,7 @@
         ]
       }
     },
-    "/ingestion/verify-processing": {
+    "/ingestion/verify_processing": {
       "post": {
         "tags": [
           "ingestion"
@@ -249,7 +249,7 @@
         ],
         "parameters": [
           {
-            "name": "file_id",
+            "name": "id",
             "in": "query",
             "required": true,
             "schema": {
@@ -659,7 +659,7 @@
         }
       }
     },
-    "/embeddings/insert-raw-embeddings": {
+    "/embeddings/insert_raw_embeddings": {
       "post": {
         "tags": [
           "embeddings"
@@ -757,7 +757,7 @@
         ]
       }
     },
-    "/embeddings/search-raw-embeddings": {
+    "/embeddings/search_raw_embeddings": {
       "post": {
         "tags": [
           "embeddings"
@@ -859,7 +859,7 @@
         ]
       }
     },
-    "/embeddings/filter-raw-embeddings": {
+    "/embeddings/filter_raw_embeddings": {
       "post": {
         "tags": [
           "embeddings"
@@ -961,7 +961,7 @@
         ]
       }
     },
-    "/embeddings/delete-raw-embeddings": {
+    "/embeddings/delete_raw_embeddings": {
       "delete": {
         "tags": [
           "embeddings"
@@ -1118,7 +1118,7 @@
         }
       }
     },
-    "/list/list-sources": {
+    "/list/list_sources": {
       "get": {
         "tags": [
           "list"
@@ -1234,7 +1234,7 @@
         ]
       }
     },
-    "/list/list-sources-by-id": {
+    "/list/list_sources_by_id": {
       "post": {
         "tags": [
           "list"
@@ -1337,7 +1337,7 @@
         ]
       }
     },
-    "/list/graph-relations-by-id": {
+    "/list/graph_relations_by_id": {
       "get": {
         "tags": [
           "list"
@@ -1470,7 +1470,7 @@
         ]
       }
     },
-    "/delete/delete-sources": {
+    "/delete/delete_sources": {
       "post": {
         "tags": [
           "delete"
@@ -1573,7 +1573,7 @@
         ]
       }
     },
-    "/fetch/fetch-source-content": {
+    "/fetch/fetch_source_content": {
       "post": {
         "tags": [
           "fetch"
@@ -1676,7 +1676,7 @@
         ]
       }
     },
-    "/search/hybrid-search": {
+    "/search/hybrid_search": {
       "post": {
         "tags": [
           "Search"
@@ -1783,7 +1783,7 @@
         ]
       }
     },
-    "/search/full-text-search": {
+    "/search/full_text_search": {
       "post": {
         "tags": [
           "Search"
@@ -3784,12 +3784,6 @@
             "default": 0.0,
             "example": 1.0
           },
-          "personalise_search": {
-            "type": "boolean",
-            "title": "Personalise Search",
-            "default": false,
-            "example": true
-          },
           "graph_context": {
             "type": "boolean",
             "title": "Graph Context",
@@ -4212,7 +4206,7 @@
       },
       "ProcessingStatus": {
         "properties": {
-          "file_id": {
+          "id": {
             "type": "string",
             "title": "File Id",
             "example": "CortexDoc1234"
@@ -4250,7 +4244,7 @@
         },
         "type": "object",
         "required": [
-          "file_id",
+          "id",
           "indexing_status"
         ],
         "title": "ProcessingStatus"
