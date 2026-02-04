@@ -1,0 +1,58 @@
+---
+title: "Fetch Content"
+description: "Fetch the content of a memory or knowledge item ingested"
+openapi: "POST /fetch/content"
+---
+
+### Fetch memory contents
+
+<Tabs>
+  <Tab title="API Request">
+    ```bash
+    curl -X 'POST' \
+    'https://api.usecortex.ai/fetch/content' \
+    -H 'accept: application/json' \
+    -H 'Content-Type: application/json' \
+    -d '{
+    "tenant_id": "string",
+    "sub_tenant_id": "string",
+    "id": "string",
+    "mode": "content",
+    "expiry_seconds": 3600
+    }'
+    ```
+    
+  </Tab>
+  <Tab title="TypeScript">
+    ```ts
+    const content = await client.fetch.fetchContent({
+      id: "CortexDoc1234",
+      file_type: "pdf",
+      tenant_id: "tenant_1234",
+      return_content: true,
+      sub_tenant_id: "sub_tenant_4567"
+    });
+    ```
+  </Tab>
+  <Tab title="Python (Sync)">
+    ```python
+    # Async usage is similar, just use async_client and await
+    content = client.fetch.fetch_content(
+        id="CortexDoc1234",
+        file_type="pdf",
+        tenant_id="tenant_1234",
+        return_content=True,
+        sub_tenant_id="sub_tenant_4567"
+    )
+    ```
+  </Tab>
+</Tabs>
+
+### Functionality
+
+- Extracts user credentials and organization details from the API key
+- Validates the file access permissions for the specified tenant
+- Creates secure access tokens for file retrieval
+- When `return_content` is `true`: Returns the actual file content directly
+- When `return_content` is `false`: Generates time-limited download URLs for the requested file
+- Returns downloadable URLs that can be used to access the file content

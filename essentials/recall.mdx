@@ -1,0 +1,143 @@
+---
+title: "Recall"
+description: "Recall is the hardest problem in memory systems. Storing data is easy. Knowing what to retrieve, when to retrieve it, and why is what makes an AI system feel intelligent."
+---
+
+Most AI systems today rely on naive retrieval: embed everything, run a vector search, and hope the right context shows up. This breaks down quickly in real applications - results are noisy, outdated, irrelevant, or lack personalization. Most nuances in context cannot be captured with embeddings. Read more on limitations on vector databases here by Google DeepMind here: https://arxiv.org/abs/2508.21038
+
+Cortex is built around a different idea:
+
+> We believe retrieval shouldn't be vector search first. Recall should be **intelligent, personalized, and context-aware**, not just semantic search over embeddings.
+
+## What Developers Usually Struggle With
+
+If you’ve built RAG systems, you’ve likely hit these problems:
+
+- Too many irrelevant chunks returned
+- No way to enforce deterministic filters
+- No personalization across users or agents
+- Hard to mix structured data with embeddings
+- Painful latency at scale
+- Constant tuning of ranking heuristics
+
+Cortex exists to remove this entire class of problems.
+
+## How Cortex Recall Works (High Level)
+
+When an agent queries Cortex, the system doesn’t just return the closest vectors. Instead, Cortex runs a **multi-stage recall pipeline** that:
+
+- Understands the **intent of the query**
+- Considers the **user, tenant, and agent context**
+- Traverses the **memory graph** to understand relationships and outcomes
+- Weighs **recency, relevance, frequency, and semantic similarity**
+- Ranks memories based on **how useful they are for the current task**
+
+The goal is not “what is similar?”\
+The goal is: **“what context will help this agent succeed right now?”**
+
+## Why This Beats Traditional RAG
+
+Traditional RAG systems treat memory like a flat database.\
+Cortex treats memory like a **living context graph**.
+
+Each recall operation takes into account:
+
+- **Who** is asking (user personalization)
+- **Which agent** is asking (agent role)
+- **What they’re trying to do** (task intent)
+- **What has worked before** (historical outcomes)
+
+This means two users can ask the same question and get **different, personalized context**.
+
+## Adaptive & Personalized Retrieval
+
+Over time, Cortex learns which memories are actually useful.
+
+This enables:
+
+- **Personalized ranking** – different users see different context
+- **Implicit feedback loops** – useful memories get boosted
+- **Contextual pruning** – low-signal memories fade away
+
+Think of Cortex less like search, and more like a:
+
+> **Personalized context engine that continuously optimizes what your agents see.**
+
+## Fine-Tuning Your Retrievals (Advanced)
+
+Cortex gives you explicit control over recall behavior.
+
+You can tune parameters like:
+
+- `recency_bias` – prefer newer memories
+- `search_alpha` – balance semantic vs lexical
+- custom scoring functions
+- metadata constraints
+
+This lets you build:
+
+- Deterministic enterprise systems
+- Highly adaptive consumer agents
+- Or anything in between
+
+Without rewriting your retrieval stack.
+
+## Beyond Vector Search
+
+Pure vector search consistently fails in real-world systems:
+
+- Returns semantically similar but useless results
+- Cannot enforce structure or constraints
+- Breaks with compliance, access control, and workflows
+- Does not personalize well across users
+
+Cortex is built on the belief that:
+
+> Vector databases are **necessary but not sufficient** for memory.
+
+Every agent needs a **personalized recall layer** that combines:
+
+- Semantic understanding
+- Structured metadata
+- Behavioral feedback
+- Graph relationships
+
+The result is not just faster search.
+
+It’s recall that feels closer to a:
+
+> **Personalized PageRank for memory**\
+> than a traditional vector database.
+
+## Performance & Scalability
+
+Cortex recall is built for production-scale systems:
+
+- **Compute–Storage Separation** → up to 10× cost savings
+- **Petabyte Scale** → billions of memories
+- **Sub-Second Latency** → real-time agents
+- **Multi-Tenant Isolation** → enterprise ready
+- **Local Development** → test locally, scale globally
+
+This is the infrastructure layer for **memory-driven AI systems**.
+
+## The Real Value Proposition (For Developers)
+
+If you didn’t use Cortex, you would need to build:
+
+- Vector pipelines
+- Metadata engines
+- Ranking heuristics
+- Feedback systems
+- Graph traversal logic
+- Caching layers
+- Compliance filters
+- Personalization logic
+
+And keep them all in sync.
+
+That’s a year of work for a team.
+
+Cortex already did that.
+
+So your agents can focus on **thinking**, not **searching**.

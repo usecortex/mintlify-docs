@@ -39,6 +39,7 @@ graph TD
     C --> F
 ```
 
+
 ## Step 1: Data Ingestion Strategy
 
 ### 1.1 App Connectors Setup
@@ -48,6 +49,7 @@ You'll need to connect to various data sources. Here are recommended approaches:
 #### Option A: Using Composio
 
 [Composio](https://composio.dev/) provides pre-built connectors for popular apps:
+
 
 ```javascript
 // Example: Setting up Composio connector
@@ -78,9 +80,11 @@ const composioConfig = {
 };
 ```
 
+
 #### Option B: Vanilla API Integration
 
 For custom integrations, use the native APIs:
+
 
 ```javascript
 // Example: Slack API integration
@@ -147,16 +151,18 @@ class GmailConnector {
 }
 ```
 
+
 ### 1.2 Data Normalization
 
 Create a unified data format for all sources:
 
 > **Important**: For optimal performance, limit each batch to a maximum of **20 app sources** per request. Send multiple batch requests with an interval of **1 second** between each request.
 
+
 ```javascript
 // Unified data structure for Cortex app upload
 const normalizedData = {
-  id: 'unique_source_id',
+  id: 'unique_id',
   title: 'Document/Message Title',
   type: 'slack_message', // Required: gmail, slack_message, notion_page, document, etc.
   timestamp: '2024-01-01T00:00:00Z', // Required: ISO timestamp
@@ -171,18 +177,20 @@ const normalizedData = {
   cortex_metadata: {}, // Optional: custom metadata for Cortex processing
   meta: {
     author: 'user@company.com',
-    source_id: 'original_source_id',
+    id: 'original_id',
     tags: ['project-a', 'urgent', 'meeting-notes'],
     permissions: ['user1@company.com', 'user2@company.com']
   }
 };
 ```
 
+
 ### 1.3 Batch Upload to Cortex
 
 Use Cortex's batch upload capabilities for efficient data ingestion:
 
 > **Best Practice**: Always verify processing after upload using the `/upload/verify_processing` endpoint to ensure your data is properly indexed.
+
 
 ```javascript
 class CortexDataIngestion {
@@ -215,8 +223,8 @@ class CortexDataIngestion {
     const uploadResult = await this.uploadBatch(sources, subTenantId);
     
     // Verify processing for each source
-    if (uploadResult.source_ids) {
-      for (const sourceId of uploadResult.source_ids) {
+    if (uploadResult.ids) {
+      for (const sourceId of uploadResult.ids) {
         const status = await this.verifyProcessing(sourceId);
         if (status.indexing_status === 'errored') {
           throw new Error(`Processing failed for source ${sourceId}`);
@@ -228,7 +236,7 @@ class CortexDataIngestion {
   }
 
   async verifyProcessing(fileId) {
-    const url = `${this.baseUrl}/upload/verify_processing?file_id=${fileId}`;
+    const url = `${this.baseUrl}/upload/verify_processing?id=${fileId}`;
     
     const response = await fetch(url, {
       method: 'POST',
@@ -269,6 +277,7 @@ class CortexDataIngestion {
 }
 ```
 
+
 ## Step 2: Search and Q&A Implementation
 
 ### 2.1 Universal Search Interface
@@ -276,6 +285,7 @@ class CortexDataIngestion {
 Create a search interface that queries across all data sources:
 
 > **Note**: Cortex supports filtering by `source_title` and `source_type` using the `metadata` parameter. Use these for targeted searches across specific data sources.
+
 
 ```javascript
 class GleanSearch {
@@ -353,6 +363,7 @@ class GleanSearch {
 }
 ```
 
+
 ### 2.2 Advanced Search Features
 
 Implement advanced search capabilities:
@@ -363,6 +374,7 @@ Implement advanced search capabilities:
 > - `auto_agent_routing`: Routes queries to the best suitable AI agent
 > - `search_alpha`: Controls semantic vs keyword matching (0.0-1.0)
 > - `recency_bias`: Prioritizes recent content (0.0-1.0)
+
 
 ```javascript
 class AdvancedSearch extends GleanSearch {
@@ -399,6 +411,7 @@ class AdvancedSearch extends GleanSearch {
 }
 ```
 
+
 ### 2.3 AI Memories and User Preferences
 
 One of the most powerful features of building a Glean-like application with Cortex is leveraging **AI Memories** to create truly personalized experiences. Cortex automatically manages AI memories when you provide a `user_name` and maintain consistent `session_id` values. This allows your application to remember user preferences, past interactions, and behavioral patterns, making every search and interaction more relevant and efficient.
@@ -413,6 +426,7 @@ Cortex's AI memories are dynamic, user-specific profiles that evolve over time. 
 - **Anticipate Needs**: Suggest relevant information before users ask
 
 #### Implementing AI Memories in Your Search
+
 
 ```javascript
 class PersonalizedSearch extends AdvancedSearch {
@@ -571,7 +585,9 @@ class PersonalizedSearch extends AdvancedSearch {
 }
 ```
 
+
 #### User Preference Learning
+
 
 ```javascript
 class PreferenceLearner {
@@ -673,7 +689,9 @@ class PreferenceLearner {
 }
 ```
 
+
 #### Memory-Enhanced Search Interface
+
 
 ```javascript
 const MemoryEnhancedSearch = ({ userId }) => {
@@ -820,6 +838,7 @@ const MemoryEnhancedSearch = ({ userId }) => {
 };
 ```
 
+
 #### Benefits of AI Memories in Your Glean Clone
 
 1. **Personalized Search Results**: Users get results tailored to their preferences and past behavior
@@ -842,6 +861,7 @@ const MemoryEnhancedSearch = ({ userId }) => {
 ## Step 3: Frontend Implementation
 
 ### 3.1 Search Interface
+
 
 ```javascript
 // React component example
@@ -905,7 +925,9 @@ const GleanSearchInterface = () => {
 };
 ```
 
+
 ### 3.2 Results Display
+
 
 ```javascript
 const SearchResults = ({ results }) => {
@@ -933,7 +955,7 @@ const SearchResults = ({ results }) => {
 };
 
 const SourceCard = ({ source, chunks }) => {
-  const sourceChunks = chunks?.filter(chunk => chunk.source_id === source.source_id) || [];
+  const sourceChunks = chunks?.filter(chunk => chunk.id === source.id) || [];
 
   return (
     <div className="source-card">
@@ -958,9 +980,11 @@ const SourceCard = ({ source, chunks }) => {
 };
 ```
 
+
 ## Step 4: Data Synchronization
 
 ### 4.1 Scheduled Sync Jobs
+
 
 ```javascript
 class DataSyncManager {
@@ -1035,7 +1059,7 @@ class DataSyncManager {
       description: item.description,
       cortex_metadata: {}, // Keep empty or for custom data
       meta: {
-        source_id: item.id,
+        id: item.id,
         author: item.author || item.user,
         tags: item.tags || [],
         created_at: item.created_at,
@@ -1046,7 +1070,9 @@ class DataSyncManager {
 }
 ```
 
+
 ### 4.2 Webhook Integration
+
 
 ```javascript
 // Express.js webhook handler
@@ -1062,7 +1088,7 @@ app.post('/webhooks/slack', async (req, res) => {
       },
       metadata: {
         source_type: 'slack_message',
-        source_id: event.ts,
+        id: event.ts,
         author: event.user,
         created_at: new Date(event.ts * 1000).toISOString(),
         channel: event.channel
@@ -1079,9 +1105,11 @@ app.post('/webhooks/slack', async (req, res) => {
 });
 ```
 
+
 ## Step 5: Security and Access Control
 
 ### 5.1 Multi-Tenant Architecture
+
 
 ```javascript
 class TenantManager {
@@ -1147,7 +1175,9 @@ class TenantManager {
 }
 ```
 
+
 ### 5.2 Data Privacy and Compliance
+
 
 ```javascript
 class DataPrivacyManager {
@@ -1215,9 +1245,11 @@ class DataPrivacyManager {
 }
 ```
 
+
 ## Step 6: Performance Optimization
 
 ### 6.1 Caching Strategy
+
 
 ```javascript
 class SearchCache {
@@ -1260,7 +1292,9 @@ class SearchCache {
 }
 ```
 
+
 ### 6.2 Rate Limiting
+
 
 ```javascript
 class RateLimiter {
@@ -1292,9 +1326,11 @@ class RateLimiter {
 }
 ```
 
+
 ## Step 7: Monitoring and Analytics
 
 ### 7.1 Search Analytics
+
 
 ```javascript
 class SearchAnalytics {
@@ -1360,6 +1396,7 @@ class SearchAnalytics {
   }
 }
 ```
+
 
 ## Best Practices and Recommendations
 

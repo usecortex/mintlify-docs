@@ -1,0 +1,240 @@
+---
+title: "Context Graphs"
+description: "Cortex automatically builds a context graph from your content, extracting entities and their relationships to help your AI understand not just individual pieces of information, but how everything connects."
+---
+
+This means your agents don’t just retrieve documents — they reason over a **web of relationships** across users, projects, systems, and knowledge.
+
+Where traditional semantic search answers:
+
+> "What is similar?"
+
+Cortex’s context graph answers:
+
+> "How is everything actually related?"
+
+---
+
+## What Is a Context Graph?
+
+A context graph is a network of:
+
+- **Entities** — people, organizations, projects, products, systems, concepts
+- **Relationships** — how those entities interact, depend on each other, or evolve
+
+Instead of treating each document as isolated text, Cortex understands the **underlying structure** of your information.
+
+### Example
+
+Query:
+
+> "Project Phoenix budget"
+
+Semantic search returns:
+
+- Documents mentioning "Phoenix" and "budget"
+
+Cortex’s context graph understands:
+
+- Sarah Chen leads Project Phoenix
+- Project Phoenix depends on the Authentication Service
+- It was approved by the Engineering VP
+- It has a Q2 deadline
+
+This is **relational context** — not just text similarity.
+
+---
+
+## How It Works
+
+### Automatic Entity Extraction
+
+When you upload content, Cortex automatically:
+
+- Identifies entities in your documents
+- Extracts relationships between entities
+- Builds a connected graph
+- Updates continuously as new content arrives
+
+No schemas. No tagging. No configuration.
+
+The graph is built **entirely automatically**.
+
+---
+
+## Intelligent Entity Disambiguation
+
+Real data is messy. Names repeat. Concepts overlap.
+
+Cortex resolves ambiguity using:
+
+- Surrounding context
+- Source type (email, doc, ticket, chat)
+- Unique identifiers (emails, URLs, IDs)
+- Relationship patterns
+
+So "Mercury" the engineer is never confused with "Mercury" the customer or "Mercury" the project.
+
+---
+
+## Cross-Source Entity Linking
+
+Cortex links entities across systems automatically.
+
+Examples:
+
+- Two docs mention "John Smith" → both reference [john.smith@company.com](mailto:john.smith@company.com) → merged
+- Slack thread and Notion doc both discuss "Project Phoenix" → linked
+- CRM record and support ticket share customer_id → unified
+
+The graph becomes a **single source of truth across tools**.
+
+---
+
+## Closing the Semantic Gap
+
+Vector search understands _meaning_.\
+Context graphs understand _structure_.
+
+Vector search can find:
+
+> "critical bug"
+
+But it cannot know:
+
+- That the bug in Doc A is the same as Ticket #4821
+- That three teams are working on related systems
+- That the issue impacts a revenue-critical workflow
+
+Context graphs bridge this gap by modeling **explicit relationships**, not just semantic similarity.
+
+---
+
+## Entity Types
+
+Cortex recognizes entities such as:
+
+- People
+- Organizations
+- Projects
+- Products
+- Systems
+- APIs
+- Error codes
+- Concepts
+
+Each entity includes:
+
+- Name
+- Type
+- Namespace
+- Relationships
+
+---
+
+## Relationship Context
+
+Every relationship captures:
+
+- Relationship type (WORKS_AT, DEPENDS_ON, REPORTS_TO)
+- Rich natural language context
+- Source evidence
+- Temporal signals
+
+This enables Cortex to reason about:
+
+- Dependencies
+- Ownership
+- Causality
+- Responsibility
+
+---
+
+## Automatic Availability
+
+Context graph signals are **automatically included in all recall and search responses**.
+
+You don’t need special APIs.
+
+Every Cortex retrieval call benefits from the graph.
+
+---
+
+## Using Graph Context
+
+Search responses include:
+
+- `chunk_triplets` — entity relationships per chunk
+- `entity_paths` — multi-hop relationship chains
+
+### entity_paths
+
+Best for:
+
+- "How is X related to Y?"
+- "Who owns this system?"
+- "What depends on this service?"
+
+Each path contains a pre-computed summary of the full relationship chain.
+
+---
+
+## Why This Matters for AI Agents
+
+Context graphs enable agents to:
+
+- Perform multi-hop reasoning
+- Answer relational questions
+- Understand organizational structure
+- Track dependencies and impact
+- Ground answers in real-world relationships
+
+This turns agents from **search engines** into **reasoning systems**.
+
+---
+
+## Key Benefits
+
+- Deeper understanding of complex domains
+- Richer context for every response
+- Higher relevance
+- Automatic maintenance
+- Tenant-level isolation
+
+---
+
+## Use Cases
+
+- Customer support → link issues to systems and solutions
+- Sales → connect prospects to products and case studies
+- Research → relate papers, authors, and findings
+- Project management → track teams, dependencies, deadlines
+- Onboarding → map org structure and stakeholders
+
+---
+
+## Best Practices
+
+- Include unique identifiers (emails, IDs, URLs)
+- Write clearly and consistently
+- Use structured content where possible
+
+The more signal in your data, the smarter the graph becomes.
+
+---
+
+## The Big Picture
+
+Vector databases give you similarity.
+
+Context graphs give you **understanding**.
+
+Cortex uses both together.
+
+That’s what allows your agents to move from:
+
+> "finding information"
+
+to
+
+> "reasoning about reality."

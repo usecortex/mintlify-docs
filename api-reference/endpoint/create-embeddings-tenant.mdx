@@ -1,15 +1,9 @@
 ---
-title: 'Create Embeddings Tenant'
-openapi: 'POST /embeddings/create_tenant'
+title: "Create Embeddings Tenant"
+description: "API reference for Create Embeddings Tenant. Useful if you are an enterprise that has specialized embedding models trained in house."
+openapi: "POST /embeddings/create_tenant"
 ---
 
-import { TableOfContents } from '/snippets/table-of-contents.jsx'
-import TryIt from '/snippets/try-it.mdx'
-
-<Panel>
-  <TableOfContents />
-</Panel>
-<TryIt />
 ### Examples
 
 <Tabs>
@@ -42,8 +36,8 @@ Create a tenant dedicated to directly storing and querying embeddings.
 > Use this API only if you plan to upload embeddings directly (via `/upload/upload_embeddings`) and query them (via `/embeddings/*`). For standard document, text/markdown, or webpage ingestion, use `/user/create_tenant` instead.
 
 ### Query Parameters
-- **tenant_id**: Required string — The tenant identifier.
 
+- **tenant_id**: Required string — The tenant identifier.
 
 ## Sample Response
 
@@ -51,11 +45,6 @@ Create a tenant dedicated to directly storing and querying embeddings.
 {
   "status": "success",
   "message": "Tenant 'embeddings_test' created successfully.",
-  "tenant_id": "embeddings_test",
+  "tenant_id": "embeddings_test"
 }
 ```
-
-## Error Responses
-
-All endpoints return consistent error responses following the standard format. For detailed error information, see our [Error Responses](/api-reference/error-responses) documentation.
-

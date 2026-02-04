@@ -1,0 +1,259 @@
+---
+title: "Knowledge Base"
+description: "Your users won't tell AI everything. But their Slack messages, Notion docs, emails, and drives already contain the context your agents need. Knowledge Memories lets you ingest, store, and recall all of this - creating a unified context layer for every user. When combined with User Memories, your agents deliver hyper-personalized responses with the right context."
+openapi: "POST /ingestion/upload_knowledge"
+---
+
+### Examples
+
+<Tabs>
+  <Tab title="API Request">
+    ```bash
+    curl -X POST https://api.usecortex.ai/ingestion/upload_knowledge \
+    -F "tenant_id=tenant_123" \
+    -F "files=@a.pdf" \
+    -F "files=@b.pdf" \
+    -F 'file_metadata=[
+    {
+      "id": "doc_a",
+      "tenant_metadata": { "dept": "sales" },
+      "document_metadata": { "author": "Alice" },
+      "relations": false
+    },
+    {
+      "id": "doc_b",
+      "tenant_metadata": { "dept": "marketing" },
+      "document_metadata": { "author": "Bob" },
+      "relations": true
+    }
+    ]'
+    ```
+  </Tab>
+  <Tab title="TypeScript">
+    ```ts
+    import fs from 'fs';
+    
+    const uploadResult = await client.upload.uploadDocument({
+      files: [
+        fs.readFileSync("a.pdf"),
+        fs.readFileSync("b.pdf")
+      ],
+      tenant_id: "tenant_123",
+      file_metadata: [
+        {
+          id: "doc_a",
+          tenant_metadata: { dept: "sales" },
+          document_metadata: { author: "Alice" },
+          relations: false
+        },
+        {
+          id: "doc_b",
+          tenant_metadata: { dept: "marketing" },
+          document_metadata: { author: "Bob" },
+          relations: true
+        }
+      ]
+    });
+    ```
+  </Tab>
+  <Tab title="Python (Sync)">
+    ```python
+    # Async usage is similar, just use async_client and await
+    with open("a.pdf", 'rb') as f1, open("b.pdf", 'rb') as f2:
+        files = [
+            ("a.pdf", f1),
+            ("b.pdf", f2)
+        ]
+        upload_result = client.upload.upload_document(
+            tenant_id="tenant_123",
+            files=files,
+            file_metadata=[
+                {
+                    "id": "doc_a",
+                    "tenant_metadata": {"dept": "sales"},
+                    "document_metadata": {"author": "Alice"},
+                    "relations": False
+                },
+                {
+                    "id": "doc_b",
+                    "tenant_metadata": {"dept": "marketing"},
+                    "document_metadata": {"author": "Bob"},
+                    "relations": True
+                }
+            ]
+        )
+    ```
+  </Tab>
+</Tabs>
+
+Upload documents to your tenant's knowledge base for processing, chunking, and indexing to enable search and retrieval.
+
+## Metadata Parameters
+
+When uploading multiple files, you can provide metadata for each file using the `file_metadata` parameter. This allows you to associate custom metadata, organize documents, and control processing behavior on a per-file basis.
+
+### `file_metadata` Array
+
+The `file_metadata` parameter accepts a JSON array where each object corresponds to one of the uploaded files. The order of metadata objects should match the order of files in the `files` parameter.
+
+**Structure:**
+
+```json
+[
+  {
+    "id": "string",
+    "tenant_metadata": {},
+    "document_metadata": {},
+    "relations": boolean
+  }
+]
+```
+
+### Metadata Fields
+
+#### `id` (string, optional)
+
+- **Description**: A unique identifier for the document. If not provided, the system will auto-generate one.
+- **Use Case**: Use this to reference the document later, enable idempotent uploads, or maintain your own document naming scheme.
+- **Example**: `"doc_a"`, `"invoice_2024_001"`, `"manual_v2.3"`
+
+#### `tenant_metadata` (object, optional)
+
+- **Description**: Key-value pairs that represent tenant-level metadata. This metadata is shared across all documents within the tenant and is useful for organization-wide filtering and categorization.
+- **Use Case**: Store department information, project tags, organizational units, or any tenant-scoped attributes that help organize and filter documents.
+- **Example**:
+
+  ```json
+  {
+    "dept": "sales",
+    "project": "Q4_2024",
+    "region": "us-west"
+  }
+  ```
+- **Note**: This metadata is indexed and can be used for filtering in search queries.
+
+#### `document_metadata` (object, optional)
+
+- **Description**: Key-value pairs that represent document-specific metadata. This metadata is unique to each document and provides context about the document itself.
+- **Use Case**: Store document-specific information like author, creation date, document type, version, or any attributes that describe the individual document.
+- **Example**:
+
+  ```json
+  {
+    "author": "Alice",
+    "created_date": "2024-01-15",
+    "document_type": "invoice",
+    "version": "1.0"
+  }
+  ```
+- **Note**: This metadata is indexed and can be used for filtering in search queries.
+
+#### `relations` (boolean, optional)
+
+- **Description**: Controls whether the system should extract and index relationships between entities in the document. When set to `true`, the system will analyze the document for entity relationships and create a knowledge graph.
+- **Use Case**: Enable relationship extraction for documents where understanding connections between entities (people, places, concepts) is important for your use case.
+- **Default**: `false`
+- **Example**:
+  - `true`: Extract relationships for documents like organizational charts, knowledge bases, or interconnected documentation
+  - `false`: Skip relationship extraction for simple documents or when graph features aren't needed
+
+<Info>
+  **Metadata Ordering**: The order of objects in the `file_metadata` array should match the order of files in the `files` parameter. The first metadata object applies to the first file, the second to the second file, and so on.
+</Info>
+
+## Supported file formats
+
+<Info>
+  **Supported Upload Formats**: For a comprehensive list of all supported file formats with detailed information, see our [Supported File Formats](/essentials/file-formats) documentation.
+</Info>
+
+<Warning>
+  **Unsupported File Formats**: If you attempt to upload a file format that is not supported, you will receive an error response with status code `400` and the message: `"Unsupported file format: [filename]"`. Ensure your files are in a supported format before uploading.
+</Warning>
+
+## Document Processing Pipeline
+
+When you upload content to Cortex, it is securely accepted and queued for processing, then automatically extracted, parsed, and cleaned to normalize structure and text. The content is intelligently chunked into semantically meaningful units with preserved metadata, enriched with embeddings for semantic understanding, indexed for hybrid retrieval (metadata, keyword, and vector search), and linked via cross-references to build relational context. Throughout the pipeline, quality checks validate extraction and embedding fidelity, ensuring the content is fully indexed, connected into the context graph, and ready for accurate, low-latency recall by your agents.
+
+<Note>
+  **Processing Time**: Most documents are fully processed and searchable within 1-5 minutes. Larger documents (100+ pages) may take up to 15 minutes. You can check processing status using the document ID returned in the response.
+</Note>
+
+### `Upsert` parameter (optional)
+
+For documents, the identifier is `id`. When that identifier already exists, `upsert` (boolean, default `true`) controls the behavior:
+
+| Value   | Behavior                   |
+| ------- | -------------------------- |
+| `true`  | Replace existing (default) |
+| `false` | Fail; do not overwrite     |
+
+Overwriting permanently removes and replaces existing chunks, embeddings, and indexes for that identifier.
+
+## Processing Status & Monitoring
+
+After uploading, you can monitor your document's processing status:
+
+### **Immediate Response**
+
+Upon successful upload, you'll receive:
+
+```json
+{
+  "filename": "file_abc.pdf",
+  "id": "doc_123456",
+  "status": "queued"
+}
+```
+
+### **Processing States**
+
+Your document will progress through these states:
+
+- **`queued`**: Document is in the processing queue, waiting to be processed
+- **`in_progress`**: Document is actively being processed (includes content extraction, chunking, embedding generation, and indexing)
+- **`success`**: Document is fully processed and searchable
+- **`errored`**: Processing encountered an error (rare occurrence)
+
+<Info>
+  **In-Progress Details**: While the status shows `in_progress`, the system is actually performing multiple steps: content extraction, document parsing, intelligent chunking, embedding generation, and database indexing. These happen sequentially but are all part of the single `in_progress` state.
+</Info>
+
+## Best Practices
+
+### **Document Preparation**
+
+- **File Size**: Documents up to 50MB are processed efficiently
+- **Content Quality**: Clear, well-structured documents produce better embeddings
+- **Metadata**: Include rich metadata for better filtering and organization
+
+### **Processing Optimization**
+
+- **Batch Uploads**: For multiple documents, consider using our batch upload endpoint
+- **Metadata Consistency**: Use consistent metadata schemas across your organization
+- **File Naming**: Descriptive filenames help with document identification
+
+### **Troubleshooting**
+
+**Document Not Appearing in Search?**
+
+- Wait 5-10 minutes for processing to complete
+- Check if the document status is `errored` (rare occurrence)
+- Verify your search query and filters
+
+**Slow Processing?**
+
+- Large documents (100+ pages) take longer to process
+- Complex formatting may require additional processing time
+- High system load may temporarily slow processing
+
+**Processing Failures?**
+
+- If status shows `errored`, ensure your document isn't corrupted or password-protected
+- Check that the file format is supported (see Supported File Formats section above)
+- Verify your API key has sufficient permissions
+- For unsupported formats, you'll receive a `400` error with the message: `"Unsupported file format: [filename]. Please check our supported file formats documentation."`
+
+<Info>
+  **Need Help?** If a document fails to process or you're experiencing issues, contact our support team with the `id` for assistance.
+</Info>

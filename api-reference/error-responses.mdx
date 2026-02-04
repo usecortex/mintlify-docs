@@ -1,6 +1,6 @@
 ---
-title: 'Error Responses'
-description: 'Comprehensive guide to HTTP error responses and their meanings across all Cortex API endpoints'
+title: "Error Responses"
+description: "Comprehensive guide to HTTP error responses and their meanings across all Cortex API endpoints"
 ---
 
 All Cortex API endpoints follow a consistent error response format. This page documents the standard HTTP error codes and their corresponding response structures.
@@ -22,9 +22,11 @@ All error responses follow this consistent structure:
 ## HTTP Status Codes
 
 ### 400 Bad Request
+
 **When it occurs**: Invalid input parameters, malformed requests, or validation failures.
 
 **Example Response**:
+
 ```json
 {
   "detail": {
@@ -36,6 +38,7 @@ All error responses follow this consistent structure:
 ```
 
 **Common scenarios**:
+
 - Missing required parameters
 - Invalid parameter formats
 - Malformed JSON in request body
@@ -43,9 +46,11 @@ All error responses follow this consistent structure:
 - Attempting to delete default sub-tenant
 
 ### 401 Unauthorized
+
 **When it occurs**: Invalid or missing API key, authentication required.
 
 **Example Response**:
+
 ```json
 {
   "detail": {
@@ -57,15 +62,18 @@ All error responses follow this consistent structure:
 ```
 
 **Common scenarios**:
+
 - Missing API key in headers
 - Invalid API key
 - Expired API key
 - Insufficient permissions
 
 ### 403 Forbidden
+
 **When it occurs**: Valid authentication but insufficient permissions for the requested resource.
 
 **Example Response**:
+
 ```json
 {
   "detail": {
@@ -77,14 +85,17 @@ All error responses follow this consistent structure:
 ```
 
 **Common scenarios**:
+
 - API key lacks required permissions
 - Tenant access restrictions
 - Resource ownership conflicts
 
 ### 404 Not Found
+
 **When it occurs**: Requested resource does not exist.
 
 **Example Response**:
+
 ```json
 {
   "detail": {
@@ -96,6 +107,7 @@ All error responses follow this consistent structure:
 ```
 
 **Common scenarios**:
+
 - Tenant does not exist
 - Sub-tenant does not exist
 - File/document not found
@@ -103,9 +115,11 @@ All error responses follow this consistent structure:
 - Source not found
 
 ### 409 Conflict
+
 **When it occurs**: Resource already exists or conflicts with existing data.
 
 **Example Response**:
+
 ```json
 {
   "detail": {
@@ -117,14 +131,17 @@ All error responses follow this consistent structure:
 ```
 
 **Common scenarios**:
+
 - Tenant ID already exists
 - Duplicate file uploads
 - Conflicting metadata schemas
 
 ### 422 Unprocessable Entity
+
 **When it occurs**: Request is well-formed but contains semantic errors.
 
 **Example Response**:
+
 ```json
 {
   "detail": {
@@ -136,15 +153,18 @@ All error responses follow this consistent structure:
 ```
 
 **Common scenarios**:
+
 - Invalid metadata schema
 - Content validation failures
 - Business rule violations
 - Data format incompatibilities
 
 ### 500 Internal Server Error
+
 **When it occurs**: Unexpected server-side error.
 
 **Example Response**:
+
 ```json
 {
   "detail": {
@@ -156,10 +176,11 @@ All error responses follow this consistent structure:
 ```
 
 <Note>
-**Error Handling**: Always check the `detail` object in error responses for the actual error information. The outer structure may vary, but the `detail` object always follows the standard format.
+  **Error Handling**: Always check the `detail` object in error responses for the actual error information. The outer structure may vary, but the `detail` object always follows the standard format.
 </Note>
 
 **Common scenarios**:
+
 - Database connectivity issues
 - Processing pipeline failures
 - External service unavailability
@@ -168,32 +189,38 @@ All error responses follow this consistent structure:
 ## Endpoint-Specific Error Codes
 
 ### Tenant Management
+
 - `TENANT_ALREADY_EXISTS`: Tenant ID is already in use
 - `TENANT_NOT_FOUND`: Specified tenant does not exist
 - `INVALID_TENANT_ID`: Tenant ID format is invalid
 
 ### Sub-Tenant Management
+
 - `CANNOT_DELETE_DEFAULT_SUB_TENANT`: Attempting to delete the default sub-tenant
 - `SUB_TENANT_NOT_FOUND`: Specified sub-tenant does not exist
 - `INVALID_SUB_TENANT_ID`: Sub-tenant ID format is invalid
 
-### Document Management
+### Knowledge Management
+
 - `FILE_NOT_FOUND`: Requested file does not exist
 - `INVALID_FILE_FORMAT`: Unsupported file format
 - `FILE_TOO_LARGE`: File exceeds size limits
 - `PROCESSING_FAILED`: Document processing encountered an error
 
 ### Search Operations
+
 - `INVALID_SEARCH_PARAMETERS`: Search query parameters are invalid
 - `SEARCH_TIMEOUT`: Search operation timed out
 - `NO_RESULTS_FOUND`: No matching results for the search query
 
 ### User Memory
+
 - `MEMORY_NOT_FOUND`: User memory does not exist
 - `MEMORY_LIMIT_EXCEEDED`: User has reached memory storage limit
 - `INVALID_MEMORY_FORMAT`: Memory content format is invalid
 
 ### Embeddings
+
 - `EMBEDDINGS_NOT_FOUND`: Requested embeddings do not exist
 - `INVALID_EMBEDDING_FORMAT`: Embedding data format is invalid
 - `EMBEDDING_GENERATION_FAILED`: Failed to generate embeddings
@@ -201,6 +228,7 @@ All error responses follow this consistent structure:
 ## Error Handling Best Practices
 
 ### Client-Side Error Handling
+
 ```javascript
 try {
   const response = await fetch('/api/endpoint', {
@@ -235,6 +263,7 @@ try {
 ```
 
 ### Retry Logic
+
 For transient errors (5xx), implement exponential backoff:
 
 ```javascript
@@ -266,29 +295,25 @@ async function retryRequest(url, options, maxRetries = 3) {
 ## Troubleshooting Common Issues
 
 ### Authentication Issues
+
 1. **Check API Key**: Ensure your API key is valid and not expired
 2. **Header Format**: Verify the Authorization header format: `Bearer YOUR_API_KEY`
 3. **Permissions**: Confirm your API key has the required permissions
 
 ### Resource Not Found
-1. **Verify IDs**: Double-check tenant_id, sub_tenant_id, and file_id values
+
+1. **Verify IDs**: Double-check tenant_id, sub_tenant_id, and id values
 2. **Case Sensitivity**: Ensure IDs match exactly (case-sensitive)
 3. **Existence**: Confirm the resource exists before making requests
 
 ### Validation Errors
+
 1. **Required Fields**: Ensure all required parameters are provided
 2. **Data Types**: Verify parameter types match the expected format
 3. **File Formats**: Check that uploaded files are in supported formats
 
 ### Rate Limiting
+
 1. **Request Frequency**: Reduce the frequency of API calls
 2. **Batch Operations**: Use batch endpoints when available
 3. **Caching**: Implement client-side caching for frequently accessed data
-
-<Note>
-**Error Code Consistency**: All error codes follow a consistent naming convention using UPPER_SNAKE_CASE. This makes it easy to programmatically handle specific error scenarios in your application.
-</Note>
-
-<Warning>
-**Error Response Structure**: Always check the `detail` object in error responses, as this contains the actual error information. The outer structure may vary, but the `detail` object always follows the standard format.
-</Warning>

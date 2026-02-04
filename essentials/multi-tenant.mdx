@@ -35,6 +35,7 @@ The **sub_tenant_id** represents a subdivision within a tenant - such as departm
 3. **Immediate Availability**: Once created, the sub-tenant is immediately available for all subsequent operations
 
 **Example - Creating a New Sub-Tenant:**
+
 ```json
 POST /upload/upload_document?tenant_id=acme_corp&sub_tenant_id=engineering_team_alpha
 {
@@ -46,6 +47,7 @@ POST /upload/upload_document?tenant_id=acme_corp&sub_tenant_id=engineering_team_
 }
 ```
 
+
 If `engineering_team_alpha` doesn't exist as a sub-tenant under `acme_corp`, Cortex will:
 1. ✅ Create the new sub-tenant `engineering_team_alpha`
 2. ✅ Upload and process the document
@@ -56,6 +58,8 @@ If `engineering_team_alpha` doesn't exist as a sub-tenant under `acme_corp`, Cor
 #### **Recommended Naming Conventions**
 
 **For User-Based Sub-Tenants (B2C):**
+
+
 ```javascript
 // Use user IDs as sub-tenant IDs for individual user workspaces
 sub_tenant_id: "user_12345"
@@ -63,7 +67,10 @@ sub_tenant_id: "user_67890"
 sub_tenant_id: "user_abc123"
 ```
 
+
 **For Department/Team-Based Sub-Tenants (B2B):**
+
+
 ```javascript
 // Use descriptive department names
 sub_tenant_id: "engineering"
@@ -72,7 +79,10 @@ sub_tenant_id: "hr"
 sub_tenant_id: "marketing"
 ```
 
+
 **For Project-Based Sub-Tenants:**
+
+
 ```javascript
 // Use project identifiers
 sub_tenant_id: "project_alpha"
@@ -80,13 +90,17 @@ sub_tenant_id: "project_beta"
 sub_tenant_id: "client_acme_corp"
 ```
 
+
 **For Customer-Based Sub-Tenants (Multi-tenant SaaS):**
+
+
 ```javascript
 // Use customer identifiers
 sub_tenant_id: "customer_12345"
 sub_tenant_id: "customer_acme_inc"
 sub_tenant_id: "customer_beta_corp"
 ```
+
 
 #### **Best Practices for Sub-Tenant IDs**
 
@@ -97,6 +111,8 @@ sub_tenant_id: "customer_beta_corp"
 5. **Consider Hierarchies**: For complex organizations, consider hierarchical naming like `dept_engineering_team_alpha`
 
 **Good Examples:**
+
+
 ```javascript
 sub_tenant_id: "user_12345"           // Individual user
 sub_tenant_id: "dept_engineering"     // Department
@@ -105,13 +121,17 @@ sub_tenant_id: "client_acme_corp"     // Client
 sub_tenant_id: "team_mobile_dev"      // Team
 ```
 
+
 **Avoid These:**
+
+
 ```javascript
 sub_tenant_id: "12345"                // Too generic
 sub_tenant_id: "user@company.com"     // Special characters
 sub_tenant_id: "very_long_descriptive_name_that_is_hard_to_read" // Too long
 sub_tenant_id: "temp"                 // Not descriptive
 ```
+
 
 ## Multi-Tenant Architecture
 
@@ -132,6 +152,7 @@ Cortex's multi-tenant system creates completely isolated workspaces at both the 
 **Scenario**: You're building an AI knowledge assistant for multiple enterprise clients.
 
 ```
+
 Tenant: "acme_corp" (Acme Corporation)
 ├── Sub-tenant: "engineering" (Engineering Department)
 ├── Sub-tenant: "sales" (Sales Department)
@@ -144,6 +165,7 @@ Tenant: "tech_solutions" (Tech Solutions Inc.)
 └── Sub-tenant: "operations" (Operations)
 ```
 
+
 **Implementation**:
 - Each enterprise client gets their own `tenant_id`
 - Each department within the enterprise gets their own `sub_tenant_id`
@@ -154,12 +176,14 @@ Tenant: "tech_solutions" (Tech Solutions Inc.)
 **Scenario**: A consulting firm serving multiple clients with project-based work.
 
 ```
+
 Tenant: "consulting_firm" (Your Consulting Firm)
 ├── Sub-tenant: "client_alpha" (Client Alpha Project)
 ├── Sub-tenant: "client_beta" (Client Beta Project)
 ├── Sub-tenant: "client_gamma" (Client Gamma Project)
 └── Sub-tenant: "internal" (Internal Operations)
 ```
+
 
 **Implementation**:
 - Your consulting firm is the main `tenant_id`
@@ -172,6 +196,7 @@ Tenant: "consulting_firm" (Your Consulting Firm)
 **Scenario**: An AI-powered learning platform serving multiple schools.
 
 ```
+
 Tenant: "stanford_university" (Stanford University)
 ├── Sub-tenant: "computer_science" (CS Department)
 ├── Sub-tenant: "business_school" (Business School)
@@ -183,6 +208,7 @@ Tenant: "mit" (MIT)
 └── Sub-tenant: "media_lab" (Media Lab)
 ```
 
+
 **Implementation**:
 - Each university is a separate `tenant_id`
 - Each department/school is a `sub_tenant_id`
@@ -193,11 +219,13 @@ Tenant: "mit" (MIT)
 **Scenario**: A company managing multiple brands with different customer bases.
 
 ```
+
 Tenant: "fashion_group" (Fashion Group Corp)
 ├── Sub-tenant: "luxury_brand" (Luxury Brand)
 ├── Sub-tenant: "casual_brand" (Casual Brand)
 └── Sub-tenant: "sports_brand" (Sports Brand)
 ```
+
 
 **Implementation**:
 - The parent company is the `tenant_id`
@@ -208,6 +236,7 @@ Tenant: "fashion_group" (Fashion Group Corp)
 
 When making API calls, always include both identifiers:
 
+
 ```json
 {
   "tenant_id": "acme_corp",
@@ -216,6 +245,7 @@ When making API calls, always include both identifiers:
   // other parameters...
 }
 ```
+
 
 ### Default Behavior
 - If `sub_tenant_id` is not provided, it automatically uses the **DEFAULT sub-tenant** created when the tenant was set up

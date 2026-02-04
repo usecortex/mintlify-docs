@@ -1,0 +1,57 @@
+---
+title: "Delete"
+description: "API reference for Delete Sources."
+openapi: "POST /knowledge/delete_knowledge"
+hidden: true
+---
+
+import { TableOfContents } from '/snippets/table-of-contents.jsx'
+
+<Panel>
+  <TableOfContents />
+</Panel>
+
+### Examples
+
+<Tabs>
+  <Tab title="API Request">
+    ```bash
+    curl -X POST \
+      'https://api.usecortex.ai/knowledge/delete_knowledge' \
+      -H 'Authorization: Bearer YOUR_API_KEY' \
+      -H 'Content-Type: application/json' \
+      -d '{
+        "tenant_id": "tenant_1234",
+        "sub_tenant_id": "",
+        "source_ids": ["CortexDoc1234", "CortexDoc4567"]
+      }'
+    ```
+  </Tab>
+  <Tab title="TypeScript">
+    ```ts
+    const result = await client.upload.deleteSource({
+      tenant_id: "tenant_1234",
+      sub_tenant_id: "sub_tenant_4567",
+      ids: ["doc_123", "doc_456"]
+    });
+    ```
+  </Tab>
+  <Tab title="Python (Sync)">
+    ```python
+    # Async usage is similar, just use async_client and await
+    result = client.upload.delete_source(
+        tenant_id="tenant_1234",
+        sub_tenant_id="sub_tenant_4567",
+        ids=["doc_123", "doc_456"]
+    )
+    ```
+  </Tab>
+</Tabs>
+
+## Request Body
+
+| Field           | Type             | Required | Description                                                                                                                 |
+| --------------- | ---------------- | -------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `tenant_id`     | string           | Yes      | Your tenant identifier                                                                                                      |
+| `sub_tenant_id` | string           | No       | Sub-tenant identifier; omit or use `""` for the default sub-tenant                                                          |
+| `source_ids`    | array of strings | Yes      | Source IDs to delete (e.g. from upload response or [List](/api-reference/endpoint/list)). At least one ID required.          |

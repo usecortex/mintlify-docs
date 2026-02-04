@@ -1,0 +1,264 @@
+---
+title: "Memories"
+description: "Memories are the fundamental building blocks of Cortex. They form the context store that powers intelligent, personalized, and adaptive AI agents."
+---
+
+A memory can be anything that carries meaning or signal for an agent:
+
+- Documents, PDFs, and presentations
+- Emails, messages, and conversations
+- Images, webpages, reports
+- User preferences, habits, and behaviors
+- Organizational knowledge and workflows
+
+Cortex treats all of this as **living memory**, not static data. Every memory is parsed, enriched, connected, and continuously optimized for recall.
+
+Think of memories as the **long-term brain of your agents** — not just what users say, but what they mean, what they care about, and what actually works.
+
+---
+
+## What Are Memories?
+
+In Cortex, memories are structured units of contextual information that help your AI system:
+
+- Remember user preferences and past interactions
+- Provide personalized, context-aware responses
+- Adapt behavior over time
+- Improve relevance and accuracy across workflows
+
+Unlike traditional memory systems (logs, chat history, or static profiles), Cortex memories are **dynamic state**.
+
+They are continuously:
+
+- Updated
+- Enriched
+- Re-ranked
+- Reused
+
+Based on how agents and users actually interact with them.
+
+---
+
+## Types of Memories
+
+Cortex supports multiple classes of memory, all unified under a single system.
+
+### User Memories
+
+Personal, user-specific context.
+
+Examples:
+
+- Preferences ("prefers concise answers")
+- Behavior ("often asks technical questions")
+- History ("previously worked on Project Strawberry")
+
+User memories enable **deep personalization** across agents.
+
+### Knowledge Memories
+
+External or organizational knowledge.
+
+Examples:
+
+- Slack threads
+- Gmail emails
+- Notion pages
+- PDFs, docs, and reports
+
+Knowledge memories give agents **shared, structured knowledge**.
+
+### Organizational Memories
+
+Tenant-level memory shared across all agents.
+
+Examples:
+
+- Team roles
+- Internal workflows
+- Policies and playbooks
+
+Organizational memories enable **collective learning across agents**.
+
+---
+
+## Self-Improving Personalization
+
+The real power of Cortex memories comes from compounding.
+
+Cortex doesn’t just store information — it **learns from interaction**.
+
+The system observes:
+
+- How users ask questions
+- What formats they prefer (bullets, tables, summaries)
+- Which content they engage with
+- Which responses actually lead to successful outcomes
+
+Over time, Cortex builds a **behavioral model per user and per agent**.
+
+### What You Get
+
+- Responses feel tailored, not generic
+- Agents naturally match user style
+- Better results with less prompting
+- Systems that improve automatically
+
+Every interaction makes the next one better.
+
+---
+
+## How Memories Work
+
+### 1. Memory Creation
+
+Memories can be created in multiple ways:
+
+- **Direct API** – add raw text, markdown, or structured data
+- **Conversation inference** – extract implicit memories from dialogue
+
+Cortex supports two modes:
+
+- `infer = true` → extract preferences, insights, and latent signals
+- `infer = false` → store content as-is
+
+This lets you choose between **fast ingestion** or **intelligent enrichment**.
+
+---
+
+### 2. Memory Processing & Graph Construction
+
+Every memory is:
+
+- Parsed and chunked
+- Embedded for semantic understanding
+- Enriched with metadata
+- Linked into the memory graph
+
+Cortex doesn’t store isolated vectors — it builds a **context graph** connecting:
+
+- Users
+- Agents
+- Tasks
+- Outcomes
+
+This graph is what powers intelligent recall.
+
+---
+
+### 3. Memory Recall
+
+At query time, Cortex retrieves memories using its multi-stage recall engine:
+
+- Deterministic metadata filtering
+- Graph traversal and relationship scoring
+- Semantic and hybrid retrieval
+- Personalized ranking
+
+Recall is not about "what is similar" — it’s about:
+
+> **What context will help this agent succeed right now?**
+
+---
+
+### 4. Memory Management
+
+You can manage memory state via APIs:
+
+- Delete outdated or incorrect memories
+- Track ingestion and processing
+- Refresh or regenerate memory state
+
+Cortex handles lifecycle management so memory remains **clean, relevant, and useful**.
+
+---
+
+## Why This Is Different From Traditional Memory
+
+Most systems treat memory as:
+
+- Logs
+- Chat history
+- Static user profiles
+
+Cortex treats memory as:
+
+- A **personalized context engine**
+- A **living knowledge graph**
+- A **self-optimizing system of record for agents**
+
+This enables:
+
+- True personalization
+- Cross-agent learning
+- Long-term behavioral adaptation
+- Compounding intelligence over time
+
+---
+
+## Example: Personalized Agent
+
+User memory:
+
+> "Alex prefers bullet points and always wants spreadsheets"
+
+After a few interactions, Cortex learns:
+
+- Respond in bullet points
+- Prioritize XLSX sources
+- Avoid long prose
+
+The agent starts to feel like it **knows Alex personally**.
+
+---
+
+## Getting Started
+
+The fastest way to see value:
+
+1. Add a memory
+2. Ask a question
+3. Observe personalized recall
+
+### Example
+
+```
+curl -X POST https://api.usecortex.ai/memory/add \
+  -H "Authorization: Bearer <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "tenant_id": "demo",
+    "user_id": "john",
+    "content": "John prefers dark mode and detailed technical explanations",
+    "infer": true
+  }'
+```
+
+Then recall it:
+
+```
+curl -X POST https://api.usecortex.ai/memory/recall \
+  -H "Authorization: Bearer <API_KEY>" \
+  -d '{
+    "tenant_id": "demo",
+    "user_id": "john",
+    "query": "How should I explain this feature?"
+  }'
+```
+
+You just gave your agent long-term personalized memory.
+
+## The Real Value
+
+Without Cortex, you would need to build:
+
+- Memory ingestion pipelines
+- Vector infrastructure
+- Metadata engines
+- Ranking systems
+- Feedback loops
+- Graph logic
+
+Cortex gives you all of this as **infrastructure**.
+
+So your agents can remember, learn, and adapt — automatically.

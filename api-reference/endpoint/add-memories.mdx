@@ -1,38 +1,11 @@
 ---
-title: 'Add Memory'
-openapi: 'POST /memories/add_memory'
+title: "User Memory"
+description: "Add memories to Cortex that can be used by your agents for learning about your users. This API allows you to ingest memories in various formats including text, markdown, and user-assistant pairs."
+openapi: "POST /memories/add_memory"
 ---
 
-import { TableOfContents } from '/snippets/table-of-contents.jsx'
-import TryIt from '/snippets/try-it.mdx'
+### Sample Requests
 
-<Panel>
-  <TableOfContents />
-</Panel>
-<TryIt />
-
-### Sample Request
-```bash
-curl -X 'POST' \
-  'https://api.usecortex.ai/memories/add_memory' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -H 'Authorization: Bearer <token>' \
-  -d '{
-  "memories": [
-    {
-      "text": "User prefers dark mode and detailed explanations",
-      "infer": true,
-      "user_name": "John"
-    }
-  ],
-  "tenant_id": "tenant-01",
-  "sub_tenant_id": "",
-  "upsert": true
-}'
-```
-
-### Examples
 <Tabs>
   <Tab title="API Request">
     ```bash expandable
@@ -50,8 +23,7 @@ curl -X 'POST' \
         }
       ],
       "tenant_id": "tenant-01",
-      "sub_tenant_id": "",
-      "upsert": true
+      "sub_tenant_id": ""
     }'
     
     # Text with inference enabled
@@ -68,9 +40,7 @@ curl -X 'POST' \
           "custom_instructions": "Extract user preferences and habits"
         }
       ],
-      "tenant_id": "tenant-01",
-      "sub_tenant_id": "",
-      "upsert": true
+      "tenant_id": "tenant-01"
     }'
     
     # Markdown content
@@ -87,9 +57,7 @@ curl -X 'POST' \
           "title": "Q3 Planning Meeting"
         }
       ],
-      "tenant_id": "tenant-01",
-      "sub_tenant_id": "",
-      "upsert": true
+      "tenant_id": "tenant-01"
     }'
     
     # User-assistant conversation pairs
@@ -108,9 +76,7 @@ curl -X 'POST' \
           "user_name": "John"
         }
       ],
-      "tenant_id": "tenant-01",
-      "sub_tenant_id": "",
-      "upsert": true
+      "tenant_id": "tenant-01"
     }'
     
     # Batch upload - multiple items with mixed settings
@@ -138,9 +104,7 @@ curl -X 'POST' \
           "user_name": "John"
         }
       ],
-      "tenant_id": "tenant-01",
-      "sub_tenant_id": "",
-      "upsert": true
+      "tenant_id": "tenant-01"
     }'
     ```
   </Tab>
@@ -250,16 +214,11 @@ curl -X 'POST' \
   </Tab>
 </Tabs>
 
-## Overview
-
-The **Add Memory** API is a unified endpoint for ingesting various types of content into Cortex. It combines the functionality of content upload and user memory storage into a single, flexible API.
-
 ## Content Types
 
 The API supports three types of content input:
 
-### 1. Raw Text (`text`)
-Plain text content that will be chunked, embedded, and indexed for retrieval.
+### Text
 
 ```json
 {
@@ -268,8 +227,7 @@ Plain text content that will be chunked, embedded, and indexed for retrieval.
 }
 ```
 
-### 2. Markdown Content (`text` + `is_markdown`)
-Markdown-formatted documents that preserve structure during processing.
+### Markdown
 
 ```json
 {
@@ -279,8 +237,7 @@ Markdown-formatted documents that preserve structure during processing.
 }
 ```
 
-### 3. User-Assistant Pairs (`user_assistant_pairs`)
-Conversation exchanges between users and AI assistants, ideal for storing chat history and extracting user preferences.
+### User-Assistant Pairs
 
 ```json
 {
@@ -295,63 +252,61 @@ Conversation exchanges between users and AI assistants, ideal for storing chat h
 
 ### `infer` (boolean)
 
-Controls whether Cortex extracts additional insights from the content:
+Controls whether Cortex extracts insights, likes, dislikes, preferences, and outcomes from the content. If it nothing is specified, default behaviour is `true`
 
-| Value | Behavior |
-|-------|----------|
-| `false` | Content is chunked and indexed as-is (faster processing) |
-| `true` | Content is analyzed to extract implicit information, preferences, and insights |
+| Value   | Behavior                                                              |
+| ------- | --------------------------------------------------------------------- |
+| `false` | Content is ingested as-is (faster processing)                         |
+| `true`  | Content is analyzed to extract information, preferences, and insights |
 
 <Info>
-**When to use `infer=true`:**
-- Storing user conversations to extract preferences
-- Processing feedback or reviews
-- Extracting insights from unstructured text
+  **`When to use infer=true:`**
 
-**When to use `infer=false`:**
-- Uploading documents, policies, or factual content
-- Storing structured data that doesn't need interpretation
-- Performance-critical bulk uploads
+  - Storing user conversations to extract preferences
+  - Processing feedback or reviews
+  - Extracting insights from unstructured text
+
+  **`When to use infer=false:`**
+
+  - Uploading factual statements
+  - Storing deterministic data that doesn't need interpretation
 </Info>
 
-### `upsert` (boolean)
+### `Upsert` parameter (optional)
 
-Controls behavior when a `source_id` already exists:
+For any form of memories, the identifier is `id`. When that identifier already exists, `upsert` (boolean, default `true`) controls the behavior:
 
-| Value | Behavior |
-|-------|----------|
-| `true` | Replace existing content with the same `source_id` |
-| `false` | Fail if `source_id` already exists |
+| Value   | Behavior                   |
+| ------- | -------------------------- |
+| `true`  | Replace existing (default) |
+| `false` | Fail; do not overwrite     |
 
-### `source_id` (optional)
+Overwriting permanently removes and replaces existing memory for that identifier.
+
+### `id` (optional)
 
 Provide your own unique identifier, or let Cortex auto-generate one.
 
 ### `expiry_time` (optional)
 
-Time-to-live in seconds. Content will be automatically deleted after this duration.
+Time-to-live in seconds. Memories will be automatically forgotten after this duration.
 
 ## Memory Item Fields
 
 Each item in the `memories` array can have the following fields:
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `text` | string | * | Raw text or markdown content |
-| `user_assistant_pairs` | array | * | Array of conversation pairs |
-| `is_markdown` | boolean | No | Whether text is markdown formatted |
-| `infer` | boolean | No | Enable inference processing (default: false) |
-| `custom_instructions` | string | No | Guide inference processing |
-| `user_name` | string | No | User's name for personalization |
-| `source_id` | string | No | Custom unique identifier |
-| `title` | string | No | Display title for the memory |
-| `expiry_time` | integer | No | TTL in seconds |
-| `tenant_metadata` | string | No | JSON string of tenant-level metadata |
-| `document_metadata` | string | No | JSON string of document-level metadata |
-
-<Note>
-**\*** Either `text` OR `user_assistant_pairs` must be provided, but not both.
-</Note>
+| Field                  | Type    | Required | Description                                  |
+| ---------------------- | ------- | -------- | -------------------------------------------- |
+| `text`                 | string  | \*       | Raw text or markdown content                 |
+| `user_assistant_pairs` | array   | \*       | Array of conversation pairs                  |
+| `is_markdown`          | boolean | No       | Whether text is markdown formatted           |
+| `infer`                | boolean | No       | Enable inference processing (default: false) |
+| `custom_instructions`  | string  | No       | Guide inference processing                   |
+| `user_name`            | string  | No       | User's name for personalization              |
+| `id`                   | string  | No       | Custom unique identifier                     |
+| `title`                | string  | No       | Display title for the memory                 |
+| `tenant_metadata`      | string  | No       | JSON string of tenant-level metadata         |
+| `document_metadata`    | string  | No       | JSON string of document-level metadata       |
 
 ## Response Format
 
@@ -361,7 +316,7 @@ Each item in the `memories` array can have the following fields:
   "message": "Memories queued for ingestion successfully",
   "results": [
     {
-      "source_id": "abc123-def456",
+      "id": "abc123-def456",
       "title": "My Document",
       "status": "queued",
       "infer": false,
@@ -375,55 +330,43 @@ Each item in the `memories` array can have the following fields:
 
 ## Processing Status
 
-After submitting content, use the [Verify Processing](/api-reference/endpoint/verify-processing) endpoint to check status:
-
 ```bash
+# Example: check status via ingestion verify_processing (when using id from ingestion flows)
 curl -X POST \
-  'https://api.usecortex.ai/ingestion/verify-processing?file_id=<source_id>&tenant_id=<tenant_id>' \
+  'https://api.usecortex.ai/ingestion/verify_processing?id=<id>&tenant_id=<tenant_id>' \
   -H 'Authorization: Bearer <token>'
 ```
 
 ### Status Values
 
-| Status | Description |
-|--------|-------------|
-| `queued` | Content is waiting to be processed |
-| `processing` | Content is being chunked and embedded |
-| `graph_creation` | Knowledge graph is being built |
-| `completed` | Content is fully indexed and searchable |
-| `errored` | Processing failed (check error_code) |
-
-## Best Practices
-
-<Info>
-**Batch Uploads**: You can include multiple items in a single request for efficient bulk ingestion. Each item can have different `infer` settings.
-</Info>
-
-<Warning>
-**Content Validation**: Either `text` or `user_assistant_pairs` must be provided for each memory item, but not both simultaneously.
-</Warning>
+| Status           | Description                             |
+| ---------------- | --------------------------------------- |
+| `queued`         | Content is waiting to be processed      |
+| `processing`     | Content is being chunked and embedded   |
+| `graph_creation` | Knowledge graph is being built          |
+| `completed`      | Content is fully indexed and searchable |
+| `errored`        | Processing failed (check error_code)    |
 
 <Note>
-**Processing Time**: 
-- `infer=false`: Typically 1-3 minutes
-- `infer=true`: May take longer due to LLM inference processing
-- Large batches: Processing time scales with content volume
+  **Batch Uploads**: You can include multiple items in a single request for efficient bulk ingestion. Each item can have different `infer` settings.
+
+  **Processing Time**:
+
+  - `infer=false`: Typically 1-3 minutes. We update all nodes in your graph with new information
+  - `infer=true`: May take slightly longer due to LLM inference processing
 </Note>
 
 ## Migration from Previous APIs
 
 This endpoint replaces and unifies:
-- `/memories/add-memories` (deprecated)
-- `/ingestion/upload-content` (deprecated)
+
+- `/memories/add_memories` (deprecated)
+- `/ingestion/upload_content` (deprecated)
 
 ### Key Changes
 
-| Old API | New API |
-|---------|---------|
-| `raw_text` | `text` |
+| Old API                   | New API                       |
+| ------------------------- | ----------------------------- |
+| `raw_text`                | `text`                        |
 | `content` in body wrapper | `memories` array at top level |
-| Separate endpoints | Single unified endpoint |
-
-## Error Responses
-
-All endpoints return consistent error responses following the standard format. For detailed error information, see our [Error Responses](/api-reference/error-responses) documentation.
+| Separate endpoints        | Single unified endpoint       |

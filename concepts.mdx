@@ -5,16 +5,73 @@ description: "Understand the core concepts of using Cortex"
 
 The Cortex SDK is designed to give you the most flexible developer experience for building AI apps and agents. Set up a global memory store for individual users (B2C), or configure organizations as tenants and onboard their users (B2B).
 
-### Tenants
+# Core Concepts
 
-Think of a **tenant** as a completely separate workspace or organization in your Cortex application. It's like having different "companies" or "projects" that can't see each other's data.
+## Memories (Users and Knowledge)
+
+These are the atoms that make up the context store for your agents. This includes any type of documents, emails, messages, images, webpages, presentations, reports, users' preferences, likes, dislikes, discussions, and any form of unstructured information. Cortex also digests simple CSVs. Each memory you add is meticulously parsed and prepared for the most optimal recall experience for your agents.
+
+## Recall: Why you need a personalized store for every agent
+
+Recall is the most critical part of a memory system. Storing memories is hard — knowing what to retrieve, when to retrieve it, and why is harder.
+
+Cortex is built around the idea that recall needs to feel **intelligent, personalized, and context-aware**, not just a naive search over embeddings.
+
+When an agent queries Cortex, the system doesn’t simply return the closest vectors. Instead, Cortex performs a multi-stage retrieval process that:
+
+- Understands the **intent of the query**
+- Considers the **user, tenant, and agent context**
+- Traverses the graph to understand **relationships, linkages, and historical outcomes**
+- Weighs **recency, relevance, frequency, and semantic similarity**
+- Ranks memories based on **how useful they are for the current task**
+
+### This Is What Makes Cortex Different
+
+Traditional RAG systems treat memory like a flat database. Cortex treats memory like a **living context graph**.
+
+Each recall operation takes into account:
+
+- **Who** is asking (user-specific personalization)
+- **Which agent** is asking (agent role and capabilities)
+- **What they’re trying to do** (task and intent)
+- **What has worked before** (historical usage patterns)
+
+This allows Cortex to return not just _relevant_ information, but the **most useful information for that exact interaction**.
+
+### Adaptive & Personalized Retrieval
+
+Over time, Cortex learns which memories are actually helpful for a given user or workflow. This enables:
+
+- **Personalized ranking** — two users asking the same question may get different context.
+- **Implicit feedback loops** — memories that are frequently used, referenced, or lead to successful outcomes are prioritized.
+- **Contextual pruning** — low-signal or redundant memories are automatically deprioritized.
+
+Think of it less like search, and more like a **personalized context engine** that continuously optimizes what your agents see.
+
+### We belive in going beyond vector search
+
+Pure vector search has repeatedly failed to provide reliable enterprise-grade context on its own. Research from Google DeepMind and Stanford shows that embedding-only retrieval systems often surface irrelevant, outdated, or misleading information, especially in complex knowledge workflows.
+
+Cortex is built on the belief that vector databases alone are not enough for memory. Every agent needs its own **personalized recall layer** that combines semantic understanding with structured signals, behavioral feedback, and graph-based relationships.
+
+Rather than asking "What is semantically similar?", Cortex asks:
+
+- What information is **most likely to help this agent succeed right now?**
+- What context has **actually worked in the past?**
+- What should be **ignored, deprioritized, or filtered out?**
+
+The result is a recall system that feels closer to a **personalized PageRank for memory** than a traditional vector database.
+
+## Tenants
+
+Think of a **tenant** as a complete workspace or organization in your Cortex application. It's like having different "companies" or "projects" that can't see each other's data.
 
 **Simple Analogy**: Imagine you're building a knowledge management system for multiple companies. Each company gets their own "tenant" - like separate office buildings where employees can't access each other's files.
 
 Cortex supports both **B2C** and **B2B** use cases:
 
-- **B2C (Business-to-Consumer)**: Each individual user gets their own private workspace within your single tenant. Perfect for personal AI assistants or individual productivity apps.
-- **B2B (Business-to-Business)**: Each organization gets their own tenant with complete data isolation. Perfect for enterprise software serving multiple companies.
+- **B2C (Business-to-Consumer)**: Each individual user gets their own private space within your single tenant. Perfect for personal AI assistants or individual productivity apps. Achieve this by assigning each user their own sub-tenant. 
+- **B2B (Business-to-Business)**: Each organization gets their own tenant with complete data isolation. Perfect for software serving multiple companies.
 
 ### Sub-Tenants
 
@@ -29,13 +86,9 @@ A **sub-tenant** is like a department or team within an organization. It provide
 - **Flexible Access Control**: Control who can access what data at both tenant and sub-tenant levels
 - **Scalable Architecture**: Serve unlimited organizations and their subdivisions
 
-### Creating Sub-Tenants
-
-**Automatic Creation**: Sub-tenants are created automatically when you first use a new `sub_tenant_id` that doesn't exist yet. There's no separate API call required.
-
 **How It Works**:
 
-1. **First Upload**: When you upload content with a new `sub_tenant_id`, Cortex automatically creates that sub-tenant
+1. **First Upload**: When you upload context with a new `sub_tenant_id`, Cortex automatically creates that sub-tenant
 2. **Immediate Availability**: The sub-tenant is immediately available for all subsequent operations
 3. **No Setup Required**: No configuration or setup is needed - just start using the new `sub_tenant_id`
 
@@ -56,40 +109,57 @@ sub_tenant_id: "sales"         // Sales team
 sub_tenant_id: "hr"            // Human Resources
 ```
 
-### Knowledge
+## Metadata: Structuring Memory for Deterministic Retrieval
 
-These are the atoms that power your retrievals. Any context you or your users add is treated as knowledge for the retrieval engine to search and retrieve. This includes any type of documents, chats, images, webpages, presentations, reports, any form of unstructured information. Cortex can also digest CSVs.
+Metadata allows you to structure and filter retrieval with precision. While semantic recall is powerful, many real-world workflows require **deterministic control** — the ability to explicitly include or exclude memories based on known attributes.
 
-Each piece of knowledge you add is meticulously cleaned, parsed using in-house parsers, chunked, embedded, and prepared for the most optimal retrieval experience.
+With Cortex, you can attach arbitrary key-value metadata to memories and use them as hard filters or ranking signals during recall. This is especially useful when you want predictable behavior across teams, products, or workflows.
 
-### AI Memory
+For example, a user might request:
 
-Memory is where personalization lives. Unlike static knowledge, memory is dynamic and user-specific. Cortex stores evolving insights about users, their preferences, past interactions, and contextual signals.
+> "All information related to the project Strawberry"
 
-- Think of it as a long-term cache of user profiles or a user’s profile—not just what they said, but what they meant and what they’ve done before: their preferences, intentions, and statements.
-- Cortex memories update automatically through conversation, queries, and usage, giving your app the ability to learn, remember, and adapt.
+This can be resolved deterministically by filtering on:
 
-### Querying
+project = "strawberry"
 
-Querying is how you extract meaningful answers from your knowledge and memory layers. Cortex gives you control over **how retrieval works**, using a combination of:
+before any semantic or graph-based ranking is applied.
 
-- **Top-K search** across documents, passages, or snippets
-- **Alpha, recency bias, and contextual expansion:**\
-  Each query is processed deeply to determine the optimal retrieval strategy. This ensures results are not just relevant, but also personalized and self-improving over time.
-- **Memory injection** automatically infuses long-term user context (e.g. preferences, past interactions) into every query.
-- **Citations and Bounding Boxes**:\
-  Every answer returned by Cortex is backed by **verifiable citations**—with exact source snippets and optional **bounding boxes** for visual references (e.g. PDFs, slides, or structured files). This builds trust and lets users trace every insight back to its origin.
-- **Mixture-of-Experts Routing**:\
-  Cortex dynamically routes each query through a Mixture-of-Experts engine to select the best answering strategy—whether it needs to use memory, search more deeply, dynamically adjust prompts, or chain multi-hop lookups.
+### Tenant Metadata
 
-### Metadata (& Agentic Querying)
+Organization-level metadata that applies consistently across all memories within a tenant. This is useful for enforcing global constraints and isolation.
 
-Metadata allows you to structure and filter retrieval with precision. You can tag documents, pages, or entities with key-value pairs and filter results by user role, product, team, time, or any custom logic.
+Common examples:
 
-\
-**Agentic Querying** goes a step further—enabling agents to retrieve, reason, and act autonomously based on structured metadata and memory signals. This unlocks use cases like:
+- `company_id`
+- `org_name`
+- `region`
+- `data_sensitivity`
 
-- **Agent workflows that chain multi-step queries**
-- **Personalized agent routing per user or org**
-- **Task-specific memory selection for copilots and assistants**\
-  Cortex makes it easy to build intelligent agents that retrieve exactly what they need, when they need it.
+Tenant metadata ensures that recall always respects **organizational boundaries and policies**.
+
+### Memory Metadata
+
+Document-level metadata that varies from memory to memory. This enables fine-grained filtering and control over retrieval.
+
+Common examples:
+
+- `user_id`
+- `team`
+- `project`
+- `source` (slack, gmail, notion, api)
+- `timestamp`
+- `tags`
+
+Memory metadata allows you to scope recall to **specific users, teams, time ranges, or data sources**.
+
+### Metadata Filtering
+
+Metadata filters can be applied at query time to control what Cortex is allowed to retrieve.
+
+You can use metadata to:
+
+- Restrict recall to a specific user or team
+- Filter by product, project, or workflow
+- Enforce time-based constraints ("last 30 days")
+- Build deterministic pipelines for compliance or auditing

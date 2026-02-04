@@ -5,7 +5,7 @@ description: "Start building amazing LLM experiences in under 5 minutes"
 
 > Base URL: `https://api.usecortex.ai`
 >
-> Contact us to get your API key at [founders@usecortex.ai](mailto:founders@usecortex.ai)
+> Sign up on the platform for setting up your workspace or contact us to get your API key at [founders@usecortex.ai](mailto:founders@usecortex.ai) for a personalized onboarding
 
 All endpoints require an API key sent as a Bearer token in the `Authorization` header.
 
@@ -13,71 +13,71 @@ All endpoints require an API key sent as a Bearer token in the `Authorization` h
 Authorization: Bearer <your_api_key>
 ```
 
+## Quick Start
+
 ### Prerequisites
 
 - Node.js / Python (or any backend language)
 - Basic knowledge of HTTP requests
 - An API key from [Cortex](https://usecortex.ai/) (`Authorization: Bearer <your_api_key>`)
-- A document or webpage you want your AI to read
+- A user conversation with an LLM assistant (or use our sample content)
 
-### **Step 1: Upload Your Knowledge Source**
+### Step 1: Create a tenant
 
-You can upload:
-
-- A public webpage
-- A document (PDF, DOCX, etc.)
-- Multiple documents in bulk
-
-#### Option A: Upload a document
+Create a tenant space for your data:
 
 ```mdx
-POST /upload/upload_document
+POST /tenants/create
 ```
 
-**Form Data:**
+```mdx
+curl -X POST 'https://api.usecortex.ai/tenants/create' \
+  -H "Authorization: Bearer <your_api_key>" \
+  -H "Content-Type: application/json" \
+  -d '{"tenant_id": "your_tenant_id"}'
+```
 
-- `file`: your document
+### **Step 2: Upload memories**
+
+You can upload messages, emails, PDFs, DOCXs, or use the memories API for text/markdown.
+
+#### Option A: Upload a knowledge memory
+
+```mdx
+POST /ingestion/upload_knowledge
+```
+
+- `memory`: your document
 - `tenant_id`: your unique tenant ID
 
-#### Option B: Upload a webpage
-
 ```mdx
-POST /upload/scrape_webpage
+curl -X POST 'https://api.usecortex.ai/ingestion/upload_knowledge' \
+  -H "Authorization: Bearer <your_api_key>" \
+  -F "file=@/path/to/your/document.pdf" \
+  -F "tenant_id=your_tenant_id"
 ```
 
-```mdx
-curl -X POST 'https://api.usecortex.ai/upload/scrape_webpage?web_url=https://example.com&tenant_id=your_tenant_id' \
-  -H "Authorization: Bearer <your_api_key>"
-```
+#### Option B: Upload user memories
 
-### **Step 2 (Optional): Verify Processing**
+Use [Add Memory](/api-reference/endpoint/add-memories) for uploading user conversations, user-LLM pairs, texts, or markdowns
 
-Check if the document is fully indexed:
+### **(Optional): Verify Processing**
 
-```mdx
-POST /upload/verify_processing?file_id=YOUR_FILE_ID
-```
-
-Returns success once the document is ready for querying.
-
-### **Step 3: Ask Questions Using the AI Retrieval API**
+Check if the memories are fully indexed:
 
 ```mdx
-POST /search/qna
+POST /ingestion/verify_processing?id=YOUR_FILE_ID&tenant_id=your_tenant_id
 ```
 
 **Request Body:**
 
 ```json
 {
-  "question": "What did the document say about pricing?",
+  "question": "What did the team say about pricing?",
   "session_id": "user-session-123",
   "tenant_id": "your_tenant_id",
   "context_list": ["optional_specific_file_id"],
-  "ai_generation": true,
-  "highlight_chunks": true,
-  "tenant_metadata": {"source_title": "contract.pdf"},
-  "document_metadata": {"source_title": "contract.pdf"}
+  "tenant_metadata": {"source_title": "contract.pdf"}
 }
 ```
 
@@ -96,45 +96,46 @@ curl -X POST 'https://api.usecortex.ai/search/qna' \
   }'
 ```
 
-### **Step 4: Display the Answer in Your App**
+### **Step 3: Give context to your agents**
 
-You'll get a JSON response like:
+Use the recall endpoint: what should the agent know about the world, the user, and the task before acting?
+
+```mdx
+POST /recall/full-recall
+```
+
+```mdx
+curl -X POST 'https://api.usecortex.ai/recall/full_recall' \
+  -H "Authorization: Bearer <your_api_key>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "tenant_id": "your_tenant_id",
+    "query": "What did the team say about pricing?",
+    "max_results": 10
+  }'
+```
+
+**Sample response:**
 
 ```json
 {
-  "answer": "The contract specifies a 12-month term with a 30-day opt-out period...",
-  "sources": [...],
-  "chunks": [...]
+  "chunks": [
+    {
+      "chunk_uuid": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+      "id": "doc_12345",
+      "chunk_content": "The team discussed a tiered pricing model: $29/month for Starter, $79/month for Pro, and $199/month for Enterprise. Enterprise includes dedicated support and custom integrations.",
+      "source_type": "file",
+      "source_title": "Q4 Pricing Strategy",
+      "source_upload_time": "2023-10-27T10:00:00Z",
+      "relevancy_score": 0.92,
+      "document_metadata": { "author": "Product Team" },
+      "tenant_metadata": { "department": "Sales" }
+    }
+  ],
+  "graph_context": {
+    "query_paths": [],
+    "chunk_relations": [],
+    "chunk_id_to_group_ids": {}
+  }
 }
 ```
-
-Render the answer in your UI and include clickable citations if desired. Citations can reference:
-
-- **Source filename** (e.g., `contract.pdf`)
-- **Page number**
-- **Snippet preview**
-
-If available, use the `bounding_box` to enable clickable highlights or coordinate-based jumping in PDFs.
-
-You can use the `tenant_metadata` and `document_metadata` parameters to restrict the context to only sources matching specific criteria:
-
-- **`tenant_metadata`**: Filter by organizational attributes (department, compliance framework) that apply to all documents in your tenant
-- **`document_metadata`**: Filter by document-specific attributes (title, author, document type) that vary per document
-
-For example, `{ "source_title": "contract.pdf" }` will only use sources with that title for answering the question. You can combine both metadata types for precise filtering: `{ "department": "Legal", "document_type": "contract" }` to find all legal contracts.
-
-### **Step 5: Iterate (Optional)**
-
-Fine-tune the user experience with:
-
-- `AI response (true or false)`: Lets you decide if you only want the retrieved context or the AI generated response to user queries using retrieved context
-- `search_alpha (0-1)`: Prioritize keyword vs. semantic match. An alpha of "1" means semantic match. An Alpha of "0" means exact keyword match
-- `recency_bias (0-1)`: Control how much you want to favour newly added knowledge. 1 you strongly favour recently added knowledge. 0 means freshness of knowledge doesn't matter.
-- `highlight_chunks`: Get the actual context/chunks that can be used for generating answers for RAG or Agentic purposes
-- `stream`: for real-time, streaming answers
-
-### 🧩 Optional Extensions
-
-- **Batch Upload**: `/upload/batch_upload` for multiple files
-- **Delete Memory**: `/delete_source` to remove documents
-- **List Sources**: `/list/sources` to display all uploaded documents

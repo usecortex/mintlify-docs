@@ -23,8 +23,8 @@ defaults = {
     "user_query": "Which mode does user prefer",
     "max_count": 5,
     "web_url": "https://www.usecortex.ai/",
-    "file_id": "CortexDoc1234",
-    "source_id": "CortexDoc1234",
+    "id": "CortexDoc1234",
+    "id": "CortexDoc1234",
     "user_name": "John Doe",
     # "message": "<string>",÷
     "embeddings": [[0.123413, 0.655367, 0.987654, 0.123456, 0.789012], [0.123413, 0.655367, 0.987654, 0.123456, 0.789012]],
@@ -55,7 +55,7 @@ defaults = {
     # "tenant_metadata": "{}",
     # "document_metadata": "{}",
     "sub_tenant_ids": ["sub_tenant_1234", "sub_tenant_4567"],
-    "source_ids": ["CortexDoc1234", "CortexDoc4567"],
+    "ids": ["CortexDoc1234", "CortexDoc4567"],
     "chunk_ids": ["CortexEmbeddings123_0", "CortexEmbeddings123_1"],
     "user_memories": [
         {
@@ -89,11 +89,11 @@ defaults = {
     ],
     "uploaded":  [
         {
-            "file_id": "CortexDoc1234",
+            "id": "CortexDoc1234",
             "filename": "document1.pdf"
         },
         {
-            "file_id": "CortexDoc4567",
+            "id": "CortexDoc4567",
             "filename": "document2.docx"
         }
     ]
@@ -132,6 +132,26 @@ OPEN_API_PATH = "./api-reference/openapi.json"
 
 with open(OPEN_API_PATH, "r") as f:
     openapi = json.load(f)
+
+def nullify_endpoint_descriptions(spec: dict) -> None:
+    """
+    For every path+method operation, set `description` to JSON null.
+    (Python `None` serializes to `null` in json.dump.)
+    """
+    paths = spec.get("paths", {})
+    if not isinstance(paths, dict):
+        return
+
+    for _, path_item in paths.items():
+        if not isinstance(path_item, dict):
+            continue
+        for method, operation in path_item.items():
+            # Skip non-operation keys allowed in a Path Item Object
+            if method in {"parameters", "summary", "description"}:
+                continue
+            if not isinstance(operation, dict):
+                continue
+            operation["description"] = None
 
 print("Adding example values to query params")
 for endpoint in openapi["paths"]:
@@ -226,9 +246,8 @@ def recursive_filter(data):
 
 
 # Process the original openapi spec
+nullify_endpoint_descriptions(openapi)
 final_open_api_spec = recursive_filter(openapi)
 
 with open(OPEN_API_PATH, "w") as f:
     json.dump(final_open_api_spec, f, indent=2)
-
-print("Updated OpenAPI file")

@@ -32,23 +32,16 @@
           {
             "group": "Essentials",
             "pages": [
-              "essentials/retrievals",
-              "essentials/graph-rag",
-              "essentials/multi-step",
-              "essentials/answers",
-              "essentials/metadata",
-              "essentials/file-formats",
-              "essentials/self-improving",
-              "essentials/ai-memories",
-              "essentials/customisation",
+              "essentials/recall",
+              "essentials/memories",
+              "essentials/context-graph",
               "essentials/multi-tenant",
-              "essentials/web-search"
+              "essentials/metadata"
             ]
           },
           {
             "group": "Use Cases",
             "pages": [
-              "essentials/app-integration",
               "use-cases/glean-clone",
               "use-cases/ai-chief-of-staff",
               "use-cases/ai-linkedin-recruiter",
@@ -63,60 +56,50 @@
           {
             "group": "API Documentation",
             "pages": [
-              "api-reference/introduction",
-              "api-reference/error-responses",
-              "api-reference/sdks"
+              "api-reference/sdks",
+              "api-reference/error-responses"
             ]
           },
           {
-            "group": "Tenant Management",
+            "group": "Tenants",
             "pages": [
               "api-reference/endpoint/create-tenant",
-              "api-reference/endpoint/tenant-stats"
+              "api-reference/endpoint/monitor-tenant",
+              "api-reference/endpoint/delete-tenant"
             ]
           },
           {
-            "group": "User Memories",
+            "group": "Memories",
             "pages": [
               "api-reference/endpoint/add-memories",
-              "api-reference/endpoint/delete-memory"
+              "api-reference/endpoint/add-knowledge-memories",
+              "api-reference/endpoint/add-hive-memories"
             ]
           },
           {
-            "group": "Knowledge Ingestion",
+            "group": "Recall",
             "pages": [
-              "api-reference/endpoint/upload-document",
-              "api-reference/endpoint/upload-content",
-              "api-reference/endpoint/upload-app",
-              "api-reference/endpoint/verify-processing"
+              "api-reference/endpoint/smart",
+              "api-reference/endpoint/keyword"
             ]
           },
           {
-            "group": "Query & Retrieval",
+            "group": "Manage Memories",
             "pages": [
-              "api-reference/endpoint/hybrid-search",
-              "api-reference/endpoint/full-text-search",
-              "api-reference/endpoint/qna"
+              "api-reference/endpoint/list",
+              "api-reference/endpoint/fetch-content",
+              "api-reference/endpoint/relations",
+              "api-reference/delete-memory",
+              "api-reference/delete-knowledge"
             ]
           },
           {
-            "group": "Knowledge Management",
+            "group": "Custom Embeddings",
             "pages": [
-              "api-reference/endpoint/list-sources",
-              "api-reference/endpoint/list-sources-by-id",
-              "api-reference/endpoint/fetch-source-content",
-              "api-reference/endpoint/delete-sources",
-              "api-reference/endpoint/graph-relations"
-            ]
-          },
-          {
-            "group": "Embeddings",
-            "pages": [
-              "api-reference/endpoint/create-embeddings-tenant",
-              "api-reference/endpoint/insert-raw-embeddings",
-              "api-reference/endpoint/search-raw-embeddings",
-              "api-reference/endpoint/filter-raw-embeddings",
-              "api-reference/endpoint/delete-raw-embeddings"
+              "api-reference/endpoint/add-embeddings",
+              "api-reference/endpoint/recall-embeddings",
+              "api-reference/endpoint/filter-embeddings",
+              "api-reference/endpoint/delete-embeddings"
             ]
           }
         ]

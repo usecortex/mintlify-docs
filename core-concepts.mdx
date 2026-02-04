@@ -1,0 +1,271 @@
+---
+title: "Core Concepts"
+description: "The mental model for building AI that remembers"
+---
+
+Cortex gives your AI three types of memory — the same way humans remember. Once you understand this model, everything else clicks.
+
+## The Three Types of Memory
+
+| Memory Type | What It Stores | Scope |
+|-------------|----------------|-------|
+| **User Memory** | Preferences, habits, past interactions | Per user |
+| **Knowledge Memory** | Documents, data, information from apps | Shared or per user |
+| **Hive Memory** | Collective learnings across all agents | Organization-wide |
+
+Here's how they work together:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                      YOUR AI AGENT                          │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   "What's our refund policy for Sarah?"                     │
+│                                                             │
+│   ┌─────────────┐  ┌─────────────┐  ┌─────────────┐        │
+│   │ User Memory │  │ Knowledge   │  │ Hive Memory │        │
+│   │             │  │ Memory      │  │             │        │
+│   │ Sarah hates │  │ Refund      │  │ Always offer│        │
+│   │ long emails │  │ policy is   │  │ extension   │        │
+│   │ prefers     │  │ 30 days,    │  │ before      │        │
+│   │ bullet      │  │ exceptions  │  │ denying     │        │
+│   │ points      │  │ for VIPs    │  │ refunds     │        │
+│   └─────────────┘  └─────────────┘  └─────────────┘        │
+│                           │                                 │
+│                           ▼                                 │
+│   Response: Concise, bullet-pointed refund policy          │
+│   that mentions the extension option                        │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## User Memory
+
+**What your AI remembers about each person.**
+
+User Memory captures everything that makes a user unique: their preferences, communication style, past questions, likes, dislikes, and behavioral patterns.
+
+```typescript
+// Store a user memory
+await cortex.userMemory.store({
+  userId: "sarah_123",
+  memory: "Prefers concise responses with bullet points. Dislikes jargon."
+});
+
+// Memories also extract automatically from conversations
+await cortex.userMemory.extractFromConversation({
+  userId: "sarah_123",
+  messages: conversationHistory
+});
+```
+
+**What you can build:**
+- AI assistants that adapt to each user's style
+- Support agents that remember past issues
+- Apps that feel like they "know" the user
+
+---
+
+## Knowledge Memory
+
+**What your AI knows from documents, apps, and data.**
+
+Knowledge Memory is your AI's factual foundation — company policies, product docs, Slack threads, emails, Notion pages, and any unstructured data your agents need to do their job.
+
+```typescript
+// Ingest a document
+await cortex.knowledgeMemory.ingest({
+  file: policyDocument,
+  filename: "refund-policy.pdf"
+});
+
+// Connect an app
+await cortex.knowledgeMemory.connectSource({
+  source: "notion",
+  workspaceId: "acme-corp"
+});
+```
+
+**What gets stored:**
+- PDFs, docs, spreadsheets, presentations
+- Slack messages, email threads
+- Notion, Google Drive, Confluence pages
+- Any text, image, or structured data
+
+Every piece of knowledge is parsed, chunked, and indexed for instant recall.
+
+---
+
+## Hive Memory
+
+**What all your agents learn together.**
+
+Hive Memory is collective intelligence — learnings, corrections, and institutional knowledge that every agent in your system can access. When one agent learns something, every agent knows.
+
+```typescript
+// Store a hive memory
+await cortex.hiveMemory.store({
+  memory: "When users ask about cancellation, always offer a 30-day extension first",
+  category: "support_playbook"
+});
+
+// All agents can now recall this
+const playbook = await cortex.hiveMemory.recall({
+  query: "handling cancellation requests"
+});
+```
+
+**What you can build:**
+- Agents that never repeat the same mistake
+- Instant propagation of policy updates
+- Self-improving AI systems that get smarter over time
+
+---
+
+## Memory Spaces
+
+**How you organize and isolate memory.**
+
+A Memory Space is an isolated container for all three memory types. Use them to separate organizations, projects, or environments.
+
+```
+Memory Space: "acme-corp"
+├── User Memories (per employee)
+├── Knowledge Memories (company docs)
+└── Hive Memories (shared learnings)
+
+Memory Space: "globex-inc"
+├── User Memories (per employee)
+├── Knowledge Memories (company docs)
+└── Hive Memories (shared learnings)
+```
+
+**No data crosses Memory Space boundaries. Ever.**
+
+### B2B vs B2C Patterns
+
+**B2B (Multi-tenant SaaS):** Each customer organization gets their own Memory Space.
+
+```typescript
+// Acme Corp's data is completely isolated
+await cortex.knowledgeMemory.ingest({
+  memorySpaceId: "acme-corp",
+  file: acmePolicy
+});
+
+// Globex can never see Acme's data
+await cortex.knowledgeMemory.ingest({
+  memorySpaceId: "globex-inc",
+  file: globexPolicy
+});
+```
+
+**B2C (Consumer apps):** One Memory Space, with User Memory doing the personalization.
+
+```typescript
+// All users share knowledge, but have personal memories
+await cortex.userMemory.store({
+  memorySpaceId: "my-app",
+  userId: "user_123",  // Personal to this user
+  memory: "Prefers dark mode and metric units"
+});
+```
+
+---
+
+## Memory Recall
+
+**How your agents retrieve the right context.**
+
+Recall is how you pull relevant memories at query time. Cortex searches across all memory types and returns what's most relevant.
+
+```typescript
+const context = await cortex.memory.recall({
+  memorySpaceId: "acme-corp",
+  userId: "sarah_123",
+  query: "What's our refund policy?",
+  include: {
+    userMemory: true,      // Sarah's preferences
+    knowledgeMemory: true, // Policy documents
+    hiveMemory: true       // Org-wide learnings
+  }
+});
+```
+
+### Recall Strategies
+
+| Strategy | Best For |
+|----------|----------|
+| **Semantic** | Meaning-based search ("docs about refunds") |
+| **Keyword** | Exact matches ("policy v2.3") |
+| **Hybrid** | Best of both (default, recommended) |
+| **Graph** | Relationship queries ("Sarah's manager") |
+
+---
+
+## Metadata
+
+**How you filter and organize memories.**
+
+Tag any memory with key-value metadata for precise filtering at recall time.
+
+```typescript
+// Store with metadata
+await cortex.knowledgeMemory.ingest({
+  file: hrPolicy,
+  metadata: {
+    department: "hr",
+    confidentiality: "internal",
+    version: "2024-01"
+  }
+});
+
+// Filter at recall time
+const results = await cortex.memory.recall({
+  query: "vacation policy",
+  filter: {
+    department: "hr",
+    confidentiality: "internal"
+  }
+});
+```
+
+**Common metadata patterns:**
+- `department`, `team`, `role` — access control
+- `version`, `updated_at` — document versioning
+- `source`, `author` — provenance tracking
+- `confidentiality` — security classification
+
+---
+
+## Quick Reference
+
+| Concept | What It Is | Key Question It Answers |
+|---------|------------|------------------------|
+| **User Memory** | Per-user preferences & history | "What do I know about this person?" |
+| **Knowledge Memory** | Documents, apps, data | "What facts do I have access to?" |
+| **Hive Memory** | Org-wide shared learnings | "What has the team learned?" |
+| **Memory Space** | Isolated container for a tenant | "Whose data is this?" |
+| **Recall** | Context retrieval at query time | "What's relevant right now?" |
+| **Metadata** | Tags for filtering | "How do I narrow this down?" |
+
+---
+
+## What's Next?
+
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    Add memory to your AI in 5 minutes
+  </Card>
+    <Card title="User Memories" icon="user" href="/essentials/memories">
+    Deep dive into personalization
+  </Card>
+  <Card title="Add Knowledge Memories" icon="book" href="/api-reference/endpoint/add-knowledge-memories">
+    Ingest documents and apps
+  </Card>
+  <Card title="Add Hive Memories" icon="hexagon" href="/api-reference/endpoint/add-hive-memories">
+    Build collective intelligence
+  </Card>
+</CardGroup>
