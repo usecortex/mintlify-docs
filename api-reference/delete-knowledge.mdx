@@ -17,7 +17,7 @@ import { TableOfContents } from '/snippets/table-of-contents.jsx'
       -d '{
         "tenant_id": "tenant_1234",
         "sub_tenant_id": "sub_tenant_4567",
-        "source_ids": ["CortexDoc1234", "CortexDoc4567"]
+        "ids": ["CortexDoc1234", "CortexDoc4567"]
       }'
     ```
   </Tab>
@@ -26,7 +26,7 @@ import { TableOfContents } from '/snippets/table-of-contents.jsx'
     const result = await client.memories.delete_knowledge({
       tenant_id: "tenant_1234",
       sub_tenant_id: "sub_tenant_4567",
-      source_ids: ["CortexDoc1234", "CortexDoc4567"]
+      ids: ["CortexDoc1234", "CortexDoc4567"]
     });
     ```
   </Tab>
@@ -36,7 +36,7 @@ import { TableOfContents } from '/snippets/table-of-contents.jsx'
     result = client.memories.delete_knowledge(
         tenant_id="tenant_1234",
         sub_tenant_id="sub_tenant_4567",
-        source_ids=["CortexDoc1234", "CortexDoc4567"]
+        ids=["CortexDoc1234", "CortexDoc4567"]
     )
     ```
   </Tab>
@@ -48,4 +48,4 @@ import { TableOfContents } from '/snippets/table-of-contents.jsx'
 | --------------- | -------- | -------- | -------------------------------------------------------------------------------------------------- |
 | `tenant_id`     | string   | Yes      | Primary organizational identifier                                                                  |
 | `sub_tenant_id` | string   | Yes      | Sub-tenant ID; use empty string for default sub-tenant                                              |
-| `source_ids`    | string[] | Yes      | List of source IDs to delete                                                                       |
+| `ids`    | string[] | Yes      | List of source IDs to delete                                                                       |
