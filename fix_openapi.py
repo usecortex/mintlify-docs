@@ -23,7 +23,7 @@ defaults = {
     "user_query": "Which mode does user prefer",
     "max_count": 5,
     "web_url": "https://www.usecortex.ai/",
-    "file_id": "CortexDoc1234",
+    "id": "CortexDoc1234",
     "id": "CortexDoc1234",
     "user_name": "John Doe",
     # "message": "<string>",÷
@@ -89,11 +89,11 @@ defaults = {
     ],
     "uploaded":  [
         {
-            "file_id": "CortexDoc1234",
+            "id": "CortexDoc1234",
             "filename": "document1.pdf"
         },
         {
-            "file_id": "CortexDoc4567",
+            "id": "CortexDoc4567",
             "filename": "document2.docx"
         }
     ]

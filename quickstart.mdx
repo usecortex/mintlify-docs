@@ -44,14 +44,14 @@ You can upload messages, emails, PDFs, DOCXs, or use the memories API for text/m
 #### Option A: Upload a knowledge memory
 
 ```mdx
-POST /ingestion/upload-knowledge
+POST /ingestion/upload_knowledge
 ```
 
 - `memory`: your document
 - `tenant_id`: your unique tenant ID
 
 ```mdx
-curl -X POST 'https://api.usecortex.ai/ingestion/upload-knowledge' \
+curl -X POST 'https://api.usecortex.ai/ingestion/upload_knowledge' \
   -H "Authorization: Bearer <your_api_key>" \
   -F "file=@/path/to/your/document.pdf" \
   -F "tenant_id=your_tenant_id"
@@ -66,7 +66,7 @@ Use [Add Memory](/api-reference/endpoint/add-memories) for uploading user conver
 Check if the memories are fully indexed:
 
 ```mdx
-POST /ingestion/verify-processing?file_id=YOUR_FILE_ID&tenant_id=your_tenant_id
+POST /ingestion/verify_processing?id=YOUR_FILE_ID&tenant_id=your_tenant_id
 ```
 
 **Request Body:**
@@ -99,3 +99,43 @@ curl -X POST 'https://api.usecortex.ai/search/qna' \
 ### **Step 3: Give context to your agents**
 
 Use the recall endpoint: what should the agent know about the world, the user, and the task before acting?
+
+```mdx
+POST /recall/full-recall
+```
+
+```mdx
+curl -X POST 'https://api.usecortex.ai/recall/full_recall' \
+  -H "Authorization: Bearer <your_api_key>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "tenant_id": "your_tenant_id",
+    "query": "What did the team say about pricing?",
+    "max_results": 10
+  }'
+```
+
+**Sample response:**
+
+```json
+{
+  "chunks": [
+    {
+      "chunk_uuid": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+      "id": "doc_12345",
+      "chunk_content": "The team discussed a tiered pricing model: $29/month for Starter, $79/month for Pro, and $199/month for Enterprise. Enterprise includes dedicated support and custom integrations.",
+      "source_type": "file",
+      "source_title": "Q4 Pricing Strategy",
+      "source_upload_time": "2023-10-27T10:00:00Z",
+      "relevancy_score": 0.92,
+      "document_metadata": { "author": "Product Team" },
+      "tenant_metadata": { "department": "Sales" }
+    }
+  ],
+  "graph_context": {
+    "query_paths": [],
+    "chunk_relations": [],
+    "chunk_id_to_group_ids": {}
+  }
+}
+```

@@ -1,7 +1,7 @@
 ---
 title: "Add Embeddings"
 description: "Add pre-computed embeddings for advanced search. Useful when you have a fine tuned embedding model for your use case."
-openapi: "POST /embeddings/insert-raw-embeddings"
+openapi: "POST /embeddings/insert_raw_embeddings"
 ---
 
 ### Examples
@@ -10,7 +10,7 @@ openapi: "POST /embeddings/insert-raw-embeddings"
   <Tab title="API Request">
     ```bash expandable
     curl -X 'POST' \
-    'https://api.usecortex.ai/embeddings/insert-raw-embeddings' \
+    'https://api.usecortex.ai/embeddings/insert_raw_embeddings' \
     -H 'accept: application/json' \
     -H 'Content-Type: application/json' \
     -d '{
@@ -47,7 +47,7 @@ openapi: "POST /embeddings/insert-raw-embeddings"
         [0.123413, 0.655367, 0.987654, 0.123456, 0.789012],
         [0.123413, 0.655367, 0.987654, 0.123456, 0.789012]
       ],
-      file_id: "CortexDoc1234"
+      id: "CortexDoc1234"
     });
     ```
   </Tab>
@@ -61,7 +61,7 @@ openapi: "POST /embeddings/insert-raw-embeddings"
             [0.123413, 0.655367, 0.987654, 0.123456, 0.789012],
             [0.123413, 0.655367, 0.987654, 0.123456, 0.789012]
         ],
-        file_id="CortexDoc1234"
+        id="CortexDoc1234"
     )
     ```
   </Tab>
@@ -74,7 +74,7 @@ openapi: "POST /embeddings/insert-raw-embeddings"
 - Your embedding vectors are immediately accepted and validated
 - Dimensional consistency is checked across all vectors
 - Format validation ensures proper numeric array structure
-- You receive a confirmation response with a `file_id` for tracking
+- You receive a confirmation response with a `id` for tracking
 
 ### 2. **Processing Phase**
 
@@ -126,11 +126,11 @@ Our system automatically handles:
   - You can use these chunk IDs to link the original text which is being embedded
 - **Dimensional consistency per tenant**: All embedding vectors within a tenant must have identical dimensions. Different dimensional vectors require separate tenants
 
-> **File ID Management**: When you provide a `file_id` as a key in the `document_metadata` object, that specific ID will be used to identify your content. If no `file_id` is provided in the `document_metadata`, the system will automatically generate a unique identifier for you. This allows you to maintain consistent references to your content across your application while ensuring every piece of content has a unique identifier.
+> **File ID Management**: When you provide a `id` as a key in the `document_metadata` object, that specific ID will be used to identify your content. If no `id` is provided in the `document_metadata`, the system will automatically generate a unique identifier for you. This allows you to maintain consistent references to your content across your application while ensuring every piece of content has a unique identifier.
 
 ### `Upsert` parameter (optional)
 
-For embeddings, the identifier is `file_id`. When that identifier already exists, `upsert` (boolean, default `true`) controls the behavior:
+For embeddings, the identifier is `id`. When that identifier already exists, `upsert` (boolean, default `true`) controls the behavior:
 
 | Value   | Behavior                   |
 | ------- | -------------------------- |
@@ -143,8 +143,8 @@ Overwriting permanently removes and replaces existing chunks, embeddings, and in
 
 ```json
 {
-  "message": "Embeddings uploaded successfully. Existing embeddings with file_id 'emb_123456' have been overwritten.",
-  "file_id": "emb_123456",
+  "message": "Embeddings uploaded successfully. Existing embeddings with id 'emb_123456' have been overwritten.",
+  "id": "emb_123456",
   "status": "success"
 }
 ```

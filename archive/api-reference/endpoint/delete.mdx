@@ -1,7 +1,7 @@
 ---
 title: "Delete"
 description: "API reference for Delete Sources."
-openapi: "POST /delete/delete-sources"
+openapi: "POST /knowledge/delete_knowledge"
 hidden: true
 ---
 
@@ -17,13 +17,13 @@ import { TableOfContents } from '/snippets/table-of-contents.jsx'
   <Tab title="API Request">
     ```bash
     curl -X POST \
-      'https://api.usecortex.ai/delete/delete-sources' \
+      'https://api.usecortex.ai/knowledge/delete_knowledge' \
       -H 'Authorization: Bearer YOUR_API_KEY' \
       -H 'Content-Type: application/json' \
       -d '{
         "tenant_id": "tenant_1234",
         "sub_tenant_id": "",
-        "ids": ["CortexDoc1234", "CortexDoc4567"]
+        "source_ids": ["CortexDoc1234", "CortexDoc4567"]
       }'
     ```
   </Tab>
@@ -54,8 +54,4 @@ import { TableOfContents } from '/snippets/table-of-contents.jsx'
 | --------------- | ---------------- | -------- | --------------------------------------------------------------------------------------------------------------------------- |
 | `tenant_id`     | string           | Yes      | Your tenant identifier                                                                                                      |
 | `sub_tenant_id` | string           | No       | Sub-tenant identifier; omit or use `""` for the default sub-tenant                                                          |
-| `ids`           | array of strings | Yes      | Source IDs to delete (e.g. from upload response or [List Sources](/api-reference/endpoint/list)). At least one ID required. |
-
-## Error Responses
-
-All endpoints return consistent error responses following the standard format. For detailed error information, see our [Error Responses](/api-reference/error-responses) documentation.
+| `source_ids`    | array of strings | Yes      | Source IDs to delete (e.g. from upload response or [List](/api-reference/endpoint/list)). At least one ID required.          |

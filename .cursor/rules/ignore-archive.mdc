@@ -1,0 +1,14 @@
+---
+description: Do not modify files in the archive folder
+alwaysApply: true
+---
+
+# Ignore Archive Folder
+
+When making edits or refactors in this project:
+
+- **Do not modify** any files under the `archive/` folder.
+- Apply changes only to files outside `archive/`.
+- If a change would affect both archive and non-archive files, update only the non-archive files.
+
+The archive is kept for reference only and should remain unchanged.

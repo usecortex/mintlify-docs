@@ -1,5 +1,5 @@
 ---
-openapi: "POST /search/hybrid-search"
+openapi: "POST /recall/full_recall"
 title: "Full Recall"
 description: "Fetch personalized context that your agent needs to perform an action from its store"
 ---
@@ -10,7 +10,7 @@ description: "Fetch personalized context that your agent needs to perform an act
   <Tab title="API Request">
     ```bash
     curl -X 'POST' \
-    'https://api.usecortex.ai/recall/full-recall' \
+    'https://api.usecortex.ai/recall/full_recall' \
     -H 'accept: application/json' \
     -H 'Content-Type: application/json' \
     -d '{
@@ -19,7 +19,7 @@ description: "Fetch personalized context that your agent needs to perform an act
     "query": "string",
     "mode": "fast",
     "max_results": 10,
-    "extra_context": "string",
+    "additional_context": "string",
     }'
     ```
   </Tab>
@@ -30,8 +30,7 @@ description: "Fetch personalized context that your agent needs to perform an act
       tenantId: "tenant_1234",
       subTenantId: "sub_tenant_4567",
       alpha: 0.8,
-      recencyBias: 0,
-      personaliseSearch: true
+      recencyBias: 0
     });
     ```
   </Tab>
@@ -43,8 +42,7 @@ description: "Fetch personalized context that your agent needs to perform an act
         tenant_id="tenant_1234",
         sub_tenant_id="sub_tenant_4567",
         alpha=0.8,
-        recency_bias=0,
-        personalise_search=True
+        recency_bias=0
     )
     ```
   </Tab>
@@ -99,7 +97,7 @@ Results are automatically enriched with knowledge graph context, providing entit
 
 **What's included in responses:**
 
-- **`extra_context.relations`** — Entities and relationships found within each chunk
-- **`extra_graph_context`** — Additional entity relationships extracted from your query
+- **`graph_context.chunk_relations`** — Entities and relationships found within each chunk
+- **`additional_context`** — Additional entity relationships extracted from your query
 
 This helps your AI understand not just _what_ is mentioned, but _how_ things relate—like knowing that "Sarah Chen" leads "Project Phoenix" which depends on the "Authentication Service".
