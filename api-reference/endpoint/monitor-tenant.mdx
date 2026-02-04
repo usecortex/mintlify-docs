@@ -10,13 +10,13 @@ openapi: "GET /tenants/monitor"
   <Tab title="API Request">
     ```bash wrap
       curl -X 'GET' \
-     'https://api.usecortex.ai/tenants/stats?tenant_id=tenant_123' \
+     'https://api.usecortex.ai/tenants/monitor?tenant_id=tenant_123' \
       --header 'Authorization: Bearer YOUR_API_KEY'
     ```
   </Tab>
   <Tab title="TypeScript">
     ```ts
-    const stats = await client.tenant.stats({
+    const stats = await client.tenant.monitor({
       tenant_id: "tenant_1234",
       sub_tenant_id: "sub_tenant_4567"
     });
@@ -25,7 +25,7 @@ openapi: "GET /tenants/monitor"
   <Tab title="Python (Sync)">
     ```python
     # Async usage is similar, just use async_client and await
-    stats = client.tenant.stats(
+    stats = client.tenant.monitor(
         tenant_id="tenant_1234",
         sub_tenant_id="sub_tenant_4567"
     )

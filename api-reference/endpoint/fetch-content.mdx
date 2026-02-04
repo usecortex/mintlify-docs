@@ -1,7 +1,7 @@
 ---
 title: "Fetch Content"
 description: "Fetch the content of a memory or knowledge item ingested"
-openapi: "POST /fetch/fetch_source_content"
+openapi: "POST /fetch/content"
 ---
 
 ### Fetch memory contents
@@ -10,7 +10,7 @@ openapi: "POST /fetch/fetch_source_content"
   <Tab title="API Request">
     ```bash
     curl -X 'POST' \
-    'https://api.usecortex.ai/fetch/fetch_memory_content' \
+    'https://api.usecortex.ai/fetch/content' \
     -H 'accept: application/json' \
     -H 'Content-Type: application/json' \
     -d '{
@@ -21,26 +21,7 @@ openapi: "POST /fetch/fetch_source_content"
     "expiry_seconds": 3600
     }'
     ```
-
-    ### Fetch knowledge items
-
-    <Tabs>
-      <Tab title="API Request">
-        ```bash
-        curl -X 'POST' \
-        'https://api.usecortex.ai/fetch/fetch_knowledge_content' \
-        -H 'accept: application/json' \
-        -H 'Content-Type: application/json' \
-        -d '{
-        "tenant_id": "string",
-        "sub_tenant_id": "string",
-        "id": "string",
-        "mode": "content",
-        "expiry_seconds": 3600
-        }'
-        ```
-      </Tab>
-    </Tabs>
+    
   </Tab>
   <Tab title="TypeScript">
     ```ts

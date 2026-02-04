@@ -1,17 +1,21 @@
 ---
 title: "List"
-description: "Retrieve all memories or knowledge for a specific tenant and subtenant combination"
-openapi: "GET /list/list_sources"
+description: "Retrieve all memories or knowledge for a specific tenant and subtenant combination (POST /list/data)"
+openapi: "POST /list/data"
 ---
+
+Use **POST /list/data** with a JSON body to list either knowledge sources or user memories. Set `kind` to `"knowledge"` or `"memories"` and include `tenant_id` (and optionally `sub_tenant_id`).
 
 ### List memories
 
 <Tabs>
   <Tab title="API Request">
     ```bash
-    curl -X 'GET' \
-    'https://api.usecortex.ai/list/list_memories?tenant_id=tenant_123' \
-    -H 'accept: application/json'
+    curl -X 'POST' \
+    'https://api.usecortex.ai/list/data' \
+    -H 'accept: application/json' \
+    -H 'Content-Type: application/json' \
+    -d '{"tenant_id": "tenant_123", "sub_tenant_id": "sub_tenant_456", "kind": "memories"}'
     ```
   </Tab>
   <Tab title="TypeScript">
@@ -33,14 +37,16 @@ openapi: "GET /list/list_sources"
   </Tab>
 </Tabs>
 
-### List Knowledge
+### List knowledge
 
 <Tabs>
   <Tab title="API Request">
     ```bash
-    curl -X 'GET' \
-    'https://api.usecortex.ai/list/list_knowledge?tenant_id=tenant_123' \
-    -H 'accept: application/json'
+    curl -X 'POST' \
+    'https://api.usecortex.ai/list/data' \
+    -H 'accept: application/json' \
+    -H 'Content-Type: application/json' \
+    -d '{"tenant_id": "tenant_123", "sub_tenant_id": "sub_tenant_456", "kind": "knowledge"}'
     ```
   </Tab>
 </Tabs>

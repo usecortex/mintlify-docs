@@ -1,7 +1,7 @@
 ---
 title: "Boolean Recall"
 description: "Perform a deterministic / full text search for exact matches within your indexed sources or memories"
-openapi: "POST /search/full_text_search"
+openapi: "POST /recall/boolean_recall"
 ---
 
 ### Examples
@@ -10,25 +10,25 @@ openapi: "POST /search/full_text_search"
   <Tab title="API Request">
     ```bash
     curl --request POST \
-      --url https://api.usecortex.ai/search/full_text_search \
+      --url https://api.usecortex.ai/recall/boolean_recall \
       --header 'Authorization: Bearer <token>' \
       --header 'Content-Type: application/json' \
       --data '{
       "query": "John Quotas AND Smith Quotas",
       "tenant_id": "tenant_1234",
       "sub_tenant_id": "sub_tenant_4567",
-      "max_chunks": 25,
+      "max_results": 25,
       "operator": "and"
     }'
     ```
   </Tab>
   <Tab title="TypeScript">
     ```ts
-    const results = await client.search.fullTextSearch({
+    const results = await client.recall.booleanRecall({
       query: "John Smith Jake",
       tenantId: "tenant_1234",
       subTenantId: "sub_tenant_4567",
-      maxChunks: 25,
+      maxResults: 25,
       operator: "and"
     });
     ```
@@ -36,11 +36,11 @@ openapi: "POST /search/full_text_search"
   <Tab title="Python (Sync)">
     ```python
     # Async usage is similar, just use async_client and await
-    results = client.search.full_text_search(
+    results = client.recall.boolean_recall(
         query="John Smith Jake",
         tenant_id="tenant_1234",
         sub_tenant_id="sub_tenant_4567",
-        max_chunks=25,
+        max_results=25,
         operator="and"
     )
     ```
@@ -86,11 +86,11 @@ The `operator` parameter controls how the search terms are combined:
 - **OR operator** (default): At least one token must be present in the document
 - **AND operator**: All tokens must be present in the document
 
-### Max Chunks Parameter
+### Max Results Parameter
 
-The `max_chunks` parameter controls the maximum number of results returned:
+The `max_results` parameter controls the maximum number of results returned:
 
-- Must be between 1 and 1001
+- Must be between 1 and 1000
 - Defaults to the system limit if not specified
 
 ### Use Cases

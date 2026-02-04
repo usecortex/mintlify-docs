@@ -86,19 +86,16 @@
           {
             "group": "Manage Memories",
             "pages": [
-              "api-reference/endpoint/delete",
               "api-reference/endpoint/list",
-              "api-reference/endpoint/list-by-id",
               "api-reference/endpoint/fetch-content",
               "api-reference/endpoint/relations",
               "api-reference/delete-memory",
-              "api-reference/delete-memory-copied-1"
+              "api-reference/delete-knowledge"
             ]
           },
           {
             "group": "Custom Embeddings",
             "pages": [
-              "api-reference/endpoint/create-embeddings-tenant",
               "api-reference/endpoint/add-embeddings",
               "api-reference/endpoint/recall-embeddings",
               "api-reference/endpoint/filter-embeddings",

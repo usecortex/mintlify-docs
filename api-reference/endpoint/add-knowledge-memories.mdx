@@ -1,7 +1,7 @@
 ---
 title: "Knowledge Base"
 description: "Your users won't tell AI everything. But their Slack messages, Notion docs, emails, and drives already contain the context your agents need. Knowledge Memories lets you ingest, store, and recall all of this - creating a unified context layer for every user. When combined with User Memories, your agents deliver hyper-personalized responses with the right context."
-openapi: "POST /ingestion/upload_document"
+openapi: "POST /ingestion/upload_knowledge"
 ---
 
 ### Examples
@@ -9,7 +9,7 @@ openapi: "POST /ingestion/upload_document"
 <Tabs>
   <Tab title="API Request">
     ```bash
-    curl -X POST https://api.usecortex.ai/upload_knowledge \
+    curl -X POST https://api.usecortex.ai/ingestion/upload_knowledge \
     -F "tenant_id=tenant_123" \
     -F "files=@a.pdf" \
     -F "files=@b.pdf" \

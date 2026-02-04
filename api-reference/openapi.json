@@ -2,15 +2,14 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Cortex SDK API",
+    "description": "REST APIs for Cortex AI retrieval engine",
     "version": "0.0.1"
   },
   "servers": [
     {
       "url": "https://api.usecortex.ai",
-      "x-fern-server-name": "cortex-prod",
-      "x-fern-audiences": [
-        "public"
-      ]
+      "description": "Production",
+      "x-fern-server-name": "cortex-prod"
     }
   ],
   "paths": {
@@ -20,6 +19,7 @@
         "operationId": "metrics_metrics_get",
         "responses": {
           "200": {
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {}
@@ -29,18 +29,18 @@
         }
       }
     },
-    "/ingestion/upload_document": {
+    "/ingestion/upload_knowledge": {
       "post": {
         "tags": [
           "ingestion"
         ],
-        "summary": "Upload Document",
-        "operationId": "upload_document_ingestion_upload_document_post",
+        "summary": "Upload Knowledge",
+        "operationId": "upload_knowledge_ingestion_upload_knowledge_post",
         "requestBody": {
           "content": {
             "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/Body_upload_document_ingestion_upload_document_post"
+                "$ref": "#/components/schemas/Body_upload_knowledge_ingestion_upload_knowledge_post"
               }
             }
           },
@@ -48,6 +48,7 @@
         },
         "responses": {
           "200": {
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
@@ -57,6 +58,7 @@
             }
           },
           "400": {
+            "description": "Bad Request - Invalid input parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -66,6 +68,7 @@
             }
           },
           "401": {
+            "description": "Unauthorized - Authentication required",
             "content": {
               "application/json": {
                 "schema": {
@@ -75,6 +78,7 @@
             }
           },
           "403": {
+            "description": "Forbidden - Access denied",
             "content": {
               "application/json": {
                 "schema": {
@@ -84,6 +88,7 @@
             }
           },
           "404": {
+            "description": "Not Found - Resource does not exist",
             "content": {
               "application/json": {
                 "schema": {
@@ -93,6 +98,7 @@
             }
           },
           "422": {
+            "description": "Unprocessable Entity - Validation failed",
             "content": {
               "application/json": {
                 "schema": {
@@ -102,6 +108,7 @@
             }
           },
           "500": {
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -111,6 +118,7 @@
             }
           },
           "503": {
+            "description": "Service Unavailable",
             "content": {
               "application/json": {
                 "schema": {
@@ -126,110 +134,7 @@
           }
         ],
         "x-fern-sdk-group-name": "upload",
-        "x-fern-sdk-method-name": "upload_document",
-        "x-fern-sdk-audience": [
-          "public"
-        ]
-      }
-    },
-    "/ingestion/upload_app": {
-      "post": {
-        "tags": [
-          "ingestion"
-        ],
-        "summary": "Upload App",
-        "operationId": "upload_app_ingestion_upload_app_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Body_upload_app_ingestion_upload_app_post"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AppSourcesUploadData"
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/cortex__models__response__commons__ActualErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/cortex__models__response__commons__ActualErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/cortex__models__response__commons__ActualErrorResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/cortex__models__response__commons__ActualErrorResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/cortex__models__response__commons__ActualErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/cortex__models__response__commons__ActualErrorResponse"
-                }
-              }
-            }
-          },
-          "503": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/cortex__models__response__commons__ActualErrorResponse"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "x-fern-sdk-group-name": "upload",
-        "x-fern-sdk-method-name": "upload_app_sources",
+        "x-fern-sdk-method-name": "upload_knowledge",
         "x-fern-sdk-audience": [
           "public"
         ]
@@ -249,14 +154,16 @@
         ],
         "parameters": [
           {
-            "name": "id",
+            "name": "file_id",
             "in": "query",
             "required": true,
             "schema": {
               "type": "string",
+              "description": "The file ID to check processing status for",
               "title": "File Id",
-              "example": "CortexDoc1234"
-            }
+              "example": "<str>"
+            },
+            "description": "The file ID to check processing status for"
           },
           {
             "name": "tenant_id",
@@ -264,10 +171,12 @@
             "required": false,
             "schema": {
               "type": "string",
+              "description": "Unique identifier for the tenant/organization",
               "default": "",
               "title": "Tenant Id",
               "example": "tenant_1234"
-            }
+            },
+            "description": "Unique identifier for the tenant/organization"
           },
           {
             "name": "sub_tenant_id",
@@ -282,13 +191,16 @@
                   "type": "null"
                 }
               ],
+              "description": "Optional sub-tenant identifier used to organize data within a tenant. If omitted, the default sub-tenant created during tenant setup will be used.",
               "title": "Sub Tenant Id",
               "example": "sub_tenant_4567"
-            }
+            },
+            "description": "Optional sub-tenant identifier used to organize data within a tenant. If omitted, the default sub-tenant created during tenant setup will be used."
           }
         ],
         "responses": {
           "200": {
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
@@ -298,6 +210,7 @@
             }
           },
           "400": {
+            "description": "Bad Request - Invalid input parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -307,6 +220,7 @@
             }
           },
           "401": {
+            "description": "Unauthorized - Authentication required",
             "content": {
               "application/json": {
                 "schema": {
@@ -316,6 +230,7 @@
             }
           },
           "403": {
+            "description": "Forbidden - Access denied",
             "content": {
               "application/json": {
                 "schema": {
@@ -325,6 +240,7 @@
             }
           },
           "404": {
+            "description": "Not Found - Resource does not exist",
             "content": {
               "application/json": {
                 "schema": {
@@ -334,6 +250,7 @@
             }
           },
           "422": {
+            "description": "Unprocessable Entity - Validation failed",
             "content": {
               "application/json": {
                 "schema": {
@@ -343,6 +260,7 @@
             }
           },
           "500": {
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -352,6 +270,7 @@
             }
           },
           "503": {
+            "description": "Service Unavailable",
             "content": {
               "application/json": {
                 "schema": {
@@ -387,6 +306,7 @@
         },
         "responses": {
           "200": {
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
@@ -396,6 +316,7 @@
             }
           },
           "400": {
+            "description": "Bad Request - Invalid input parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -405,6 +326,7 @@
             }
           },
           "401": {
+            "description": "Unauthorized - Authentication required",
             "content": {
               "application/json": {
                 "schema": {
@@ -414,6 +336,7 @@
             }
           },
           "403": {
+            "description": "Forbidden - Access denied",
             "content": {
               "application/json": {
                 "schema": {
@@ -423,6 +346,7 @@
             }
           },
           "404": {
+            "description": "Not Found - Resource does not exist",
             "content": {
               "application/json": {
                 "schema": {
@@ -432,6 +356,7 @@
             }
           },
           "422": {
+            "description": "Unprocessable Entity - Validation failed",
             "content": {
               "application/json": {
                 "schema": {
@@ -441,6 +366,7 @@
             }
           },
           "500": {
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -450,6 +376,7 @@
             }
           },
           "503": {
+            "description": "Service Unavailable",
             "content": {
               "application/json": {
                 "schema": {
@@ -463,16 +390,21 @@
           {
             "HTTPBearer": []
           }
+        ],
+        "x-fern-sdk-group-name": "tenant",
+        "x-fern-sdk-method-name": "create_tenant",
+        "x-fern-sdk-audience": [
+          "public"
         ]
       }
     },
-    "/tenants/stats": {
+    "/tenants/monitor": {
       "get": {
         "tags": [
           "tenants"
         ],
         "summary": "Get Tenant Stats",
-        "operationId": "get_tenant_stats_tenants_stats_get",
+        "operationId": "get_tenant_stats_tenants_monitor_get",
         "security": [
           {
             "HTTPBearer": []
@@ -485,13 +417,16 @@
             "required": true,
             "schema": {
               "type": "string",
+              "description": "Unique identifier for the tenant/organization",
               "title": "Tenant Id",
               "example": "tenant_1234"
-            }
+            },
+            "description": "Unique identifier for the tenant/organization"
           }
         ],
         "responses": {
           "200": {
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
@@ -501,6 +436,7 @@
             }
           },
           "400": {
+            "description": "Bad Request - Invalid input parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -510,6 +446,7 @@
             }
           },
           "401": {
+            "description": "Unauthorized - Authentication required",
             "content": {
               "application/json": {
                 "schema": {
@@ -519,6 +456,7 @@
             }
           },
           "403": {
+            "description": "Forbidden - Access denied",
             "content": {
               "application/json": {
                 "schema": {
@@ -528,6 +466,7 @@
             }
           },
           "404": {
+            "description": "Not Found - Resource does not exist",
             "content": {
               "application/json": {
                 "schema": {
@@ -537,6 +476,7 @@
             }
           },
           "422": {
+            "description": "Unprocessable Entity - Validation failed",
             "content": {
               "application/json": {
                 "schema": {
@@ -546,6 +486,7 @@
             }
           },
           "500": {
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -555,6 +496,7 @@
             }
           },
           "503": {
+            "description": "Service Unavailable",
             "content": {
               "application/json": {
                 "schema": {
@@ -563,100 +505,12 @@
               }
             }
           }
-        }
-      }
-    },
-    "/api-keys/create_api_key": {
-      "post": {
-        "tags": [
-          "api-keys"
-        ],
-        "summary": "Create Api Key",
-        "operationId": "create_api_key_api_keys_create_api_key_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ApiKeyCreateRequest"
-              }
-            }
-          },
-          "required": true
         },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiKeyCreateResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/cortex__models__response__commons__ActualErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/cortex__models__response__commons__ActualErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/cortex__models__response__commons__ActualErrorResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/cortex__models__response__commons__ActualErrorResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/cortex__models__response__commons__ActualErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/cortex__models__response__commons__ActualErrorResponse"
-                }
-              }
-            }
-          },
-          "503": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/cortex__models__response__commons__ActualErrorResponse"
-                }
-              }
-            }
-          }
-        }
+        "x-fern-sdk-group-name": "tenant",
+        "x-fern-sdk-method-name": "stats",
+        "x-fern-sdk-audience": [
+          "public"
+        ]
       }
     },
     "/embeddings/insert_raw_embeddings": {
@@ -678,6 +532,7 @@
         },
         "responses": {
           "200": {
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
@@ -687,6 +542,7 @@
             }
           },
           "400": {
+            "description": "Bad Request - Invalid input parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -696,6 +552,7 @@
             }
           },
           "401": {
+            "description": "Unauthorized - Authentication required",
             "content": {
               "application/json": {
                 "schema": {
@@ -705,6 +562,7 @@
             }
           },
           "403": {
+            "description": "Forbidden - Access denied",
             "content": {
               "application/json": {
                 "schema": {
@@ -714,6 +572,7 @@
             }
           },
           "404": {
+            "description": "Not Found - Resource does not exist",
             "content": {
               "application/json": {
                 "schema": {
@@ -723,6 +582,7 @@
             }
           },
           "422": {
+            "description": "Unprocessable Entity - Validation failed",
             "content": {
               "application/json": {
                 "schema": {
@@ -732,6 +592,7 @@
             }
           },
           "500": {
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -741,6 +602,7 @@
             }
           },
           "503": {
+            "description": "Service Unavailable",
             "content": {
               "application/json": {
                 "schema": {
@@ -754,6 +616,11 @@
           {
             "HTTPBearer": []
           }
+        ],
+        "x-fern-sdk-group-name": "embeddings",
+        "x-fern-sdk-method-name": "insert",
+        "x-fern-sdk-audience": [
+          "public"
         ]
       }
     },
@@ -776,6 +643,7 @@
         },
         "responses": {
           "200": {
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
@@ -789,6 +657,7 @@
             }
           },
           "400": {
+            "description": "Bad Request - Invalid input parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -798,6 +667,7 @@
             }
           },
           "401": {
+            "description": "Unauthorized - Authentication required",
             "content": {
               "application/json": {
                 "schema": {
@@ -807,6 +677,7 @@
             }
           },
           "403": {
+            "description": "Forbidden - Access denied",
             "content": {
               "application/json": {
                 "schema": {
@@ -816,6 +687,7 @@
             }
           },
           "404": {
+            "description": "Not Found - Resource does not exist",
             "content": {
               "application/json": {
                 "schema": {
@@ -825,6 +697,7 @@
             }
           },
           "422": {
+            "description": "Unprocessable Entity - Validation failed",
             "content": {
               "application/json": {
                 "schema": {
@@ -834,6 +707,7 @@
             }
           },
           "500": {
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -843,6 +717,7 @@
             }
           },
           "503": {
+            "description": "Service Unavailable",
             "content": {
               "application/json": {
                 "schema": {
@@ -856,6 +731,11 @@
           {
             "HTTPBearer": []
           }
+        ],
+        "x-fern-sdk-group-name": "embeddings",
+        "x-fern-sdk-method-name": "search",
+        "x-fern-sdk-audience": [
+          "public"
         ]
       }
     },
@@ -878,6 +758,7 @@
         },
         "responses": {
           "200": {
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
@@ -891,6 +772,7 @@
             }
           },
           "400": {
+            "description": "Bad Request - Invalid input parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -900,6 +782,7 @@
             }
           },
           "401": {
+            "description": "Unauthorized - Authentication required",
             "content": {
               "application/json": {
                 "schema": {
@@ -909,6 +792,7 @@
             }
           },
           "403": {
+            "description": "Forbidden - Access denied",
             "content": {
               "application/json": {
                 "schema": {
@@ -918,6 +802,7 @@
             }
           },
           "404": {
+            "description": "Not Found - Resource does not exist",
             "content": {
               "application/json": {
                 "schema": {
@@ -927,6 +812,7 @@
             }
           },
           "422": {
+            "description": "Unprocessable Entity - Validation failed",
             "content": {
               "application/json": {
                 "schema": {
@@ -936,6 +822,7 @@
             }
           },
           "500": {
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -945,6 +832,7 @@
             }
           },
           "503": {
+            "description": "Service Unavailable",
             "content": {
               "application/json": {
                 "schema": {
@@ -958,6 +846,11 @@
           {
             "HTTPBearer": []
           }
+        ],
+        "x-fern-sdk-group-name": "embeddings",
+        "x-fern-sdk-method-name": "filter",
+        "x-fern-sdk-audience": [
+          "public"
         ]
       }
     },
@@ -980,9 +873,11 @@
             "required": true,
             "schema": {
               "type": "string",
+              "description": "Unique identifier for the tenant/organization",
               "title": "Tenant Id",
               "example": "tenant_1234"
-            }
+            },
+            "description": "Unique identifier for the tenant/organization"
           },
           {
             "name": "sub_tenant_id",
@@ -997,12 +892,14 @@
                   "type": "null"
                 }
               ],
+              "description": "Optional sub-tenant ID for scoping deletion",
               "title": "Sub Tenant Id",
               "example": "sub_tenant_4567"
-            }
+            },
+            "description": "Optional sub-tenant ID for scoping deletion"
           },
           {
-            "name": "id",
+            "name": "source_id",
             "in": "query",
             "required": false,
             "schema": {
@@ -1014,9 +911,11 @@
                   "type": "null"
                 }
               ],
+              "description": "Optional source ID to delete by (mutually exclusive with chunk_ids)",
               "title": "Source Id",
-              "example": "CortexDoc1234"
-            }
+              "example": "<str>"
+            },
+            "description": "Optional source ID to delete by (mutually exclusive with chunk_ids)"
           },
           {
             "name": "chunk_ids",
@@ -1034,16 +933,19 @@
                   "type": "null"
                 }
               ],
+              "description": "Optional list of chunk IDs to delete (mutually exclusive with source_id)",
               "title": "Chunk Ids",
               "example": [
                 "CortexEmbeddings123_0",
                 "CortexEmbeddings123_1"
               ]
-            }
+            },
+            "description": "Optional list of chunk IDs to delete (mutually exclusive with source_id)"
           }
         ],
         "responses": {
           "200": {
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
@@ -1053,6 +955,7 @@
             }
           },
           "400": {
+            "description": "Bad Request - Invalid input parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -1062,6 +965,7 @@
             }
           },
           "401": {
+            "description": "Unauthorized - Authentication required",
             "content": {
               "application/json": {
                 "schema": {
@@ -1071,6 +975,7 @@
             }
           },
           "403": {
+            "description": "Forbidden - Access denied",
             "content": {
               "application/json": {
                 "schema": {
@@ -1080,6 +985,7 @@
             }
           },
           "404": {
+            "description": "Not Found - Resource does not exist",
             "content": {
               "application/json": {
                 "schema": {
@@ -1089,6 +995,7 @@
             }
           },
           "422": {
+            "description": "Unprocessable Entity - Validation failed",
             "content": {
               "application/json": {
                 "schema": {
@@ -1098,6 +1005,7 @@
             }
           },
           "500": {
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -1107,117 +1015,7 @@
             }
           },
           "503": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/cortex__models__response__commons__ActualErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/list/list_sources": {
-      "get": {
-        "tags": [
-          "list"
-        ],
-        "summary": "Get User Sources",
-        "operationId": "get_user_sources_list_list_sources_get",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "tenant_id",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Tenant Id",
-              "example": "tenant_1234"
-            }
-          },
-          {
-            "name": "sub_tenant_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "default": "",
-              "title": "Sub Tenant Id",
-              "example": "sub_tenant_4567"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SourceListResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/cortex__models__response__commons__ActualErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/cortex__models__response__commons__ActualErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/cortex__models__response__commons__ActualErrorResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/cortex__models__response__commons__ActualErrorResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/cortex__models__response__commons__ActualErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/cortex__models__response__commons__ActualErrorResponse"
-                }
-              }
-            }
-          },
-          "503": {
+            "description": "Service Unavailable",
             "content": {
               "application/json": {
                 "schema": {
@@ -1227,25 +1025,25 @@
             }
           }
         },
-        "x-fern-sdk-group-name": "sources",
-        "x-fern-sdk-method-name": "get_all",
+        "x-fern-sdk-group-name": "embeddings",
+        "x-fern-sdk-method-name": "delete",
         "x-fern-sdk-audience": [
           "public"
         ]
       }
     },
-    "/list/list_sources_by_id": {
+    "/list/data": {
       "post": {
         "tags": [
           "list"
         ],
-        "summary": "Get User Sources By Id",
-        "operationId": "get_user_sources_by_id_list_list_sources_by_id_post",
+        "summary": "List Content",
+        "operationId": "list_content_list_data_post",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ListSourcesByIdRequest"
+                "$ref": "#/components/schemas/ListContentRequest"
               }
             }
           },
@@ -1253,15 +1051,25 @@
         },
         "responses": {
           "200": {
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SourceListResponse"
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/SourceListResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ListUserMemoriesResponse"
+                    }
+                  ],
+                  "title": "Response List Content List Data Post"
                 }
               }
             }
           },
           "400": {
+            "description": "Bad Request - Invalid input parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -1271,6 +1079,7 @@
             }
           },
           "401": {
+            "description": "Unauthorized - Authentication required",
             "content": {
               "application/json": {
                 "schema": {
@@ -1280,6 +1089,7 @@
             }
           },
           "403": {
+            "description": "Forbidden - Access denied",
             "content": {
               "application/json": {
                 "schema": {
@@ -1289,6 +1099,7 @@
             }
           },
           "404": {
+            "description": "Not Found - Resource does not exist",
             "content": {
               "application/json": {
                 "schema": {
@@ -1298,6 +1109,7 @@
             }
           },
           "422": {
+            "description": "Unprocessable Entity - Validation failed",
             "content": {
               "application/json": {
                 "schema": {
@@ -1307,6 +1119,7 @@
             }
           },
           "500": {
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -1316,6 +1129,7 @@
             }
           },
           "503": {
+            "description": "Service Unavailable",
             "content": {
               "application/json": {
                 "schema": {
@@ -1330,8 +1144,8 @@
             "HTTPBearer": []
           }
         ],
-        "x-fern-sdk-group-name": "sources",
-        "x-fern-sdk-method-name": "get_by_ids",
+        "x-fern-sdk-group-name": "fetch",
+        "x-fern-sdk-method-name": "list_knowledge",
         "x-fern-sdk-audience": [
           "public"
         ]
@@ -1351,14 +1165,16 @@
         ],
         "parameters": [
           {
-            "name": "id",
+            "name": "source_id",
             "in": "query",
             "required": true,
             "schema": {
               "type": "string",
+              "description": "The source ID to fetch relations for",
               "title": "Source Id",
-              "example": "CortexDoc1234"
-            }
+              "example": "<str>"
+            },
+            "description": "The source ID to fetch relations for"
           },
           {
             "name": "tenant_id",
@@ -1366,10 +1182,12 @@
             "required": false,
             "schema": {
               "type": "string",
+              "description": "Unique identifier for the tenant/organization",
               "default": "",
               "title": "Tenant Id",
               "example": "tenant_1234"
-            }
+            },
+            "description": "Unique identifier for the tenant/organization"
           },
           {
             "name": "sub_tenant_id",
@@ -1384,13 +1202,16 @@
                   "type": "null"
                 }
               ],
+              "description": "Optional sub-tenant identifier used to organize data within a tenant. If omitted, the default sub-tenant created during tenant setup will be used.",
               "title": "Sub Tenant Id",
               "example": "sub_tenant_4567"
-            }
+            },
+            "description": "Optional sub-tenant identifier used to organize data within a tenant. If omitted, the default sub-tenant created during tenant setup will be used."
           }
         ],
         "responses": {
           "200": {
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
@@ -1400,6 +1221,7 @@
             }
           },
           "400": {
+            "description": "Bad Request - Invalid input parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -1409,6 +1231,7 @@
             }
           },
           "401": {
+            "description": "Unauthorized - Authentication required",
             "content": {
               "application/json": {
                 "schema": {
@@ -1418,6 +1241,7 @@
             }
           },
           "403": {
+            "description": "Forbidden - Access denied",
             "content": {
               "application/json": {
                 "schema": {
@@ -1427,6 +1251,7 @@
             }
           },
           "404": {
+            "description": "Not Found - Resource does not exist",
             "content": {
               "application/json": {
                 "schema": {
@@ -1436,6 +1261,7 @@
             }
           },
           "422": {
+            "description": "Unprocessable Entity - Validation failed",
             "content": {
               "application/json": {
                 "schema": {
@@ -1445,6 +1271,7 @@
             }
           },
           "500": {
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -1454,6 +1281,7 @@
             }
           },
           "503": {
+            "description": "Service Unavailable",
             "content": {
               "application/json": {
                 "schema": {
@@ -1463,20 +1291,20 @@
             }
           }
         },
-        "x-fern-sdk-group-name": "sources",
-        "x-fern-sdk-method-name": "get_graph_relations_by_id",
+        "x-fern-sdk-group-name": "fetch",
+        "x-fern-sdk-method-name": "graph_relations_by_source_id",
         "x-fern-sdk-audience": [
           "public"
         ]
       }
     },
-    "/delete/delete_sources": {
+    "/knowledge/delete_knowledge": {
       "post": {
         "tags": [
           "delete"
         ],
         "summary": "Delete Source",
-        "operationId": "delete_source_delete_delete_sources_post",
+        "operationId": "delete_source_knowledge_delete_knowledge_post",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1489,6 +1317,7 @@
         },
         "responses": {
           "200": {
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
@@ -1498,6 +1327,7 @@
             }
           },
           "400": {
+            "description": "Bad Request - Invalid input parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -1507,6 +1337,7 @@
             }
           },
           "401": {
+            "description": "Unauthorized - Authentication required",
             "content": {
               "application/json": {
                 "schema": {
@@ -1516,6 +1347,7 @@
             }
           },
           "403": {
+            "description": "Forbidden - Access denied",
             "content": {
               "application/json": {
                 "schema": {
@@ -1525,6 +1357,7 @@
             }
           },
           "404": {
+            "description": "Not Found - Resource does not exist",
             "content": {
               "application/json": {
                 "schema": {
@@ -1534,6 +1367,7 @@
             }
           },
           "422": {
+            "description": "Unprocessable Entity - Validation failed",
             "content": {
               "application/json": {
                 "schema": {
@@ -1543,6 +1377,7 @@
             }
           },
           "500": {
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -1552,6 +1387,7 @@
             }
           },
           "503": {
+            "description": "Service Unavailable",
             "content": {
               "application/json": {
                 "schema": {
@@ -1567,19 +1403,19 @@
           }
         ],
         "x-fern-sdk-group-name": "sources",
-        "x-fern-sdk-method-name": "delete_source",
+        "x-fern-sdk-method-name": "delete",
         "x-fern-sdk-audience": [
           "public"
         ]
       }
     },
-    "/fetch/fetch_source_content": {
+    "/fetch/content": {
       "post": {
         "tags": [
           "fetch"
         ],
         "summary": "Fetch Source",
-        "operationId": "fetch_source_fetch_fetch_source_content_post",
+        "operationId": "fetch_source_fetch_content_post",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1592,6 +1428,7 @@
         },
         "responses": {
           "200": {
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
@@ -1601,6 +1438,7 @@
             }
           },
           "400": {
+            "description": "Bad Request - Invalid input parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -1610,6 +1448,7 @@
             }
           },
           "401": {
+            "description": "Unauthorized - Authentication required",
             "content": {
               "application/json": {
                 "schema": {
@@ -1619,6 +1458,7 @@
             }
           },
           "403": {
+            "description": "Forbidden - Access denied",
             "content": {
               "application/json": {
                 "schema": {
@@ -1628,6 +1468,7 @@
             }
           },
           "404": {
+            "description": "Not Found - Resource does not exist",
             "content": {
               "application/json": {
                 "schema": {
@@ -1637,6 +1478,7 @@
             }
           },
           "422": {
+            "description": "Unprocessable Entity - Validation failed",
             "content": {
               "application/json": {
                 "schema": {
@@ -1646,6 +1488,7 @@
             }
           },
           "500": {
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -1655,6 +1498,7 @@
             }
           },
           "503": {
+            "description": "Service Unavailable",
             "content": {
               "application/json": {
                 "schema": {
@@ -1669,20 +1513,20 @@
             "HTTPBearer": []
           }
         ],
-        "x-fern-sdk-group-name": "sources",
-        "x-fern-sdk-method-name": "fetch_source",
+        "x-fern-sdk-group-name": "fetch",
+        "x-fern-sdk-method-name": "source_content",
         "x-fern-sdk-audience": [
           "public"
         ]
       }
     },
-    "/search/hybrid_search": {
+    "/recall/full_recall": {
       "post": {
         "tags": [
           "Search"
         ],
         "summary": "Hybrid search",
-        "operationId": "hybrid_search_search_hybrid_search_post",
+        "operationId": "hybrid_search_recall_full_recall_post",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1695,6 +1539,7 @@
         },
         "responses": {
           "200": {
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
@@ -1704,6 +1549,7 @@
             }
           },
           "400": {
+            "description": "Bad Request - Invalid input parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -1713,6 +1559,7 @@
             }
           },
           "401": {
+            "description": "Unauthorized - Authentication required",
             "content": {
               "application/json": {
                 "schema": {
@@ -1722,6 +1569,7 @@
             }
           },
           "403": {
+            "description": "Forbidden - Access denied",
             "content": {
               "application/json": {
                 "schema": {
@@ -1731,6 +1579,7 @@
             }
           },
           "404": {
+            "description": "Not Found - Resource does not exist",
             "content": {
               "application/json": {
                 "schema": {
@@ -1740,6 +1589,7 @@
             }
           },
           "422": {
+            "description": "Unprocessable Entity - Validation failed",
             "content": {
               "application/json": {
                 "schema": {
@@ -1749,6 +1599,7 @@
             }
           },
           "500": {
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -1758,6 +1609,7 @@
             }
           },
           "503": {
+            "description": "Service Unavailable",
             "content": {
               "application/json": {
                 "schema": {
@@ -1767,6 +1619,7 @@
             }
           },
           "429": {
+            "description": "Too Many Requests - Rate limit exceeded",
             "content": {
               "application/json": {
                 "schema": {
@@ -1780,16 +1633,21 @@
           {
             "HTTPBearer": []
           }
+        ],
+        "x-fern-sdk-group-name": "search",
+        "x-fern-sdk-method-name": "retrieve",
+        "x-fern-sdk-audience": [
+          "public"
         ]
       }
     },
-    "/search/full_text_search": {
+    "/recall/boolean_recall": {
       "post": {
         "tags": [
           "Search"
         ],
         "summary": "Full-text search",
-        "operationId": "full_text_search_search_full_text_search_post",
+        "operationId": "full_text_search_recall_boolean_recall_post",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1802,6 +1660,7 @@
         },
         "responses": {
           "200": {
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
@@ -1811,6 +1670,7 @@
             }
           },
           "400": {
+            "description": "Bad Request - Invalid input parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -1820,6 +1680,7 @@
             }
           },
           "401": {
+            "description": "Unauthorized - Authentication required",
             "content": {
               "application/json": {
                 "schema": {
@@ -1829,6 +1690,7 @@
             }
           },
           "403": {
+            "description": "Forbidden - Access denied",
             "content": {
               "application/json": {
                 "schema": {
@@ -1838,6 +1700,7 @@
             }
           },
           "404": {
+            "description": "Not Found - Resource does not exist",
             "content": {
               "application/json": {
                 "schema": {
@@ -1847,6 +1710,7 @@
             }
           },
           "422": {
+            "description": "Unprocessable Entity - Validation failed",
             "content": {
               "application/json": {
                 "schema": {
@@ -1856,6 +1720,7 @@
             }
           },
           "500": {
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -1865,6 +1730,7 @@
             }
           },
           "503": {
+            "description": "Service Unavailable",
             "content": {
               "application/json": {
                 "schema": {
@@ -1874,6 +1740,7 @@
             }
           },
           "429": {
+            "description": "Too Many Requests - Rate limit exceeded",
             "content": {
               "application/json": {
                 "schema": {
@@ -1887,16 +1754,21 @@
           {
             "HTTPBearer": []
           }
+        ],
+        "x-fern-sdk-group-name": "search",
+        "x-fern-sdk-method-name": "full_text_search",
+        "x-fern-sdk-audience": [
+          "public"
         ]
       }
     },
-    "/search/qna": {
+    "/recall/qna": {
       "post": {
         "tags": [
           "Search"
         ],
         "summary": "Question & Answer with retrieval",
-        "operationId": "qna_search_search_qna_post",
+        "operationId": "qna_search_recall_qna_post",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1909,6 +1781,7 @@
         },
         "responses": {
           "200": {
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
@@ -1918,6 +1791,7 @@
             }
           },
           "400": {
+            "description": "Bad Request - Invalid input parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -1927,6 +1801,7 @@
             }
           },
           "401": {
+            "description": "Unauthorized - Authentication required",
             "content": {
               "application/json": {
                 "schema": {
@@ -1936,6 +1811,7 @@
             }
           },
           "403": {
+            "description": "Forbidden - Access denied",
             "content": {
               "application/json": {
                 "schema": {
@@ -1945,6 +1821,7 @@
             }
           },
           "404": {
+            "description": "Not Found - Resource does not exist",
             "content": {
               "application/json": {
                 "schema": {
@@ -1954,6 +1831,7 @@
             }
           },
           "422": {
+            "description": "Unprocessable Entity - Validation failed",
             "content": {
               "application/json": {
                 "schema": {
@@ -1963,6 +1841,7 @@
             }
           },
           "500": {
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -1972,6 +1851,7 @@
             }
           },
           "503": {
+            "description": "Service Unavailable",
             "content": {
               "application/json": {
                 "schema": {
@@ -1981,6 +1861,7 @@
             }
           },
           "429": {
+            "description": "Too Many Requests - Rate limit exceeded",
             "content": {
               "application/json": {
                 "schema": {
@@ -1994,6 +1875,11 @@
           {
             "HTTPBearer": []
           }
+        ],
+        "x-fern-sdk-group-name": "search",
+        "x-fern-sdk-method-name": "qna",
+        "x-fern-sdk-audience": [
+          "public"
         ]
       }
     },
@@ -2016,6 +1902,7 @@
         },
         "responses": {
           "200": {
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
@@ -2025,6 +1912,7 @@
             }
           },
           "400": {
+            "description": "Bad Request - Invalid input parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -2034,6 +1922,7 @@
             }
           },
           "401": {
+            "description": "Unauthorized - Authentication required",
             "content": {
               "application/json": {
                 "schema": {
@@ -2043,6 +1932,7 @@
             }
           },
           "403": {
+            "description": "Forbidden - Access denied",
             "content": {
               "application/json": {
                 "schema": {
@@ -2052,6 +1942,7 @@
             }
           },
           "404": {
+            "description": "Not Found - Resource does not exist",
             "content": {
               "application/json": {
                 "schema": {
@@ -2061,6 +1952,7 @@
             }
           },
           "422": {
+            "description": "Unprocessable Entity - Validation failed",
             "content": {
               "application/json": {
                 "schema": {
@@ -2070,6 +1962,7 @@
             }
           },
           "500": {
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -2079,6 +1972,7 @@
             }
           },
           "503": {
+            "description": "Service Unavailable",
             "content": {
               "application/json": {
                 "schema": {
@@ -2119,9 +2013,11 @@
             "required": true,
             "schema": {
               "type": "string",
+              "description": "Tenant ID",
               "title": "Tenant Id",
               "example": "tenant_1234"
-            }
+            },
+            "description": "Tenant ID"
           },
           {
             "name": "memory_id",
@@ -2129,9 +2025,11 @@
             "required": true,
             "schema": {
               "type": "string",
+              "description": "Unique identifier of the memory to delete",
               "title": "Memory Id",
               "example": "memory_1234"
-            }
+            },
+            "description": "Unique identifier of the memory to delete"
           },
           {
             "name": "sub_tenant_id",
@@ -2146,13 +2044,16 @@
                   "type": "null"
                 }
               ],
+              "description": "Sub-tenant ID",
               "title": "Sub Tenant Id",
               "example": "sub_tenant_4567"
-            }
+            },
+            "description": "Sub-tenant ID"
           }
         ],
         "responses": {
           "200": {
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
@@ -2162,6 +2063,7 @@
             }
           },
           "400": {
+            "description": "Bad Request - Invalid input parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -2171,6 +2073,7 @@
             }
           },
           "401": {
+            "description": "Unauthorized - Authentication required",
             "content": {
               "application/json": {
                 "schema": {
@@ -2180,6 +2083,7 @@
             }
           },
           "403": {
+            "description": "Forbidden - Access denied",
             "content": {
               "application/json": {
                 "schema": {
@@ -2189,6 +2093,7 @@
             }
           },
           "404": {
+            "description": "Not Found - Resource does not exist",
             "content": {
               "application/json": {
                 "schema": {
@@ -2198,6 +2103,7 @@
             }
           },
           "422": {
+            "description": "Unprocessable Entity - Validation failed",
             "content": {
               "application/json": {
                 "schema": {
@@ -2207,6 +2113,7 @@
             }
           },
           "500": {
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -2216,126 +2123,21 @@
             }
           },
           "503": {
+            "description": "Service Unavailable",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ActualErrorResponse"
                 }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/user/onboard": {
-      "post": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Onboard User",
-        "operationId": "onboard_user_user_onboard_post",
-        "parameters": [
-          {
-            "name": "x-cortex-secret",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "X-Cortex-Secret"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/OnboardUserRequest"
               }
             }
           }
         },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OnboardUserResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ActualErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ActualErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ActualErrorResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ActualErrorResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ActualErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ActualErrorResponse"
-                }
-              }
-            }
-          },
-          "503": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ActualErrorResponse"
-                }
-              }
-            }
-          }
-        }
+        "x-fern-sdk-group-name": "upload",
+        "x-fern-sdk-method-name": "delete_memory",
+        "x-fern-sdk-audience": [
+          "public"
+        ]
       }
     },
     "/dashboard/resources/list/api_keys": {
@@ -2347,6 +2149,7 @@
         "operationId": "list_apis_dashboard_resources_list_api_keys_get",
         "responses": {
           "200": {
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
@@ -2356,6 +2159,7 @@
             }
           },
           "400": {
+            "description": "Bad Request - Invalid input parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -2365,6 +2169,7 @@
             }
           },
           "401": {
+            "description": "Unauthorized - Authentication required",
             "content": {
               "application/json": {
                 "schema": {
@@ -2374,6 +2179,7 @@
             }
           },
           "403": {
+            "description": "Forbidden - Access denied",
             "content": {
               "application/json": {
                 "schema": {
@@ -2383,6 +2189,7 @@
             }
           },
           "404": {
+            "description": "Not Found - Resource does not exist",
             "content": {
               "application/json": {
                 "schema": {
@@ -2392,6 +2199,7 @@
             }
           },
           "422": {
+            "description": "Unprocessable Entity - Validation failed",
             "content": {
               "application/json": {
                 "schema": {
@@ -2401,6 +2209,7 @@
             }
           },
           "500": {
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -2410,6 +2219,7 @@
             }
           },
           "503": {
+            "description": "Service Unavailable",
             "content": {
               "application/json": {
                 "schema": {
@@ -2435,9 +2245,11 @@
             "required": true,
             "schema": {
               "type": "string",
+              "description": "Tenant ID",
               "title": "Tenant Id",
               "example": "tenant_1234"
-            }
+            },
+            "description": "Tenant ID"
           },
           {
             "name": "sub_tenant_id",
@@ -2445,13 +2257,16 @@
             "required": true,
             "schema": {
               "type": "string",
+              "description": "Sub-tenant ID",
               "title": "Sub Tenant Id",
               "example": "sub_tenant_4567"
-            }
+            },
+            "description": "Sub-tenant ID"
           }
         ],
         "responses": {
           "200": {
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
@@ -2461,6 +2276,7 @@
             }
           },
           "400": {
+            "description": "Bad Request - Invalid input parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -2470,6 +2286,7 @@
             }
           },
           "401": {
+            "description": "Unauthorized - Authentication required",
             "content": {
               "application/json": {
                 "schema": {
@@ -2479,6 +2296,7 @@
             }
           },
           "403": {
+            "description": "Forbidden - Access denied",
             "content": {
               "application/json": {
                 "schema": {
@@ -2488,6 +2306,7 @@
             }
           },
           "404": {
+            "description": "Not Found - Resource does not exist",
             "content": {
               "application/json": {
                 "schema": {
@@ -2497,6 +2316,7 @@
             }
           },
           "422": {
+            "description": "Unprocessable Entity - Validation failed",
             "content": {
               "application/json": {
                 "schema": {
@@ -2506,6 +2326,7 @@
             }
           },
           "500": {
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -2515,6 +2336,7 @@
             }
           },
           "503": {
+            "description": "Service Unavailable",
             "content": {
               "application/json": {
                 "schema": {
@@ -2535,6 +2357,7 @@
         "operationId": "list_tenants_dashboard_resources_list_tenant_ids_get",
         "responses": {
           "200": {
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
@@ -2544,6 +2367,7 @@
             }
           },
           "400": {
+            "description": "Bad Request - Invalid input parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -2553,6 +2377,7 @@
             }
           },
           "401": {
+            "description": "Unauthorized - Authentication required",
             "content": {
               "application/json": {
                 "schema": {
@@ -2562,6 +2387,7 @@
             }
           },
           "403": {
+            "description": "Forbidden - Access denied",
             "content": {
               "application/json": {
                 "schema": {
@@ -2571,6 +2397,7 @@
             }
           },
           "404": {
+            "description": "Not Found - Resource does not exist",
             "content": {
               "application/json": {
                 "schema": {
@@ -2580,6 +2407,7 @@
             }
           },
           "422": {
+            "description": "Unprocessable Entity - Validation failed",
             "content": {
               "application/json": {
                 "schema": {
@@ -2589,6 +2417,7 @@
             }
           },
           "500": {
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -2598,6 +2427,7 @@
             }
           },
           "503": {
+            "description": "Service Unavailable",
             "content": {
               "application/json": {
                 "schema": {
@@ -2618,6 +2448,7 @@
         "operationId": "is_organization_admin_dashboard_user_is_user_admin_get",
         "responses": {
           "200": {
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {}
@@ -2636,6 +2467,7 @@
         "operationId": "user_details_ep_dashboard_user_user_details_get",
         "responses": {
           "200": {
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {}
@@ -2665,6 +2497,7 @@
         ],
         "responses": {
           "200": {
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {}
@@ -2672,6 +2505,7 @@
             }
           },
           "422": {
+            "description": "Validation Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -2692,33 +2526,10 @@
         "operationId": "check_user_exists_dashboard_user_check_user_exists_get",
         "responses": {
           "200": {
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {}
-              }
-            }
-          }
-        }
-      }
-    },
-    "/": {
-      "get": {
-        "tags": [
-          "System"
-        ],
-        "summary": "Root",
-        "operationId": "root__get",
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "additionalProperties": {
-                    "type": "string"
-                  },
-                  "type": "object",
-                  "title": "Response Root  Get"
-                }
               }
             }
           }
@@ -2759,122 +2570,46 @@
             },
             "type": "array",
             "title": "Results",
+            "description": "List of results for each ingested memory item.",
             "example": []
           },
           "success_count": {
             "type": "integer",
             "title": "Success Count",
+            "description": "Number of items successfully queued for ingestion.",
             "default": 0,
             "example": 1
           },
           "failed_count": {
             "type": "integer",
             "title": "Failed Count",
+            "description": "Number of items that failed to queue.",
             "default": 0,
             "example": 1
           }
         },
         "type": "object",
-        "title": "AddMemoryResponse"
-      },
-      "ApiKeyCreateRequest": {
-        "properties": {
-          "owner": {
-            "type": "string",
-            "title": "Owner",
-            "example": "<owner>"
-          },
-          "scopes": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Scopes",
-            "example": []
-          },
-          "env": {
-            "type": "string",
-            "pattern": "^(live|test)$",
-            "title": "Env",
-            "default": "live",
-            "example": "<env>"
-          },
-          "prefix": {
-            "type": "string",
-            "minLength": 1,
-            "title": "Prefix",
-            "default": "sk",
-            "example": "<prefix>"
-          }
-        },
-        "type": "object",
-        "required": [
-          "owner"
-        ],
-        "title": "ApiKeyCreateRequest"
-      },
-      "ApiKeyCreateResponse": {
-        "properties": {
-          "api_key_id": {
-            "type": "string",
-            "title": "Api Key Id",
-            "example": "<api_key_id>"
-          },
-          "owner": {
-            "type": "string",
-            "title": "Owner",
-            "example": "<owner>"
-          },
-          "scopes": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Scopes",
-            "example": []
-          },
-          "env": {
-            "type": "string",
-            "title": "Env",
-            "example": "<env>"
-          },
-          "full_api_key": {
-            "type": "string",
-            "title": "Full Api Key",
-            "example": "<full_api_key>"
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Created At",
-            "example": "<created_at>"
-          }
-        },
-        "type": "object",
-        "required": [
-          "api_key_id",
-          "owner",
-          "env",
-          "full_api_key",
-          "created_at"
-        ],
-        "title": "ApiKeyCreateResponse"
+        "title": "AddMemoryResponse",
+        "description": "Response model for add_memory endpoint."
       },
       "ApiKeyInfo": {
         "properties": {
           "api_key_id": {
             "type": "string",
             "title": "Api Key Id",
+            "description": "API key identifier",
             "example": "<api_key_id>"
           },
           "user_email": {
             "type": "string",
             "title": "User Email",
+            "description": "Owner email",
             "example": "<user_email>"
           },
           "user_id": {
             "type": "string",
             "title": "User Id",
+            "description": "User ID",
             "example": "<user_id>"
           },
           "scopes": {
@@ -2883,16 +2618,19 @@
             },
             "type": "array",
             "title": "Scopes",
+            "description": "API key scopes",
             "example": []
           },
           "is_valid": {
             "type": "boolean",
             "title": "Is Valid",
+            "description": "Whether the API key is valid",
             "example": true
           },
           "created_at": {
             "type": "string",
             "title": "Created At",
+            "description": "Creation timestamp",
             "example": "<created_at>"
           }
         },
@@ -2906,82 +2644,52 @@
         ],
         "title": "ApiKeyInfo"
       },
-      "AppSourcesUploadData": {
-        "properties": {
-          "success": {
-            "type": "boolean",
-            "title": "Success",
-            "default": true,
-            "example": true
-          },
-          "message": {
-            "type": "string",
-            "title": "Message",
-            "default": "Upload initiated successfully"
-          },
-          "results": {
-            "items": {
-              "$ref": "#/components/schemas/SourceUploadResultItem"
-            },
-            "type": "array",
-            "title": "Results",
-            "example": []
-          },
-          "success_count": {
-            "type": "integer",
-            "title": "Success Count",
-            "default": 0,
-            "example": 1
-          },
-          "failed_count": {
-            "type": "integer",
-            "title": "Failed Count",
-            "default": 0,
-            "example": 1
-          }
-        },
-        "type": "object",
-        "title": "AppSourcesUploadData"
-      },
       "AttachmentModel": {
         "properties": {
           "id": {
             "type": "string",
             "title": "Id",
+            "description": "Unique identifier for the attachment.",
             "default": "",
-            "example": "<id>"
+            "example": "CortexDoc1234"
           },
           "url": {
             "type": "string",
             "title": "Url",
+            "description": "Public or internal URL referencing the attachment resource.",
             "default": "",
             "example": "<url>"
           },
           "title": {
             "type": "string",
             "title": "Title",
+            "description": "Human-readable title or filename of the attachment.",
             "default": "",
             "example": "<title>"
           },
           "content_type": {
             "type": "string",
             "title": "Content Type",
+            "description": "MIME type of the attachment (e.g., application/pdf).",
             "default": "",
             "example": "<content_type>"
           },
           "content_url": {
             "type": "string",
             "title": "Content Url",
+            "description": "Direct URL for content retrieval when different from the reference URL.",
             "default": "",
             "example": "<content_url>"
           },
           "misc": {
             "additionalProperties": true,
             "type": "object",
-            "title": "Misc"
+            "title": "Misc",
+            "description": "Additional attachment attributes defined by the tenant (free-form)."
           },
           "content": {
-            "$ref": "#/components/schemas/ContentModel"
+            "$ref": "#/components/schemas/ContentModel",
+            "description": "Structured content payload for the attachment when available."
           }
         },
         "type": "object",
@@ -3004,22 +2712,26 @@
             "type": "array",
             "minItems": 1,
             "title": "Memories",
+            "description": "List of memory items to ingest",
             "example": []
           },
           "tenant_id": {
             "type": "string",
             "title": "Tenant Id",
+            "description": "Unique identifier for the tenant/organization",
             "example": "tenant_1234"
           },
           "sub_tenant_id": {
             "type": "string",
             "title": "Sub Tenant Id",
+            "description": "Optional sub-tenant identifier used to organize data within a tenant. If omitted, the default sub-tenant created during tenant setup will be used.",
             "default": "",
             "example": "sub_tenant_4567"
           },
           "upsert": {
             "type": "boolean",
             "title": "Upsert",
+            "description": "If true, update existing sources with the same source_id.",
             "default": true,
             "example": true
           }
@@ -3036,14 +2748,16 @@
           "tenant_id": {
             "type": "string",
             "title": "Tenant Id",
+            "description": "Unique identifier for the tenant/organization",
             "example": "tenant_1234"
           },
           "sub_tenant_id": {
             "type": "string",
             "title": "Sub Tenant Id",
+            "description": "Optional sub-tenant identifier used to organize data within a tenant. If omitted, the default sub-tenant created during tenant setup will be used.",
             "example": "sub_tenant_4567"
           },
-          "id": {
+          "source_id": {
             "anyOf": [
               {
                 "type": "string"
@@ -3053,7 +2767,7 @@
               }
             ],
             "title": "Source Id",
-            "example": "CortexDoc1234"
+            "description": "Optional source ID to filter by (mutually exclusive with chunk_ids)"
           },
           "chunk_ids": {
             "anyOf": [
@@ -3068,6 +2782,7 @@
               }
             ],
             "title": "Chunk Ids",
+            "description": "Optional list of chunk IDs to filter by (mutually exclusive with source_id)",
             "example": [
               "CortexEmbeddings123_0",
               "CortexEmbeddings123_1"
@@ -3085,13 +2800,15 @@
                 "type": "null"
               }
             ],
-            "title": "Output Fields"
+            "title": "Output Fields",
+            "description": "Optional list of fields to return in results (default: chunk_id, source_id, metadata)"
           },
           "limit": {
             "type": "integer",
-            "maximum": 10000.0,
-            "minimum": 1.0,
+            "maximum": 10000,
+            "minimum": 1,
             "title": "Limit",
+            "description": "Maximum number of results to return",
             "default": 100,
             "example": 1
           }
@@ -3108,11 +2825,13 @@
           "tenant_id": {
             "type": "string",
             "title": "Tenant Id",
+            "description": "Unique identifier for the tenant/organization",
             "example": "tenant_1234"
           },
           "sub_tenant_id": {
             "type": "string",
             "title": "Sub Tenant Id",
+            "description": "Optional sub-tenant identifier used to organize data within a tenant. If omitted, the default sub-tenant created during tenant setup will be used.",
             "default": "",
             "example": "sub_tenant_4567"
           },
@@ -3122,6 +2841,7 @@
             },
             "type": "array",
             "title": "Embeddings",
+            "description": "List of raw embedding documents to insert",
             "example": [
               [
                 0.123413,
@@ -3142,6 +2862,7 @@
           "upsert": {
             "type": "boolean",
             "title": "Upsert",
+            "description": "If True, update existing embeddings; if False, insert only",
             "default": false,
             "example": true
           }
@@ -3158,11 +2879,13 @@
           "tenant_id": {
             "type": "string",
             "title": "Tenant Id",
+            "description": "Unique identifier for the tenant/organization",
             "example": "tenant_1234"
           },
           "sub_tenant_id": {
             "type": "string",
             "title": "Sub Tenant Id",
+            "description": "Optional sub-tenant identifier used to organize data within a tenant. If omitted, the default sub-tenant created during tenant setup will be used.",
             "example": "sub_tenant_4567"
           },
           "query_embedding": {
@@ -3171,13 +2894,15 @@
             },
             "type": "array",
             "title": "Query Embedding",
+            "description": "Query embedding vector to search for",
             "example": []
           },
           "limit": {
             "type": "integer",
-            "maximum": 1000.0,
-            "minimum": 1.0,
+            "maximum": 1000,
+            "minimum": 1,
             "title": "Limit",
+            "description": "Maximum number of results to return",
             "default": 10,
             "example": 1
           },
@@ -3190,7 +2915,8 @@
                 "type": "null"
               }
             ],
-            "title": "Filter Expr"
+            "title": "Filter Expr",
+            "description": "Optional Milvus filter expression for additional filtering"
           },
           "output_fields": {
             "anyOf": [
@@ -3204,7 +2930,8 @@
                 "type": "null"
               }
             ],
-            "title": "Output Fields"
+            "title": "Output Fields",
+            "description": "Optional list of fields to return in results (default: chunk_id, source_id, metadata)"
           }
         },
         "type": "object",
@@ -3215,73 +2942,37 @@
         ],
         "title": "Body_search_raw_embeddings_endpoint_embeddings_search_raw_embeddings_post"
       },
-      "Body_upload_app_ingestion_upload_app_post": {
+      "Body_upload_knowledge_ingestion_upload_knowledge_post": {
         "properties": {
-          "app_sources": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/SourceModel-Input"
-              },
-              {
-                "items": {
-                  "$ref": "#/components/schemas/SourceModel-Input"
-                },
-                "type": "array"
-              }
-            ],
-            "title": "App Sources"
-          },
           "tenant_id": {
             "type": "string",
             "title": "Tenant Id",
+            "description": "Unique identifier for the tenant/organization",
             "example": "tenant_1234"
           },
           "sub_tenant_id": {
             "type": "string",
             "title": "Sub Tenant Id",
+            "description": "Optional sub-tenant identifier used to organize data within a tenant. If omitted, the default sub-tenant created during tenant setup will be used.",
             "default": "",
             "example": "sub_tenant_4567"
           },
           "upsert": {
             "type": "boolean",
             "title": "Upsert",
+            "description": "If true, update existing sources with the same id.",
             "default": true,
             "example": true
-          }
-        },
-        "type": "object",
-        "required": [
-          "app_sources",
-          "tenant_id"
-        ],
-        "title": "Body_upload_app_ingestion_upload_app_post"
-      },
-      "Body_upload_document_ingestion_upload_document_post": {
-        "properties": {
+          },
           "files": {
             "items": {
               "type": "string",
               "format": "binary"
             },
             "type": "array",
-            "title": "Files"
-          },
-          "tenant_id": {
-            "type": "string",
-            "title": "Tenant Id",
-            "example": "tenant_1234"
-          },
-          "sub_tenant_id": {
-            "type": "string",
-            "title": "Sub Tenant Id",
-            "default": "",
-            "example": "sub_tenant_4567"
-          },
-          "upsert": {
-            "type": "boolean",
-            "title": "Upsert",
-            "default": true,
-            "example": true
+            "title": "Files",
+            "description": "Files to upload (documents). Omit or leave empty when only sending app_sources.",
+            "default": []
           },
           "file_metadata": {
             "anyOf": [
@@ -3292,26 +2983,40 @@
                 "type": "null"
               }
             ],
-            "title": "File Metadata"
+            "title": "File Metadata",
+            "description": "JSON array of file metadata objects; length must match files when provided."
+          },
+          "app_sources": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "App Sources",
+            "description": "JSON: single source object or array of app-generated sources to index. Omit when only uploading files."
           }
         },
         "type": "object",
         "required": [
-          "files",
           "tenant_id"
         ],
-        "title": "Body_upload_document_ingestion_upload_document_post"
+        "title": "Body_upload_knowledge_ingestion_upload_knowledge_post"
       },
       "CollectionStats": {
         "properties": {
           "row_count": {
             "type": "integer",
             "title": "Row Count",
+            "description": "Number of rows in the collection",
             "example": 1
           },
           "dimensions": {
             "type": "integer",
             "title": "Dimensions",
+            "description": "Number of dimensions in the collection",
             "example": 1
           }
         },
@@ -3327,24 +3032,28 @@
           "text": {
             "type": "string",
             "title": "Text",
+            "description": "Plain text content extracted or provided for indexing.",
             "default": "",
             "example": "<text>"
           },
           "html_base64": {
             "type": "string",
             "title": "Html Base64",
+            "description": "Base64-encoded HTML content preserving structure and formatting.",
             "default": "",
             "example": "<html_base64>"
           },
           "csv_base64": {
             "type": "string",
             "title": "Csv Base64",
+            "description": "Base64-encoded CSV data for tabular content ingestion.",
             "default": "",
             "example": "<csv_base64>"
           },
           "markdown": {
             "type": "string",
             "title": "Markdown",
+            "description": "Raw Markdown content to be indexed as rich text.",
             "default": "",
             "example": "<markdown>"
           },
@@ -3354,7 +3063,8 @@
               "type": "object"
             },
             "type": "array",
-            "title": "Files"
+            "title": "Files",
+            "description": "List of file descriptors associated with the source (e.g., filenames, sizes)."
           },
           "layout": {
             "items": {
@@ -3363,6 +3073,7 @@
             },
             "type": "array",
             "title": "Layout",
+            "description": "Optional layout metadata such as sections or blocks to guide chunking.",
             "example": []
           }
         },
@@ -3374,45 +3085,53 @@
           "name": {
             "type": "string",
             "title": "Name",
+            "description": "Property name (used as field name in Milvus)",
             "example": "<name>"
           },
           "data_type": {
             "$ref": "#/components/schemas/MilvusDataType",
+            "description": "Milvus data type. Use VARCHAR for text fields that need embeddings.",
             "default": "VARCHAR"
           },
           "max_length": {
             "type": "integer",
             "title": "Max Length",
+            "description": "Max length for VARCHAR fields. Increase for longer text content.",
             "default": 1024,
             "example": 1
           },
           "enable_analyzer": {
             "type": "boolean",
             "title": "Enable Analyzer",
+            "description": "Enable text analyzer for full-text search capabilities",
             "default": false,
             "example": true
           },
           "enable_match": {
             "type": "boolean",
             "title": "Enable Match",
+            "description": "Enable TEXT_MATCH filtering on this field",
             "default": false,
             "example": true
           },
           "enable_dense_embedding": {
             "type": "boolean",
             "title": "Enable Dense Embedding",
+            "description": "Create a dense embedding field (FLOAT_VECTOR) for semantic similarity search. Only applicable to VARCHAR fields. A corresponding '{name}_embedding' field will be created.",
             "default": false,
             "example": true
           },
           "enable_sparse_embedding": {
             "type": "boolean",
             "title": "Enable Sparse Embedding",
+            "description": "Create a sparse embedding field (BM25) for keyword search. Only applicable to VARCHAR fields. A corresponding '{name}_sparse' field and BM25 function will be created.",
             "default": false,
             "example": true
           },
           "nullable": {
             "type": "boolean",
             "title": "Nullable",
+            "description": "Whether field can be null",
             "default": true,
             "example": true
           }
@@ -3421,7 +3140,8 @@
         "required": [
           "name"
         ],
-        "title": "CustomPropertyDefinition"
+        "title": "CustomPropertyDefinition",
+        "description": "Definition for custom/dynamic properties on a collection.\n\nUse this to define tenant metadata fields that can enhance search capabilities:\n- enable_dense_embedding: Creates a dense vector field for semantic similarity search\n- enable_sparse_embedding: Creates a sparse vector field for BM25 keyword search\n\nExample:\n    CustomPropertyDefinition(\n        name=\"product_description\",\n        data_type=MilvusDataType.VARCHAR,\n        max_length=4096,\n        enable_dense_embedding=True,  # Enables semantic search on this field\n        enable_sparse_embedding=True,  # Enables keyword search on this field\n    )"
       },
       "DashboardApisResponse": {
         "properties": {
@@ -3431,16 +3151,19 @@
             },
             "type": "array",
             "title": "Api Keys",
+            "description": "List of API keys",
             "example": []
           },
           "count": {
             "type": "integer",
             "title": "Count",
+            "description": "Total number of API keys",
             "example": 1
           },
           "message": {
             "type": "string",
             "title": "Message",
+            "description": "Response message",
             "default": "Successfully retrieved API keys"
           }
         },
@@ -3454,19 +3177,22 @@
         "properties": {
           "sources": {
             "items": {
-              "$ref": "#/components/schemas/SourceModel-Output"
+              "$ref": "#/components/schemas/SourceModel"
             },
             "type": "array",
-            "title": "Sources"
+            "title": "Sources",
+            "description": "List of sources"
           },
           "count": {
             "type": "integer",
             "title": "Count",
+            "description": "Total number of sources",
             "example": 1
           },
           "message": {
             "type": "string",
             "title": "Message",
+            "description": "Response message",
             "default": "Successfully retrieved sources"
           }
         },
@@ -3484,16 +3210,19 @@
             },
             "type": "array",
             "title": "Tenants",
+            "description": "List of tenants",
             "example": []
           },
           "count": {
             "type": "integer",
             "title": "Count",
+            "description": "Total number of tenants",
             "example": 1
           },
           "message": {
             "type": "string",
             "title": "Message",
+            "description": "Response message",
             "default": "Successfully retrieved tenants"
           }
         },
@@ -3508,11 +3237,13 @@
           "delete_count": {
             "type": "integer",
             "title": "Delete Count",
+            "description": "Number of entities deleted",
             "example": 1
           },
           "success": {
             "type": "boolean",
             "title": "Success",
+            "description": "Whether delete succeeded",
             "default": true,
             "example": true
           },
@@ -3525,26 +3256,30 @@
                 "type": "null"
               }
             ],
-            "title": "Error"
+            "title": "Error",
+            "description": "Error message if failed"
           }
         },
         "type": "object",
         "required": [
           "delete_count"
         ],
-        "title": "DeleteResult"
+        "title": "DeleteResult",
+        "description": "Result of a delete operation."
       },
       "DeleteUserMemoryResponse": {
         "properties": {
           "success": {
             "type": "boolean",
             "title": "Success",
+            "description": "Indicates whether the memory deletion operation was successful",
             "default": true,
             "example": true
           },
           "user_memory_deleted": {
             "type": "boolean",
             "title": "User Memory Deleted",
+            "description": "Confirms whether the specific memory was successfully deleted",
             "example": true
           }
         },
@@ -3552,29 +3287,34 @@
         "required": [
           "user_memory_deleted"
         ],
-        "title": "DeleteUserMemoryResponse"
+        "title": "DeleteUserMemoryResponse",
+        "description": "Response model for deleting a user memory."
       },
       "Entity": {
         "properties": {
           "name": {
             "type": "string",
             "title": "Name",
+            "description": "Normalized entity name",
             "example": "<name>"
           },
           "type": {
             "type": "string",
             "title": "Type",
+            "description": "PERSON, ORGANIZATION, PROJECT, PRODUCT, ERROR_CODE, etc.",
             "example": "<type>"
           },
           "namespace": {
             "type": "string",
             "title": "Namespace",
+            "description": "Context category like 'employees', 'projects'",
             "default": "default",
             "example": "<namespace>"
           },
           "entity_id": {
             "type": "string",
             "title": "Entity Id",
+            "description": "Internal unique entity ID from graph database",
             "example": "<entity_id>"
           },
           "identifier": {
@@ -3586,7 +3326,8 @@
                 "type": "null"
               }
             ],
-            "title": "Identifier"
+            "title": "Identifier",
+            "description": "Unique ID like email, employee_id, URL"
           }
         },
         "type": "object",
@@ -3632,13 +3373,49 @@
           "url",
           "both"
         ],
-        "title": "FetchMode"
+        "title": "FetchMode",
+        "description": "Mode for fetching file content."
+      },
+      "ForcefulRelationsPayload": {
+        "properties": {
+          "cortex_source_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cortex Source Ids",
+            "description": "Cortex source IDs to forcefully relate to the uploaded source."
+          },
+          "properties": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Properties",
+            "description": "Optional properties to attach to the forceful relation."
+          }
+        },
+        "type": "object",
+        "title": "ForcefulRelationsPayload"
       },
       "FullTextSearchRequest": {
         "properties": {
           "tenant_id": {
             "type": "string",
             "title": "Tenant Id",
+            "description": "Unique identifier for the tenant/organization",
             "example": "tenant_1234"
           },
           "sub_tenant_id": {
@@ -3651,26 +3428,31 @@
               }
             ],
             "title": "Sub Tenant Id",
+            "description": "Optional sub-tenant identifier used to organize data within a tenant. If omitted, the default sub-tenant created during tenant setup will be used.",
             "example": "sub_tenant_4567"
           },
           "query": {
             "type": "string",
             "title": "Query",
+            "description": "Search terms to find in your content",
             "example": "John Smith Jake"
           },
           "operator": {
             "$ref": "#/components/schemas/BM25OperatorType",
+            "description": "How to combine search terms (OR or AND)",
             "default": "or",
             "example": "and"
           },
-          "max_chunks": {
+          "max_results": {
             "type": "integer",
-            "title": "Max Chunks",
+            "title": "Max Results",
+            "description": "Maximum number of results to return",
             "default": 10,
             "example": 1
           },
           "search_mode": {
             "$ref": "#/components/schemas/SearchMode",
+            "description": "What to search: 'sources' for documents or 'memories' for user memories",
             "default": "sources"
           }
         },
@@ -3711,7 +3493,8 @@
           }
         },
         "type": "object",
-        "title": "GraphContext"
+        "title": "GraphContext",
+        "description": "Graph context containing query-based paths and chunk-based relation paths."
       },
       "HTTPValidationError": {
         "properties": {
@@ -3732,6 +3515,7 @@
           "tenant_id": {
             "type": "string",
             "title": "Tenant Id",
+            "description": "Unique identifier for the tenant/organization",
             "example": "tenant_1234"
           },
           "sub_tenant_id": {
@@ -3744,14 +3528,16 @@
               }
             ],
             "title": "Sub Tenant Id",
+            "description": "Optional sub-tenant identifier used to organize data within a tenant. If omitted, the default sub-tenant created during tenant setup will be used.",
             "example": "sub_tenant_4567"
           },
           "query": {
             "type": "string",
             "title": "Query",
+            "description": "Search terms to find relevant content",
             "example": "Which mode does user prefer"
           },
-          "max_chunks": {
+          "max_results": {
             "anyOf": [
               {
                 "type": "integer"
@@ -3760,10 +3546,12 @@
                 "type": "null"
               }
             ],
-            "title": "Max Chunks"
+            "title": "Max Results",
+            "description": "Maximum number of results to return"
           },
           "mode": {
             "$ref": "#/components/schemas/RetrieveMode",
+            "description": "Retrieval mode to use ('fast' or 'accurate')",
             "default": "fast"
           },
           "alpha": {
@@ -3776,21 +3564,31 @@
               }
             ],
             "title": "Alpha",
+            "description": "Search ranking algorithm parameter (0.0-1.0 or 'auto')",
             "default": 0.8
           },
           "recency_bias": {
             "type": "number",
             "title": "Recency Bias",
-            "default": 0.0,
+            "description": "Preference for newer content (0.0 = no bias, 1.0 =             strong recency preference)",
+            "default": 0,
             "example": 1.0
+          },
+          "personalise_recall": {
+            "type": "boolean",
+            "title": "Personalise Recall",
+            "description": "Enable personalized search results based on user preferences",
+            "default": false,
+            "example": true
           },
           "graph_context": {
             "type": "boolean",
             "title": "Graph Context",
+            "description": "Enable graph context for search results",
             "default": false,
             "example": true
           },
-          "extra_context": {
+          "additional_context": {
             "anyOf": [
               {
                 "type": "string"
@@ -3799,11 +3597,32 @@
                 "type": "null"
               }
             ],
-            "title": "Extra Context"
+            "title": "Additional Context",
+            "description": "Additional context provided by the user to guide retrieval"
           },
           "search_mode": {
             "$ref": "#/components/schemas/SearchMode",
+            "description": "What to search: 'sources' for documents or 'memories' for user memories",
             "default": "sources"
+          },
+          "metadata_filters": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Metadata Filters",
+            "description": "Optional key-value pairs to filter search results by tenant metadata fields. Keys must match fields defined in tenant_metadata_schema during tenant creation. Supports exact match filtering on indexed metadata fields. Example: {'category': 'engineering', 'priority': 'high'}",
+            "examples": [
+              {
+                "category": "engineering",
+                "department": "R&D"
+              }
+            ]
           }
         },
         "type": "object",
@@ -3854,6 +3673,7 @@
           "insert_count": {
             "type": "integer",
             "title": "Insert Count",
+            "description": "Number of entities inserted",
             "example": 1
           },
           "ids": {
@@ -3862,11 +3682,16 @@
             },
             "type": "array",
             "title": "Ids",
-            "example": []
+            "description": "Inserted entity IDs",
+            "example": [
+              "CortexDoc1234",
+              "CortexDoc4567"
+            ]
           },
           "success": {
             "type": "boolean",
             "title": "Success",
+            "description": "Whether insert succeeded",
             "default": true,
             "example": true
           },
@@ -3879,32 +3704,31 @@
                 "type": "null"
               }
             ],
-            "title": "Error"
+            "title": "Error",
+            "description": "Error message if failed"
           }
         },
         "type": "object",
         "required": [
           "insert_count"
         ],
-        "title": "InsertResult"
+        "title": "InsertResult",
+        "description": "Result of an insert operation."
       },
-      "ListSourcesByIdRequest": {
+      "ListContentKind": {
+        "type": "string",
+        "enum": [
+          "knowledge",
+          "memories"
+        ],
+        "title": "ListContentKind"
+      },
+      "ListContentRequest": {
         "properties": {
-          "ids": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "minItems": 1,
-            "title": "Source Ids",
-            "example": [
-              "CortexDoc1234",
-              "CortexDoc4567"
-            ]
-          },
           "tenant_id": {
             "type": "string",
             "title": "Tenant Id",
+            "description": "Tenant ID",
             "example": "tenant_1234"
           },
           "sub_tenant_id": {
@@ -3917,19 +3741,72 @@
               }
             ],
             "title": "Sub Tenant Id",
+            "description": "Sub-tenant ID",
             "example": "sub_tenant_4567"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/ListContentKind",
+            "description": "Whether to list normal sources or user memories.",
+            "default": "knowledge"
+          },
+          "source_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Ids",
+            "description": "Optional list of IDs to fetch. If omitted, returns all."
           }
         },
         "type": "object",
         "required": [
-          "ids",
           "tenant_id"
         ],
-        "title": "ListSourcesByIdRequest"
+        "title": "ListContentRequest",
+        "description": "Unified request model for listing either sources or user memories.\n\nIf `source_ids` is provided and non-empty, only those IDs are returned.\nOtherwise, all items for the tenant/sub-tenant scope are returned."
+      },
+      "ListUserMemoriesResponse": {
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "Success",
+            "description": "Indicates whether the memory listing operation was successful",
+            "default": true,
+            "example": true
+          },
+          "user_memories": {
+            "items": {
+              "$ref": "#/components/schemas/UserMemory"
+            },
+            "type": "array",
+            "title": "User Memories",
+            "description": "Array of all user memories associated with your tenant",
+            "example": [
+              {
+                "memory_id": "memory_1234",
+                "memory_content": "I prefer detailed technical explanations and works in the Pacific timezone"
+              },
+              {
+                "memory_id": "memory_4567",
+                "memory_content": "I prefer dark mode"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "ListUserMemoriesResponse",
+        "description": "Response model for listing all user memories."
       },
       "MemoryItem": {
         "properties": {
-          "id": {
+          "source_id": {
             "anyOf": [
               {
                 "type": "string"
@@ -3939,7 +3816,7 @@
               }
             ],
             "title": "Source Id",
-            "example": "CortexDoc1234"
+            "description": "Optional unique identifier. Auto-generated if not provided."
           },
           "title": {
             "anyOf": [
@@ -3950,7 +3827,8 @@
                 "type": "null"
               }
             ],
-            "title": "Title"
+            "title": "Title",
+            "description": "Display title for this memory item."
           },
           "text": {
             "anyOf": [
@@ -3962,6 +3840,7 @@
               }
             ],
             "title": "Text",
+            "description": "Raw text or markdown content to be indexed.",
             "examples": [
               "# Introduction\n\nThis is the document content."
             ]
@@ -3978,17 +3857,20 @@
                 "type": "null"
               }
             ],
-            "title": "User Assistant Pairs"
+            "title": "User Assistant Pairs",
+            "description": "Array of user/assistant conversation pairs to store as memory."
           },
           "is_markdown": {
             "type": "boolean",
             "title": "Is Markdown",
+            "description": "Whether the text is markdown formatted.",
             "default": false,
             "example": true
           },
           "infer": {
             "type": "boolean",
             "title": "Infer",
+            "description": "If true, process and extract additional insights/inferences from the contentbefore indexingUseful for extracting implicit information from conversations",
             "default": false,
             "example": true
           },
@@ -4001,11 +3883,13 @@
                 "type": "null"
               }
             ],
-            "title": "Custom Instructions"
+            "title": "Custom Instructions",
+            "description": "Custom instructions to guide inference processing."
           },
           "user_name": {
             "type": "string",
             "title": "User Name",
+            "description": "User's name for personalization in conversation pairs.",
             "default": "User",
             "example": "John Doe"
           },
@@ -4018,7 +3902,8 @@
                 "type": "null"
               }
             ],
-            "title": "Expiry Time"
+            "title": "Expiry Time",
+            "description": "Optional TTL in seconds for this memory."
           },
           "tenant_metadata": {
             "anyOf": [
@@ -4030,6 +3915,7 @@
               }
             ],
             "title": "Tenant Metadata",
+            "description": "JSON string containing tenant-level document metadata (e.g., department, compliance_tag)\n\nExample: > \"{\"department\":\"Finance\",\"compliance_tag\":\"GDPR\"}\"\n\n",
             "default": ""
           },
           "document_metadata": {
@@ -4042,18 +3928,32 @@
               }
             ],
             "title": "Document Metadata",
+            "description": "JSON string containing document-specific metadata (e.g., title, author, file_id). If file_id is not provided, the system will generate an ID automatically.\n\nExample: > \"{\"title\":\"Q1 Report.pdf\",\"author\":\"Alice Smith\",\"file_id\":\"custom_file_123\"}\"\n\n\n",
             "default": ""
+          },
+          "relations": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ForcefulRelationsPayload"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Forcefully connect 2 sources based on cortex source ids or common properties."
           }
         },
         "type": "object",
-        "title": "MemoryItem"
+        "title": "MemoryItem",
+        "description": "Represents a single memory item for ingestion.\nSupports raw text, markdown, and user/assistant conversation pairs."
       },
       "MemoryResultItem": {
         "properties": {
-          "id": {
+          "source_id": {
             "type": "string",
             "title": "Source Id",
-            "example": "CortexDoc1234"
+            "description": "Unique identifier for the ingested source.",
+            "example": "<source_id>"
           },
           "title": {
             "anyOf": [
@@ -4064,15 +3964,18 @@
                 "type": "null"
               }
             ],
-            "title": "Title"
+            "title": "Title",
+            "description": "Title of the memory if provided."
           },
           "status": {
             "$ref": "#/components/schemas/SourceStatus",
+            "description": "Initial processing status.",
             "default": "queued"
           },
           "infer": {
             "type": "boolean",
             "title": "Infer",
+            "description": "Whether inference was requested for this memory.",
             "default": false,
             "example": true
           },
@@ -4085,14 +3988,16 @@
                 "type": "null"
               }
             ],
-            "title": "Error"
+            "title": "Error",
+            "description": "Error message if ingestion failed."
           }
         },
         "type": "object",
         "required": [
-          "id"
+          "source_id"
         ],
-        "title": "MemoryResultItem"
+        "title": "MemoryResultItem",
+        "description": "Result for a single ingested memory item."
       },
       "MilvusDataType": {
         "type": "string",
@@ -4110,79 +4015,8 @@
           "FLOAT_VECTOR",
           "SPARSE_FLOAT_VECTOR"
         ],
-        "title": "MilvusDataType"
-      },
-      "OnboardUserRequest": {
-        "properties": {
-          "email": {
-            "type": "string",
-            "format": "email",
-            "title": "Email",
-            "example": "<email>"
-          },
-          "id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Id"
-          },
-          "name": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Name"
-          }
-        },
-        "type": "object",
-        "required": [
-          "email"
-        ],
-        "title": "OnboardUserRequest"
-      },
-      "OnboardUserResponse": {
-        "properties": {
-          "status": {
-            "type": "string",
-            "title": "Status"
-          },
-          "user_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "User Id"
-          },
-          "api_key": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Api Key"
-          }
-        },
-        "type": "object",
-        "required": [
-          "status"
-        ],
-        "title": "OnboardUserResponse"
+        "title": "MilvusDataType",
+        "description": "Milvus data types mapped from Weaviate schema."
       },
       "PathTriplet": {
         "properties": {
@@ -4206,10 +4040,11 @@
       },
       "ProcessingStatus": {
         "properties": {
-          "id": {
+          "file_id": {
             "type": "string",
             "title": "File Id",
-            "example": "CortexDoc1234"
+            "description": "Identifier for the file whose status is being retrieved",
+            "example": "<file_id>"
           },
           "indexing_status": {
             "type": "string",
@@ -4222,11 +4057,13 @@
               "success"
             ],
             "title": "Indexing Status",
+            "description": "Current status of the file. Possible values are 'queued', 'processing', 'completed', 'errored', 'graph_creation', 'success'. 'graph_creation' indicates the file is indexed but the knowledge graph is still being created. 'success' is an alias for 'completed'.",
             "example": "<indexing_status>"
           },
           "error_code": {
             "type": "string",
             "title": "Error Code",
+            "description": "Error code for the file. You may share this code with us to help us diagnose and resolve the issue.",
             "default": "",
             "example": "<error_code>"
           },
@@ -4239,12 +4076,13 @@
           "message": {
             "type": "string",
             "title": "Message",
+            "description": "Detailed status message about the processing operation",
             "default": "Processing status retrieved successfully"
           }
         },
         "type": "object",
         "required": [
-          "id",
+          "file_id",
           "indexing_status"
         ],
         "title": "ProcessingStatus"
@@ -4254,6 +4092,7 @@
           "tenant_id": {
             "type": "string",
             "title": "Tenant Id",
+            "description": "Unique identifier for the tenant/organization",
             "example": "tenant_1234"
           },
           "sub_tenant_id": {
@@ -4266,41 +4105,48 @@
               }
             ],
             "title": "Sub Tenant Id",
+            "description": "Optional sub-tenant identifier used to organize data within a tenant. If omitted, the default sub-tenant created during tenant setup will be used.",
             "example": "sub_tenant_4567"
           },
           "question": {
             "type": "string",
             "minLength": 1,
             "title": "Question",
+            "description": "The question to answer based on indexed sources",
             "example": "What is Cortex AI"
           },
           "max_chunks": {
             "type": "integer",
-            "maximum": 50.0,
-            "minimum": 1.0,
+            "maximum": 50,
+            "minimum": 1,
             "title": "Max Chunks",
+            "description": "Maximum number of context chunks to retrieve",
             "default": 10,
             "example": 1
           },
           "mode": {
             "$ref": "#/components/schemas/RetrieveMode",
+            "description": "Retrieval mode: 'fast' for single query, 'accurate' for multi-query with reranking",
             "default": "fast"
           },
           "alpha": {
             "type": "number",
-            "maximum": 1.0,
-            "minimum": 0.0,
+            "maximum": 1,
+            "minimum": 0,
             "title": "Alpha",
+            "description": "Hybrid search alpha (0.0 = sparse/keyword, 1.0 = dense/semantic)",
             "default": 0.8,
             "example": 1.0
           },
           "search_mode": {
             "$ref": "#/components/schemas/SearchMode",
+            "description": "What to search: 'sources' for documents or 'memories' for user memories",
             "default": "sources"
           },
           "include_graph_context": {
             "type": "boolean",
             "title": "Include Graph Context",
+            "description": "Whether to include knowledge graph context for enhanced answers",
             "default": true,
             "example": true
           },
@@ -4313,10 +4159,12 @@
                 "type": "null"
               }
             ],
-            "title": "Extra Context"
+            "title": "Extra Context",
+            "description": "Additional context to guide retrieval and answer generation"
           },
           "llm_provider": {
             "$ref": "#/components/schemas/SupportedLLMProviders",
+            "description": "LLM provider for answer generation",
             "default": "groq"
           },
           "model": {
@@ -4328,21 +4176,24 @@
                 "type": "null"
               }
             ],
-            "title": "Model"
+            "title": "Model",
+            "description": "Specific model to use (defaults to provider's default model)"
           },
           "temperature": {
             "type": "number",
-            "maximum": 2.0,
-            "minimum": 0.0,
+            "maximum": 2,
+            "minimum": 0,
             "title": "Temperature",
+            "description": "LLM temperature for answer generation (lower = more focused)",
             "default": 0.3,
             "example": 1.0
           },
           "max_tokens": {
             "type": "integer",
-            "maximum": 16000.0,
-            "minimum": 100.0,
+            "maximum": 16000,
+            "minimum": 100,
             "title": "Max Tokens",
+            "description": "Maximum tokens for the generated answer",
             "default": 4096,
             "example": 1
           }
@@ -4352,7 +4203,8 @@
           "tenant_id",
           "question"
         ],
-        "title": "QnASearchRequest"
+        "title": "QnASearchRequest",
+        "description": "Request model for the QnA search API."
       },
       "QnASearchResponse": {
         "properties": {
@@ -4365,6 +4217,7 @@
           "answer": {
             "type": "string",
             "title": "Answer",
+            "description": "The AI-generated answer based on retrieved context",
             "example": "<answer>"
           },
           "chunks": {
@@ -4373,10 +4226,12 @@
             },
             "type": "array",
             "title": "Chunks",
+            "description": "Retrieved context chunks used to generate the answer",
             "example": []
           },
           "graph_context": {
-            "$ref": "#/components/schemas/GraphContext"
+            "$ref": "#/components/schemas/GraphContext",
+            "description": "Knowledge graph context (entity paths and chunk relations)"
           },
           "model_used": {
             "anyOf": [
@@ -4387,33 +4242,38 @@
                 "type": "null"
               }
             ],
-            "title": "Model Used"
+            "title": "Model Used",
+            "description": "The LLM model used for answer generation"
           },
           "timing": {
             "additionalProperties": {
               "type": "number"
             },
             "type": "object",
-            "title": "Timing"
+            "title": "Timing",
+            "description": "Timing information (retrieval_ms, answer_generation_ms, total_ms)"
           }
         },
         "type": "object",
         "required": [
           "answer"
         ],
-        "title": "QnASearchResponse"
+        "title": "QnASearchResponse",
+        "description": "Response model for the QnA search API."
       },
       "RawEmbeddingDocument": {
         "properties": {
-          "id": {
+          "source_id": {
             "type": "string",
             "title": "Source Id",
-            "example": "CortexDoc1234"
+            "description": "Source identifier for the embedding",
+            "example": "<source_id>"
           },
           "metadata": {
             "additionalProperties": true,
             "type": "object",
-            "title": "Metadata"
+            "title": "Metadata",
+            "description": "Metadata to store"
           },
           "embeddings": {
             "items": {
@@ -4421,6 +4281,7 @@
             },
             "type": "array",
             "title": "Embeddings",
+            "description": "Embedding payloads containing ids and vectors",
             "example": [
               [
                 0.123413,
@@ -4441,17 +4302,19 @@
         },
         "type": "object",
         "required": [
-          "id",
+          "source_id",
           "embeddings"
         ],
-        "title": "RawEmbeddingDocument"
+        "title": "RawEmbeddingDocument",
+        "description": "A raw embedding document for direct insert/upsert operations."
       },
       "RawEmbeddingSearchResult": {
         "properties": {
-          "id": {
+          "source_id": {
             "type": "string",
             "title": "Source Id",
-            "example": "CortexDoc1234"
+            "description": "Source identifier",
+            "example": "<source_id>"
           },
           "embedding": {
             "anyOf": [
@@ -4461,18 +4324,21 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "description": "Embedding payload with chunk id and vector (if set)"
           },
           "score": {
             "type": "number",
             "title": "Score",
-            "default": 0.0,
+            "description": "Similarity score",
+            "default": 0,
             "example": 1.0
           },
           "distance": {
             "type": "number",
             "title": "Distance",
-            "default": 0.0,
+            "description": "Vector distance",
+            "default": 0,
             "example": 1.0
           },
           "metadata": {
@@ -4485,20 +4351,23 @@
                 "type": "null"
               }
             ],
-            "title": "Metadata"
+            "title": "Metadata",
+            "description": "Metadata associated with the embedding"
           }
         },
         "type": "object",
         "required": [
-          "id"
+          "source_id"
         ],
-        "title": "RawEmbeddingSearchResult"
+        "title": "RawEmbeddingSearchResult",
+        "description": "Search result for raw embedding collections."
       },
       "RawEmbeddingVector": {
         "properties": {
           "chunk_id": {
             "type": "string",
             "title": "Chunk Id",
+            "description": "Primary key / chunk identifier",
             "example": "<chunk_id>"
           },
           "embedding": {
@@ -4507,6 +4376,7 @@
             },
             "type": "array",
             "title": "Embedding",
+            "description": "Embedding vector",
             "example": []
           }
         },
@@ -4515,30 +4385,35 @@
           "chunk_id",
           "embedding"
         ],
-        "title": "RawEmbeddingVector"
+        "title": "RawEmbeddingVector",
+        "description": "Embedding payload containing the chunk identifier and vector."
       },
       "RelationEvidence": {
         "properties": {
           "canonical_predicate": {
             "type": "string",
             "title": "Canonical Predicate",
+            "description": "Relationship phrase like 'works for', 'reports to'",
             "example": "<canonical_predicate>"
           },
           "raw_predicate": {
             "type": "string",
             "title": "Raw Predicate",
+            "description": "Original predicate from text",
             "example": "<raw_predicate>"
           },
           "context": {
             "type": "string",
             "title": "Context",
+            "description": "Rich contextual description of the relationship with surrounding information, details about how/why/when, and any relevant background. Should be comprehensive enough to understand the relationship without referring back to source.",
             "example": "<context>"
           },
           "confidence": {
             "type": "number",
-            "maximum": 1.0,
-            "minimum": 0.0,
+            "maximum": 1,
+            "minimum": 0,
             "title": "Confidence",
+            "description": "Confidence score",
             "default": 0.8,
             "example": 1.0
           },
@@ -4551,17 +4426,20 @@
                 "type": "null"
               }
             ],
-            "title": "Temporal Details"
+            "title": "Temporal Details",
+            "description": "Temporal timing information extracted from text (e.g., 'last week', 'in 2023', 'yesterday')"
           },
           "timestamp": {
             "type": "string",
             "format": "date-time",
             "title": "Timestamp",
+            "description": "Timestamp when this relation was introduced",
             "example": "<timestamp>"
           },
           "relationship_id": {
             "type": "string",
             "title": "Relationship Id",
+            "description": "Unique ID for this relationship from graph database",
             "example": "<relationship_id>"
           },
           "chunk_id": {
@@ -4573,7 +4451,8 @@
                 "type": "null"
               }
             ],
-            "title": "Chunk Id"
+            "title": "Chunk Id",
+            "description": "ID of the chunk this relation was extracted from"
           },
           "source_entity_id": {
             "anyOf": [
@@ -4584,7 +4463,8 @@
                 "type": "null"
               }
             ],
-            "title": "Source Entity Id"
+            "title": "Source Entity Id",
+            "description": "The entity ID of source node"
           },
           "target_entity_id": {
             "anyOf": [
@@ -4595,7 +4475,8 @@
                 "type": "null"
               }
             ],
-            "title": "Target Entity Id"
+            "title": "Target Entity Id",
+            "description": "The entity ID of target node"
           }
         },
         "type": "object",
@@ -4605,7 +4486,8 @@
           "context",
           "relationship_id"
         ],
-        "title": "RelationEvidence"
+        "title": "RelationEvidence",
+        "description": "Single piece of evidence for a relationship between two entities"
       },
       "RetrievalResult": {
         "properties": {
@@ -4619,16 +4501,25 @@
           },
           "graph_context": {
             "$ref": "#/components/schemas/GraphContext"
+          },
+          "additional_context": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/VectorStoreChunk"
+            },
+            "type": "object",
+            "title": "Additional Context",
+            "description": "Map of chunk_uuid to VectorStoreChunk for extra context from forcefully related sources. Use chunk.extra_context_ids to look up chunks: extra_context[id] for id in chunk.extra_context_ids."
           }
         },
         "type": "object",
-        "title": "RetrievalResult"
+        "title": "RetrievalResult",
+        "description": "Result of a hybrid search retrieval operation."
       },
       "RetrieveMode": {
         "type": "string",
         "enum": [
           "fast",
-          "accurate"
+          "thinking"
         ],
         "title": "RetrieveMode"
       },
@@ -4667,7 +4558,8 @@
                 "type": "null"
               }
             ],
-            "title": "Group Id"
+            "title": "Group Id",
+            "description": "Path group identifier (e.g., 'p_0') for chunk mapping"
           }
         },
         "type": "object",
@@ -4683,7 +4575,8 @@
           "sources",
           "memories"
         ],
-        "title": "SearchMode"
+        "title": "SearchMode",
+        "description": "Search mode to specify what type of content to search."
       },
       "SourceDeleteRequest": {
         "properties": {
@@ -4697,26 +4590,25 @@
             "title": "Sub Tenant Id",
             "example": "sub_tenant_4567"
           },
-          "ids": {
+          "source_ids": {
             "items": {
               "type": "string"
             },
             "type": "array",
             "minItems": 1,
             "title": "Source Ids",
-            "example": [
-              "CortexDoc1234",
-              "CortexDoc4567"
-            ]
+            "description": "List of source IDs to delete.",
+            "example": []
           }
         },
         "type": "object",
         "required": [
           "tenant_id",
           "sub_tenant_id",
-          "ids"
+          "source_ids"
         ],
-        "title": "SourceDeleteRequest"
+        "title": "SourceDeleteRequest",
+        "description": "Request to delete sources by their IDs."
       },
       "SourceDeleteResponse": {
         "properties": {
@@ -4742,23 +4634,27 @@
           "deleted_count": {
             "type": "integer",
             "title": "Deleted Count",
+            "description": "Number of sources deleted.",
             "default": 0,
             "example": 1
           }
         },
         "type": "object",
-        "title": "SourceDeleteResponse"
+        "title": "SourceDeleteResponse",
+        "description": "Response for delete request."
       },
       "SourceDeleteResultItem": {
         "properties": {
-          "id": {
+          "source_id": {
             "type": "string",
             "title": "Source Id",
-            "example": "CortexDoc1234"
+            "description": "ID of the source.",
+            "example": "<source_id>"
           },
           "deleted": {
             "type": "boolean",
             "title": "Deleted",
+            "description": "Whether deletion succeeded.",
             "default": false,
             "example": true
           },
@@ -4771,20 +4667,23 @@
                 "type": "null"
               }
             ],
-            "title": "Error"
+            "title": "Error",
+            "description": "Error message if deletion failed."
           }
         },
         "type": "object",
         "required": [
-          "id"
+          "source_id"
         ],
-        "title": "SourceDeleteResultItem"
+        "title": "SourceDeleteResultItem",
+        "description": "Result for a single source deletion."
       },
       "SourceFetchRequest": {
         "properties": {
           "tenant_id": {
             "type": "string",
             "title": "Tenant Id",
+            "description": "Unique identifier for the tenant/organization",
             "example": "tenant_1234"
           },
           "sub_tenant_id": {
@@ -4797,22 +4696,26 @@
               }
             ],
             "title": "Sub Tenant Id",
+            "description": "Optional sub-tenant identifier used to organize data within a tenant. If omitted, the default sub-tenant created during tenant setup will be used.",
             "example": "sub_tenant_4567"
           },
-          "id": {
+          "source_id": {
             "type": "string",
             "title": "Source Id",
-            "example": "CortexDoc1234"
+            "description": "Source ID of the file to fetch",
+            "example": "<source_id>"
           },
           "mode": {
             "$ref": "#/components/schemas/FetchMode",
+            "description": "Fetch mode: 'content' returns file content, 'url' returns presigned URL, 'both' returns both",
             "default": "content"
           },
           "expiry_seconds": {
             "type": "integer",
-            "maximum": 604800.0,
-            "minimum": 60.0,
+            "maximum": 604800,
+            "minimum": 60,
             "title": "Expiry Seconds",
+            "description": "Expiry time in seconds for presigned URL (60-604800, default: 3600)",
             "default": 3600,
             "example": 1
           }
@@ -4820,22 +4723,25 @@
         "type": "object",
         "required": [
           "tenant_id",
-          "id"
+          "source_id"
         ],
-        "title": "SourceFetchRequest"
+        "title": "SourceFetchRequest",
+        "description": "Request to fetch source file content."
       },
       "SourceFetchResponse": {
         "properties": {
           "success": {
             "type": "boolean",
             "title": "Success",
+            "description": "Whether the fetch was successful",
             "default": true,
             "example": true
           },
-          "id": {
+          "source_id": {
             "type": "string",
             "title": "Source Id",
-            "example": "CortexDoc1234"
+            "description": "Source ID of the fetched file",
+            "example": "<source_id>"
           },
           "content": {
             "anyOf": [
@@ -4846,7 +4752,8 @@
                 "type": "null"
               }
             ],
-            "title": "Content"
+            "title": "Content",
+            "description": "File content as string (if mode includes 'content')"
           },
           "content_base64": {
             "anyOf": [
@@ -4857,7 +4764,8 @@
                 "type": "null"
               }
             ],
-            "title": "Content Base64"
+            "title": "Content Base64",
+            "description": "File content as base64 encoded string (for binary files, if mode includes 'content')"
           },
           "presigned_url": {
             "anyOf": [
@@ -4868,7 +4776,8 @@
                 "type": "null"
               }
             ],
-            "title": "Presigned Url"
+            "title": "Presigned Url",
+            "description": "Presigned URL to access the file (if mode includes 'url')"
           },
           "content_type": {
             "anyOf": [
@@ -4879,7 +4788,8 @@
                 "type": "null"
               }
             ],
-            "title": "Content Type"
+            "title": "Content Type",
+            "description": "Content type of the file"
           },
           "size_bytes": {
             "anyOf": [
@@ -4890,11 +4800,13 @@
                 "type": "null"
               }
             ],
-            "title": "Size Bytes"
+            "title": "Size Bytes",
+            "description": "Size of the file in bytes"
           },
           "message": {
             "type": "string",
             "title": "Message",
+            "description": "Response message",
             "default": "File fetched successfully"
           },
           "error": {
@@ -4906,14 +4818,16 @@
                 "type": "null"
               }
             ],
-            "title": "Error"
+            "title": "Error",
+            "description": "Error message if fetch failed"
           }
         },
         "type": "object",
         "required": [
-          "id"
+          "source_id"
         ],
-        "title": "SourceFetchResponse"
+        "title": "SourceFetchResponse",
+        "description": "Response for file fetch request."
       },
       "SourceGraphRelationsResponse": {
         "properties": {
@@ -4930,17 +4844,20 @@
             },
             "type": "array",
             "title": "Relations",
+            "description": "List of relations retrieved",
             "example": []
           },
           "success": {
             "type": "boolean",
             "title": "Success",
+            "description": "Indicates whether the request was successful",
             "default": true,
             "example": true
           },
           "message": {
             "type": "string",
             "title": "Message",
+            "description": "Response message describing the operation result",
             "default": "Relations retrieved successfully"
           }
         },
@@ -4965,7 +4882,7 @@
           },
           "sources": {
             "items": {
-              "$ref": "#/components/schemas/SourceModel-Output"
+              "$ref": "#/components/schemas/SourceModel"
             },
             "type": "array",
             "title": "Sources"
@@ -4973,6 +4890,7 @@
           "total": {
             "type": "integer",
             "title": "Total",
+            "description": "Total number of sources matching the query.",
             "example": 1
           }
         },
@@ -4982,70 +4900,89 @@
         ],
         "title": "SourceListResponse"
       },
-      "SourceModel-Input": {
+      "SourceModel": {
         "properties": {
           "id": {
             "type": "string",
             "title": "Id",
-            "example": "<id>"
+            "description": "Stable, unique identifier for the source. If omitted, one may be generated upstream.",
+            "example": "CortexDoc1234"
           },
           "tenant_id": {
             "type": "string",
             "title": "Tenant Id",
+            "description": "Unique identifier for the tenant/organization",
             "example": "tenant_1234"
           },
           "sub_tenant_id": {
             "type": "string",
             "title": "Sub Tenant Id",
+            "description": "Optional sub-tenant identifier used to organize data within a tenant. If omitted, the default sub-tenant created during tenant setup will be used.",
             "example": "sub_tenant_4567"
           },
           "title": {
             "type": "string",
             "title": "Title",
+            "description": "Short human-readable title for the source.",
             "default": "",
             "example": "<title>"
           },
           "type": {
             "type": "string",
             "title": "Type",
+            "description": "High-level category of the source (e.g., document, email, ticket).",
             "default": "",
             "example": "<type>"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description",
+            "description": "Optional long-form description providing additional context.",
+            "default": "",
+            "example": "<description>"
           },
           "note": {
             "type": "string",
             "title": "Note",
+            "description": "Free-form notes for internal use or ingestion hints.",
             "default": "",
             "example": "<note>"
           },
           "url": {
             "type": "string",
             "title": "Url",
+            "description": "Canonical URL or reference link associated with the source.",
             "default": "",
             "example": "<url>"
           },
           "timestamp": {
             "type": "string",
             "title": "Timestamp",
+            "description": "Creation or last-updated timestamp of the source in ISO-8601 format.",
             "default": "",
             "example": "<timestamp>"
           },
           "content": {
-            "$ref": "#/components/schemas/ContentModel"
+            "$ref": "#/components/schemas/ContentModel",
+            "description": "Primary content payload used for indexing and retrieval."
           },
           "tenant_metadata": {
             "additionalProperties": true,
             "type": "object",
-            "title": "Tenant Metadata"
+            "title": "Tenant Metadata",
+            "description": "JSON string containing tenant-level document metadata (e.g., department, compliance_tag)\n\nExample: > \"{\"department\":\"Finance\",\"compliance_tag\":\"GDPR\"}\"\n\n"
           },
           "document_metadata": {
             "additionalProperties": true,
             "type": "object",
-            "title": "Document Metadata"
+            "title": "Document Metadata",
+            "description": "JSON string containing document-specific metadata (e.g., title, author, file_id). If file_id is not provided, the system will generate an ID automatically.\n\nExample: > \"{\"title\":\"Q1 Report.pdf\",\"author\":\"Alice Smith\",\"file_id\":\"custom_file_123\"}\"\n\n\n"
           },
           "meta": {
             "additionalProperties": true,
             "type": "object",
-            "title": "Meta"
+            "title": "Meta",
+            "description": "System-provided attributes (e.g., app_name, local file size) not intended for search filtering."
           },
           "attachments": {
             "items": {
@@ -5053,89 +4990,7 @@
             },
             "type": "array",
             "title": "Attachments",
-            "example": []
-          }
-        },
-        "type": "object",
-        "required": [
-          "id",
-          "tenant_id",
-          "sub_tenant_id"
-        ],
-        "title": "SourceModel"
-      },
-      "SourceModel-Output": {
-        "properties": {
-          "id": {
-            "type": "string",
-            "title": "Id",
-            "example": "<id>"
-          },
-          "tenant_id": {
-            "type": "string",
-            "title": "Tenant Id",
-            "example": "tenant_1234"
-          },
-          "sub_tenant_id": {
-            "type": "string",
-            "title": "Sub Tenant Id",
-            "example": "sub_tenant_4567"
-          },
-          "title": {
-            "type": "string",
-            "title": "Title",
-            "default": "",
-            "example": "<title>"
-          },
-          "type": {
-            "type": "string",
-            "title": "Type",
-            "default": "",
-            "example": "<type>"
-          },
-          "note": {
-            "type": "string",
-            "title": "Note",
-            "default": "",
-            "example": "<note>"
-          },
-          "url": {
-            "type": "string",
-            "title": "Url",
-            "default": "",
-            "example": "<url>"
-          },
-          "timestamp": {
-            "type": "string",
-            "title": "Timestamp",
-            "default": "",
-            "example": "<timestamp>"
-          },
-          "content": {
-            "$ref": "#/components/schemas/ContentModel"
-          },
-          "tenant_metadata": {
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Tenant Metadata"
-          },
-          "document_metadata": {
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Document Metadata"
-          },
-          "meta": {
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Meta"
-          },
-          "attachments": {
-            "items": {
-              "$ref": "#/components/schemas/AttachmentModel"
-            },
-            "type": "array",
-            "title": "Attachments",
-            "example": []
+            "description": "Attachments related to the source such as images, PDFs, or supplemental files."
           }
         },
         "type": "object",
@@ -5175,17 +5030,20 @@
             },
             "type": "array",
             "title": "Results",
+            "description": "List of upload results for each source.",
             "example": []
           },
           "success_count": {
             "type": "integer",
             "title": "Success Count",
+            "description": "Number of sources successfully queued.",
             "default": 0,
             "example": 1
           },
           "failed_count": {
             "type": "integer",
             "title": "Failed Count",
+            "description": "Number of sources that failed to upload.",
             "default": 0,
             "example": 1
           }
@@ -5195,10 +5053,11 @@
       },
       "SourceUploadResultItem": {
         "properties": {
-          "id": {
+          "source_id": {
             "type": "string",
             "title": "Source Id",
-            "example": "CortexDoc1234"
+            "description": "Unique identifier for the uploaded source.",
+            "example": "<source_id>"
           },
           "filename": {
             "anyOf": [
@@ -5209,10 +5068,12 @@
                 "type": "null"
               }
             ],
-            "title": "Filename"
+            "title": "Filename",
+            "description": "Original filename if present."
           },
           "status": {
             "$ref": "#/components/schemas/SourceStatus",
+            "description": "Initial processing status.",
             "default": "queued"
           },
           "error": {
@@ -5224,12 +5085,13 @@
                 "type": "null"
               }
             ],
-            "title": "Error"
+            "title": "Error",
+            "description": "Error message if upload failed."
           }
         },
         "type": "object",
         "required": [
-          "id"
+          "source_id"
         ],
         "title": "SourceUploadResultItem"
       },
@@ -5250,11 +5112,13 @@
             "type": "string",
             "minLength": 1,
             "title": "Tenant Id",
+            "description": "Unique tenant identifier",
             "example": "tenant_1234"
           },
           "is_embeddings_tenant": {
             "type": "boolean",
             "title": "Is Embeddings Tenant",
+            "description": "True to create embeddings tenant",
             "default": false,
             "example": true
           },
@@ -5268,6 +5132,7 @@
               }
             ],
             "title": "Embeddings Dimension",
+            "description": "Embedding dimensions for embeddings tenant. Not required for non-embeddings (is_embeddings_tenant=False) tenants",
             "default": 1536
           },
           "tenant_metadata_schema": {
@@ -5283,6 +5148,7 @@
               }
             ],
             "title": "Tenant Metadata Schema",
+            "description": "Schema definition for tenant metadata fields. Each field can be configured for: filtering (enable_match), semantic search (enable_dense_embedding), and/or keyword search (enable_sparse_embedding). Fields with embeddings enabled must be VARCHAR type.",
             "examples": [
               [
                 {
@@ -5326,17 +5192,20 @@
         "required": [
           "tenant_id"
         ],
-        "title": "TenantCreateRequest"
+        "title": "TenantCreateRequest",
+        "description": "Request model for creating a tenant with optional metadata schema.\n\nThe tenant_metadata_schema allows you to define custom fields that will be indexed\nin Milvus with configurable search capabilities:\n\nExample:\n    {\n        \"tenant_id\": \"my-tenant\",\n        \"tenant_metadata_schema\": [\n            {\n                \"name\": \"category\",\n                \"data_type\": \"VARCHAR\",\n                \"max_length\": 256,\n                \"enable_match\": true\n            },\n            {\n                \"name\": \"product_description\",\n                \"data_type\": \"VARCHAR\",\n                \"max_length\": 4096,\n                \"enable_dense_embedding\": true,\n                \"enable_sparse_embedding\": true\n            }\n        ]\n    }"
       },
       "TenantCreateResponse": {
         "properties": {
           "tenant_id": {
             "type": "string",
             "title": "Tenant Id",
+            "description": "Identifier provided by user",
             "example": "tenant_1234"
           },
           "infra": {
-            "$ref": "#/components/schemas/Infra"
+            "$ref": "#/components/schemas/Infra",
+            "description": "Infra status"
           },
           "metadata_schema": {
             "anyOf": [
@@ -5346,11 +5215,13 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "description": "Summary of configured tenant metadata schema (if provided)"
           },
           "message": {
             "type": "string",
             "title": "Message",
+            "description": "Summary message",
             "default": "Tenant created and infra provisioning triggered"
           }
         },
@@ -5366,16 +5237,19 @@
           "tenant_id": {
             "type": "string",
             "title": "Tenant Id",
+            "description": "Organization tenant ID",
             "example": "tenant_1234"
           },
           "organisation": {
             "type": "string",
             "title": "Organisation",
+            "description": "Organization name",
             "example": "<organisation>"
           },
           "timestamp": {
             "type": "string",
             "title": "Timestamp",
+            "description": "Creation timestamp",
             "example": "<timestamp>"
           }
         },
@@ -5392,6 +5266,7 @@
           "field_count": {
             "type": "integer",
             "title": "Field Count",
+            "description": "Number of custom metadata fields configured",
             "example": 1
           },
           "dense_embedding_fields": {
@@ -5400,6 +5275,7 @@
             },
             "type": "array",
             "title": "Dense Embedding Fields",
+            "description": "Fields with dense embeddings enabled for semantic search",
             "example": []
           },
           "sparse_embedding_fields": {
@@ -5408,6 +5284,7 @@
             },
             "type": "array",
             "title": "Sparse Embedding Fields",
+            "description": "Fields with sparse embeddings enabled for keyword search",
             "example": []
           }
         },
@@ -5415,24 +5292,29 @@
         "required": [
           "field_count"
         ],
-        "title": "TenantMetadataSchemaInfo"
+        "title": "TenantMetadataSchemaInfo",
+        "description": "Summary of configured tenant metadata schema fields."
       },
       "TenantStatsResponse": {
         "properties": {
           "tenant_id": {
             "type": "string",
             "title": "Tenant Id",
+            "description": "Tenant identifier",
             "example": "tenant_1234"
           },
           "normal_collection": {
-            "$ref": "#/components/schemas/CollectionStats"
+            "$ref": "#/components/schemas/CollectionStats",
+            "description": "Statistics for the normal (context) collection"
           },
           "memory_collection": {
-            "$ref": "#/components/schemas/CollectionStats"
+            "$ref": "#/components/schemas/CollectionStats",
+            "description": "Statistics for the memory collection"
           },
           "message": {
             "type": "string",
             "title": "Message",
+            "description": "Summary message",
             "default": "Successfully retrieved tenant collection statistics"
           }
         },
@@ -5458,11 +5340,13 @@
             },
             "type": "array",
             "title": "Relations",
+            "description": "Array of relation evidences",
             "example": []
           },
           "chunk_id": {
             "type": "string",
             "title": "Chunk Id",
+            "description": "The chunk_id these relations are associated with",
             "example": "<chunk_id>"
           }
         },
@@ -5473,18 +5357,21 @@
           "relations",
           "chunk_id"
         ],
-        "title": "TripletWithEvidence"
+        "title": "TripletWithEvidence",
+        "description": "Triple with multiple evidence items from different chunks"
       },
       "UserAssistantPair": {
         "properties": {
           "user": {
             "type": "string",
             "title": "User",
+            "description": "User's message in the conversation",
             "example": "<user>"
           },
           "assistant": {
             "type": "string",
             "title": "Assistant",
+            "description": "Assistant's response to the user message",
             "example": "<assistant>"
           }
         },
@@ -5493,7 +5380,37 @@
           "user",
           "assistant"
         ],
-        "title": "UserAssistantPair"
+        "title": "UserAssistantPair",
+        "description": "Represents a user-assistant conversation pair."
+      },
+      "UserMemory": {
+        "properties": {
+          "memory_id": {
+            "type": "string",
+            "title": "Memory Id",
+            "description": "Unique identifier for the user memory",
+            "examples": [
+              "CortexUserMemory1234..."
+            ],
+            "example": "memory_1234"
+          },
+          "memory_content": {
+            "type": "string",
+            "title": "Memory Content",
+            "description": "The actual memory content text that was stored",
+            "examples": [
+              "User prefers dark mode interface and uses keyboard shortcuts"
+            ],
+            "example": "<memory_content>"
+          }
+        },
+        "type": "object",
+        "required": [
+          "memory_id",
+          "memory_content"
+        ],
+        "title": "UserMemory",
+        "description": "Represents a user memory stored in the system."
       },
       "ValidationError": {
         "properties": {
@@ -5536,22 +5453,25 @@
           "chunk_uuid": {
             "type": "string",
             "title": "Chunk Uuid",
+            "description": "Unique identifier for this content chunk",
             "examples": [
               "a1b2c3d4-e5f6-7890-1234-567890abcdef"
             ],
             "example": "<chunk_uuid>"
           },
-          "id": {
+          "source_id": {
             "type": "string",
             "title": "Source Id",
+            "description": "Unique identifier for the source document",
             "examples": [
               "doc_12345"
             ],
-            "example": "CortexDoc1234"
+            "example": "<source_id>"
           },
           "chunk_content": {
             "type": "string",
             "title": "Chunk Content",
+            "description": "The actual text content of this chunk",
             "examples": [
               "This is a chunk of text from the source document."
             ],
@@ -5560,6 +5480,7 @@
           "source_type": {
             "type": "string",
             "title": "Source Type",
+            "description": "Type of the source document (file, webpage, etc.)",
             "default": "",
             "examples": [
               "file"
@@ -5569,6 +5490,7 @@
           "source_upload_time": {
             "type": "string",
             "title": "Source Upload Time",
+            "description": "When the source document was originally uploaded",
             "default": "",
             "examples": [
               "2023-10-27T10:00:00Z"
@@ -5578,6 +5500,7 @@
           "source_title": {
             "type": "string",
             "title": "Source Title",
+            "description": "Title or name of the source document",
             "default": "",
             "examples": [
               "Project Phoenix Overview"
@@ -5587,6 +5510,7 @@
           "source_last_updated_time": {
             "type": "string",
             "title": "Source Last Updated Time",
+            "description": "When the source document was last modified",
             "default": "",
             "examples": [
               "2023-10-27T12:30:00Z"
@@ -5603,6 +5527,7 @@
               }
             ],
             "title": "Layout",
+            "description": "Layout of the chunk in original document. You will generally receive        a stringified dict with 2 keys, `offsets` and `page`(optional). Offsets will have        `document_level_start_index` and `page_level_start_index`(optional)",
             "examples": [
               "{\"offsets\": {\"document_level_start_index\": 1024}, \"page\": 2}"
             ]
@@ -5616,7 +5541,8 @@
                 "type": "null"
               }
             ],
-            "title": "Relevancy Score"
+            "title": "Relevancy Score",
+            "description": "Score indicating how relevant this chunk is to your search query,         with higher values indicating better matches"
           },
           "document_metadata": {
             "anyOf": [
@@ -5629,6 +5555,7 @@
               }
             ],
             "title": "Document Metadata",
+            "description": "Metadata extracted from the source document",
             "examples": [
               {
                 "author": "John Doe",
@@ -5647,17 +5574,33 @@
               }
             ],
             "title": "Tenant Metadata",
+            "description": "Custom metadata associated with your tenant",
             "examples": [
               {
                 "department": "R&D"
               }
             ]
+          },
+          "extra_context_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra Context Ids",
+            "description": "IDs of related chunks providing extra context (from forceful relations). Only present in accurate mode when sources have forceful relations."
           }
         },
         "type": "object",
         "required": [
           "chunk_uuid",
-          "id",
+          "source_id",
           "chunk_content"
         ],
         "title": "VectorStoreChunk"

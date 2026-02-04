@@ -1,5 +1,5 @@
 ---
-openapi: "POST /search/hybrid_search"
+openapi: "POST /recall/full_recall"
 title: "Full Recall"
 description: "Fetch personalized context that your agent needs to perform an action from its store"
 ---
@@ -19,7 +19,7 @@ description: "Fetch personalized context that your agent needs to perform an act
     "query": "string",
     "mode": "fast",
     "max_results": 10,
-    "extra_context": "string",
+    "additional_context": "string",
     }'
     ```
   </Tab>
@@ -97,7 +97,7 @@ Results are automatically enriched with knowledge graph context, providing entit
 
 **What's included in responses:**
 
-- **`extra_context.relations`** — Entities and relationships found within each chunk
-- **`extra_graph_context`** — Additional entity relationships extracted from your query
+- **`graph_context.chunk_relations`** — Entities and relationships found within each chunk
+- **`additional_context`** — Additional entity relationships extracted from your query
 
 This helps your AI understand not just _what_ is mentioned, but _how_ things relate—like knowing that "Sarah Chen" leads "Project Phoenix" which depends on the "Authentication Service".
