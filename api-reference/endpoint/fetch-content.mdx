@@ -25,7 +25,7 @@ openapi: "POST /fetch/content"
   </Tab>
   <Tab title="TypeScript">
     ```ts
-    const content = await client.fetch.fetchContent({
+    const content = await client.fetch.content({
       id: "CortexDoc1234",
       file_type: "pdf",
       tenant_id: "tenant_1234",
@@ -37,7 +37,7 @@ openapi: "POST /fetch/content"
   <Tab title="Python (Sync)">
     ```python
     # Async usage is similar, just use async_client and await
-    content = client.fetch.fetch_content(
+    content = client.fetch.content(
         id="CortexDoc1234",
         file_type="pdf",
         tenant_id="tenant_1234",

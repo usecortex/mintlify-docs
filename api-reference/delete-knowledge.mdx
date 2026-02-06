@@ -23,7 +23,7 @@ import { TableOfContents } from '/snippets/table-of-contents.jsx'
   </Tab>
   <Tab title="TypeScript">
     ```ts
-    const result = await client.memories.delete_knowledge({
+    const result = await client.knowledge.delete({
       tenant_id: "tenant_1234",
       sub_tenant_id: "sub_tenant_4567",
       ids: ["CortexDoc1234", "CortexDoc4567"]
@@ -33,7 +33,7 @@ import { TableOfContents } from '/snippets/table-of-contents.jsx'
   <Tab title="Python">
     ```python
     # Async usage is similar, just use async_client and await
-    result = client.memories.delete_knowledge(
+    result = client.knowledge.delete(
         tenant_id="tenant_1234",
         sub_tenant_id="sub_tenant_4567",
         ids=["CortexDoc1234", "CortexDoc4567"]
