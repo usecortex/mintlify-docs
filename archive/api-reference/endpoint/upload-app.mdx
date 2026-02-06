@@ -17,72 +17,41 @@ curl -X 'POST' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
-  "app_sources": {
-    "id": "string",
-    "tenant_id": "string",
-    "sub_tenant_id": "string",
-    "title": "",
-    "type": "",
-    "description": "",
-    "note": "",
-    "url": "",
-    "timestamp": "",
-    "content": {
-      "text": "",
-      "html_base64": "",
-      "csv_base64": "",
-      "markdown": "",
-      "files": [
-        {
-          "additionalProp1": {}
-        }
-      ],
-      "layout": [
-        {
-          "additionalProp1": {}
-        }
-      ]
-    },
-    "tenant_metadata": {
-      "additionalProp1": {}
-    },
-    "document_metadata": {
-      "additionalProp1": {}
-    },
-    "meta": {
-      "additionalProp1": {}
-    },
-    "attachments": [
-      {
-        "id": "",
-        "url": "",
-        "title": "",
-        "content_type": "",
-        "content_url": "",
-        "misc": {
-          "additionalProp1": {}
-        },
-        "content": {
-          "text": "",
-          "html_base64": "",
-          "csv_base64": "",
-          "markdown": "",
-          "files": [
-            {
-              "additionalProp1": {}
-            }
-          ],
-          "layout": [
-            {
-              "additionalProp1": {}
-            }
-          ]
-        }
-      }
-    ]
-  },
-  "tenant_id": "string",
-  "sub_tenant_id": "",
+  "app_knowledge": [
+    {
+      "id": "string",
+      "tenant_id": "string",
+      "sub_tenant_id": "string",
+      "title": "",
+      "source": "",
+      "description": "",
+      "url": "",
+      "timestamp": "",
+      "content": {
+        "text": "",
+        "html_base64": "",
+        "csv_base64": "",
+        "markdown": "",
+        "files": [
+          {
+            "additionalProp1": {}
+          }
+        ],
+        "layout": [
+          {
+            "additionalProp1": {}
+          }
+        ]
+      },
+      "metadata": {
+        "additionalProp1": {}
+      },
+      "additional_metadata": {
+        "additionalProp1": {}
+      },
+      "relations": null
+    }
+  ],
   "upsert": true
 }'
 
@@ -94,22 +63,29 @@ curl -X 'POST' \
   <Tab title="TypeScript">
     ```ts expandable
     const result = await client.upload.uploadAppSources({
-      tenant_id: "tenant_1234",
-      sub_tenant_id: "sub_tenant_4567",
-      body: [
+      app_knowledge: [
         {
           id: "user-guide-1",
+          tenant_id: "tenant_1234",
+          sub_tenant_id: "sub_tenant_4567",
           title: "Feature X Guide",
+          source: "notion",
           content: { text: "How to use feature X" },
-          document_metadata: { source: "database" }
+          metadata: { dept: "engineering" },
+          additional_metadata: { source: "database" }
         },
         {
           id: "user-guide-2", 
+          tenant_id: "tenant_1234",
+          sub_tenant_id: "sub_tenant_4567",
           title: "Feature Y Guide",
+          source: "slack",
           content: { text: "How to use feature Y" },
-          document_metadata: { source: "api" }
+          metadata: { dept: "engineering" },
+          additional_metadata: { source: "api" }
         }
-      ]
+      ],
+      upsert: true
     });
     ```
 
@@ -118,30 +94,56 @@ curl -X 'POST' \
     ```python expandable
     # Async usage is similar, just use async_client and await
     result = client.upload.upload_app_sources(
-        tenant_id="tenant_1234",
-        request=[
+        app_knowledge=[
             {
                 "id": "user-guide-1",
+                "tenant_id": "tenant_1234",
+                "sub_tenant_id": "sub_tenant_4567",
                 "title": "Feature X Guide", 
+                "source": "notion",
                 "content": {"text": "How to use feature X"},
-                "document_metadata": {"source": "database"}
+                "metadata": {"dept": "engineering"},
+                "additional_metadata": {"source": "database"}
             },
             {
                 "id": "user-guide-2",
+                "tenant_id": "tenant_1234",
+                "sub_tenant_id": "sub_tenant_4567",
                 "title": "Feature Y Guide",
+                "source": "slack",
                 "content": {"text": "How to use feature Y"}, 
-                "document_metadata": {"source": "api"}
+                "metadata": {"dept": "engineering"},
+                "additional_metadata": {"source": "api"}
             }
         ],
-        sub_tenant_id="sub_tenant_4567"
+        upsert=True
     )
     ```
 
   </Tab>
 </Tabs>
 
-Works similar to the upload endpoint but is specifically designed to upload multiple app sources (e.g., Gmail, Slack, Notion) in a single request for processing and indexing.
-Each app upload is handled using specialized pipelines inside Cortex and can include various content types with rich metadata.
+Works similar to the upload knowledge endpoint but is specifically designed to upload multiple app sources (e.g., Gmail, Slack, Notion) in a single request using the standardized AppKnowledgeModel format. Each app upload is handled using specialized pipelines inside Cortex and can include various content types with rich metadata.
+
+## AppKnowledgeModel Structure
+
+The endpoint accepts an array of `AppKnowledgeModel` objects with the following structure:
+
+### Required Fields
+- **`id`** (string): Stable, unique identifier for the source
+- **`tenant_id`** (string): Unique identifier for the tenant
+- **`sub_tenant_id`** (string): Unique identifier for the sub-tenant
+
+### Optional Fields
+- **`title`** (string): Short human-readable title for the source
+- **`source`** (string): Source of the knowledge (e.g., slack, gmail, notion)
+- **`description`** (string): Long-form description providing additional context
+- **`url`** (string): Canonical URL or reference link associated with the source
+- **`timestamp`** (string): Creation or last-updated timestamp in ISO-8601 format
+- **`content`** (ContentModel): Primary content payload for indexing and retrieval
+- **`metadata`** (dict): Tenant-level metadata for organizing and filtering
+- **`additional_metadata`** (dict): Document-specific metadata
+- **`relations`** (ForcefulRelationsPayload | null): Controls relationship extraction
 
 ## Supported Apps
 
@@ -230,11 +232,11 @@ Each app source is processed using specialized pipelines:
 
 > **Recommended**: For optimal performance, limit each batch to a maximum of **20 app sources** per request. Send multiple batch requests with an interval of **1 second** between each request.
 
-> **File ID Management**: When you provide a `file_id` as a key in the `document_metadata` object, that specific ID will be used to identify your content. If no `file_id` is provided in the `document_metadata`, the system will automatically generate a unique identifier for you. This allows you to maintain consistent references to your content across your application while ensuring every piece of content has a unique identifier.
+> **ID Management**: When you provide an `id` in the AppKnowledgeModel, that specific ID will be used to identify your content. The `id` field is required for all knowledge sources. This allows you to maintain consistent references to your content across your application while ensuring every piece of content has a unique identifier.
 
 ### `Upsert` parameter (optional)
 
-For app sources, the identifier is `file_id`. When that identifier already exists, `upsert` (boolean, default `true`) controls the behavior:
+For app sources, the identifier is `id`. When that identifier already exists, `upsert` (boolean, default `true`) controls the behavior:
 
 | Value | Behavior |
 |-------|----------|
@@ -243,64 +245,44 @@ For app sources, the identifier is `file_id`. When that identifier already exist
 
 Overwriting permanently removes and replaces existing chunks, embeddings, and indexes for that identifier.
 
-**Example success response when overwriting by `file_id`:**
+**Example success response when overwriting by `id`:**
 
 
 ```json
 {
-  "message": "App sources uploaded successfully. Sources with existing file_ids have been overwritten.",
-  "document_ids": ["gmail_123456", "slack_789012", "notion_345678", "drive_901234"],
-  "overwritten_file_ids": ["gmail_123456", "slack_789012"],
+  "message": "App sources uploaded successfully. Sources with existing ids have been overwritten.",
+  "processed": 4,
+  "failed": 0,
+  "ids": ["gmail_123456", "slack_789012", "notion_345678", "drive_901234"],
+  "overwritten_ids": ["gmail_123456", "slack_789012"],
   "status": "success"
 }
 ```
 
 
-## Attachments Field Structure
+## Content Model Structure
 
-The `attachments` field allows you to include additional files, documents, or content alongside your main app source. Each attachment supports multiple content formats and can contain nested structures for complex documents.
+The `content` field in AppKnowledgeModel allows you to include various types of content alongside your main app source. It supports multiple content formats and can contain nested structures for complex documents.
 
-### Attachment Object Structure
-
+### Content Object Structure
 
 ```json
 {
-  "attachments": [
-    {
-      "id": "unique_attachment_id",
-      "url": "https://example.com/document.pdf",
-      "title": "Document Title",
-      "content_type": "application/pdf",
-      "content_url": "https://api.example.com/content/123",
-      "misc": {
-        "custom_field": "value"
-      },
-      "content": {
-        "text": "Plain text content",
-        "html_base64": "base64_encoded_html",
-        "csv_base64": "base64_encoded_csv",
-        "markdown": "# Markdown content",
-        "files": [{"name": "file.pdf", "data": "base64_data"}],
-        "layout": [{"type": "section", "content": "..."}]
-      }
-    }
-  ]
+  "content": {
+    "text": "Plain text content",
+    "html_base64": "base64_encoded_html",
+    "csv_base64": "base64_encoded_csv",
+    "markdown": "# Markdown content",
+    "files": [{"name": "file.pdf", "data": "base64_data"}],
+    "layout": [{"type": "section", "content": "..."}]
+  }
 }
 ```
 
 
-### When to Use Each Field
+### When to Use Each Content Field
 
-**Core Identification Fields:**
-- `id` (optional): Unique identifier for the attachment. If not provided, system generates one automatically.
-- `title` (optional): Human-readable name for the attachment.
-- `url` (optional): External URL where the attachment can be accessed.
-- `content_type` (optional): MIME type of the attachment (e.g., "application/pdf", "text/plain").
-- `content_url` (optional): API endpoint URL for retrieving attachment content.
-
-**Content Storage Fields:**
-Use these fields to store different types of content directly in the attachment:
-
+**Core Content Fields:**
 - `content.text`: Use for plain text content. Best for simple text documents, notes, or extracted text from other formats.
 - `content.html_base64`: Use for HTML content encoded in base64. Ideal for web pages, rich text documents, or formatted content that needs to preserve HTML structure.
 - `content.csv_base64`: Use for CSV data encoded in base64. Perfect for tabular data, spreadsheets, or structured data exports.
@@ -308,13 +290,9 @@ Use these fields to store different types of content directly in the attachment:
 - `content.files`: Use for binary file attachments as an array of file objects. Each file object should contain at least a `name` and `data` field (base64 encoded).
 - `content.layout`: Use for structured document layouts as an array of layout objects. Useful for complex documents with sections, headers, or custom formatting.
 
-**Metadata Field:**
-- `misc` (optional): Dictionary for storing custom metadata, additional properties, or app-specific information about the attachment.
-
 ### Content Format Guidelines
 
 **For Text Content:**
-
 
 ```json
 {
@@ -324,9 +302,7 @@ Use these fields to store different types of content directly in the attachment:
 }
 ```
 
-
 **For HTML Content:**
-
 
 ```json
 {
@@ -336,9 +312,7 @@ Use these fields to store different types of content directly in the attachment:
 }
 ```
 
-
 **For CSV Data:**
-
 
 ```json
 {
@@ -348,9 +322,7 @@ Use these fields to store different types of content directly in the attachment:
 }
 ```
 
-
 **For Markdown:**
-
 
 ```json
 {
@@ -360,9 +332,7 @@ Use these fields to store different types of content directly in the attachment:
 }
 ```
 
-
 **For File Attachments:**
-
 
 ```json
 {
@@ -382,9 +352,10 @@ Use these fields to store different types of content directly in the attachment:
 
 1. **Choose the Right Format**: Use the content field that best matches your data type for optimal processing.
 2. **Base64 Encoding**: Always encode binary data (HTML, CSV, files) in base64 format.
-3. **File Size Limits**: Keep individual attachments under 10MB for optimal processing performance.
-4. **Metadata Usage**: Use the `misc` field to store app-specific metadata that might be useful for filtering or organization.
-5. **Content Type Specification**: Always specify `content_type` when possible to help with proper content processing.
+3. **Content Size Limits**: Keep individual content items under 10MB for optimal processing performance.
+4. **Metadata Usage**: Use the `metadata` and `additional_metadata` fields to store app-specific information that might be useful for filtering or organization.
+5. **Source Specification**: Always specify the `source` field to ensure proper processing pipeline selection.
+6. **Required Fields**: Ensure `id`, `tenant_id`, and `sub_tenant_id` are provided for all knowledge sources.
 
 ## Error Responses
 
