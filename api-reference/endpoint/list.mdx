@@ -20,7 +20,7 @@ Use **POST /list/data** with a JSON body to list either knowledge sources or use
   </Tab>
   <Tab title="TypeScript">
     ```ts
-    const allSources = await client.memories.getAll({
+    const allSources = await client.list.data({
       tenant_id: "tenant_1234",
       sub_tenant_id: "sub_tenant_4567"
     });
@@ -29,7 +29,7 @@ Use **POST /list/data** with a JSON body to list either knowledge sources or use
   <Tab title="Python (Sync)">
     ```python
     # Async usage is similar, just use async_client and await
-    all_sources = client.memories.get_all(
+    all_sources = client.list.data(
         tenant_id="tenant_1234",
         sub_tenant_id="sub_tenant_4567"
     )

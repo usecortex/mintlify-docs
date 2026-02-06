@@ -111,7 +111,7 @@ openapi: "POST /memories/add_memory"
   <Tab title="TypeScript">
     ```ts expandable
     // Simple text memory
-    const result = await client.memories.addMemory({
+    const result = await client.userMemory.add({
       memories: [
         {
           text: "User prefers detailed explanations and dark mode",
@@ -125,7 +125,7 @@ openapi: "POST /memories/add_memory"
     });
     
     // Markdown content
-    const markdownResult = await client.memories.addMemory({
+    const markdownResult = await client.userMemory.add({
       memories: [
         {
           text: "# Meeting Notes\n\n## Key Points\n- Budget approved\n- Launch date: Q2",
@@ -140,7 +140,7 @@ openapi: "POST /memories/add_memory"
     });
     
     // User-assistant pairs with inference
-    const conversationResult = await client.memories.addMemory({
+    const conversationResult = await client.userMemory.add({
       memories: [
         {
           user_assistant_pairs: [
@@ -165,7 +165,7 @@ openapi: "POST /memories/add_memory"
     client = CortexClient(api_key="your_api_key")
     
     # Simple text memory
-    result = client.memories.add_memory(
+    result = client.user_memory.add(
         memories=[
             {
                 "text": "User prefers detailed explanations and dark mode",
@@ -179,7 +179,7 @@ openapi: "POST /memories/add_memory"
     )
     
     # Markdown content
-    markdown_result = client.memories.add_memory(
+    markdown_result = client.user_memory.add(
         memories=[
             {
                 "text": "# Meeting Notes\n\n## Key Points\n- Budget approved",
@@ -194,7 +194,7 @@ openapi: "POST /memories/add_memory"
     )
     
     # User-assistant pairs with inference
-    conversation_result = client.memories.add_memory(
+    conversation_result = client.user_memory.add(
         memories=[
             {
                 "user_assistant_pairs": [

@@ -33,7 +33,7 @@ openapi: "POST /ingestion/upload_knowledge"
     ```ts
     import fs from 'fs';
     
-    const uploadResult = await client.upload.uploadDocument({
+    const uploadResult = await client.upload.knowledge({
       files: [
         fs.readFileSync("a.pdf"),
         fs.readFileSync("b.pdf")
@@ -64,7 +64,7 @@ openapi: "POST /ingestion/upload_knowledge"
             ("a.pdf", f1),
             ("b.pdf", f2)
         ]
-        upload_result = client.upload.upload_document(
+        upload_result = client.upload.knowledge(
             tenant_id="tenant_123",
             files=files,
             file_metadata=[
