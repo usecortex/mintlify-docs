@@ -1,6 +1,6 @@
 ---
 title: "SDKs - Node and Python"
-description: "Official TypeScript/Node.js and Python SDKs so that you can integrate Cortex AI into your application with ease."
+description: "Official TypeScript/Node.js and Python SDKs for the Cortex AI platform. Build powerful, context-aware AI applications."
 ---
 
 ## Installation
@@ -52,15 +52,9 @@ description: "Official TypeScript/Node.js and Python SDKs so that you can integr
 
 ## SDK Method Structure & Type Safety
 
-Our SDKs follow a predictable pattern that mirrors the API structure while providing full type safety:
+Our SDKs follow a predictable pattern that mirrors the API structure while providing full type safety.
 
-<Note>
-  **Method Mapping**: `client.<group>.<function_name>` mirrors `api.usecortex.ai/<group>/<function_name>`
-
-  For example: `client.upload.addMemory()` corresponds to `POST /upload/add_memory`
-</Note>
-
-### Input and Output Type Matching
+> **Method Mapping** : `client.<group>.<function_name>` mirrors  `api.usecortex.ai/<group>/<function_name>` 
 
 The SDKs provide exact type parity with the API specification:
 
@@ -80,15 +74,15 @@ When calling the REST API directly (e.g. with curl), use snake_case. In TypeScri
 
 ## Getting Started
 
-Let's walk through a complete example from creating a tenant to searching your data.
+### Create a Tenant
 
-### Step 1: Create a Tenant
+You can consider a `tenant` as a single database that can have internal isolated collections called `sub-tenants`. [Know more about the concept of tenant here](https://docs.usecortex.ai/essentials/multi-tenant)
 
 <Tabs>
   <Tab title="TypeScript">
     ```ts
     async function createTenant() {
-      const tenantCreationResponse = await client.user.createTenant({
+      const tenantCreationResponse = await client.tenant.create({
         tenant_id: "my-company"
       });
       return tenantCreationResponse;
@@ -98,146 +92,297 @@ Let's walk through a complete example from creating a tenant to searching your d
   <Tab title="Python (Sync)">
     ```python
     def create_tenant():
-        return client.user.create_tenant(tenant_id="my-company")
+        return client.tenant.create(tenant_id="my-company")
     ```
   </Tab>
   <Tab title="Python (Async)">
     ```python
     async def create_tenant():
-        return await async_client.user.create_tenant(tenant_id="my-company")
+        return await async_client.tenant.create(tenant_id="my-company")
     ```
   </Tab>
 </Tabs>
 
-### Step 2: Getting your context store ready
+### Ingest Your Data
 
-Now let's upload some context:
+When you index your data, you make it ready for retrieval from Cortex using natural language.
+
+#### Knowledge Base
+
+Upload documents, PDFs, and other content to your knowledge base for semantic search and retrieval.
 
 <Tabs>
   <Tab title="TypeScript">
     ```ts
-    // Upload text content
-    async function uploadKnowledge() {
-      const res = await client.upload.uploadKnowledge({
-        tenant_id: "my-company",
-        sub_tenant_id: "engineering",
-        body: {
-          content: "Our API rate limits are 1000 requests per minute for premium accounts.",
-          id: "api-docs-rate-limits",
-          tenant_metadata: { sub_tenant_id: "engineering" }
+    // Add to your knowledge base
+    import fs from 'fs';
+
+    const uploadResult = await client.upload.knowledge({
+      files: [
+        fs.readFileSync("a.pdf"),
+        fs.readFileSync("b.pdf")
+      ],
+      tenant_id: "tenant_123",
+      file_metadata: [
+        {
+          id: "doc_a",
+          tenant_metadata: { dept: "sales" },
+          document_metadata: { author: "Alice" },
+          relations: false
+        },
+        {
+          id: "doc_b",
+          tenant_metadata: { dept: "marketing" },
+          document_metadata: { author: "Bob" },
+          relations: true
         }
-      });
-      return res;
-    }
-    ```
-  </Tab>
-  <Tab title="Python (Sync)">
-    ```python
-    # Upload text content
-    def upload_text():
-        return client.upload.upload_text(
-            tenant_id="my-company-py-sync",
-            sub_tenant_id="engineering",
-            content="Our API rate limits are 1000 requests per minute for premium accounts.",
-            id="api-docs-rate-limits",
-            tenant_metadata={"sub_tenant_id": "engineering"}
-        )
-    
-    # Upload document file
-    def upload_file():
-        with open("company-handbook.pdf", 'rb') as file_obj:
-            file_data = ("company-handbook.pdf", file_obj)
-            return client.upload.upload_document(
-                tenant_id="my-company",
-                file=file_data,
-                id="company-handbook.pdf"
-            )
-    ```
-  </Tab>
-  <Tab title="Python (Async)">
-    ```python
-    # Upload text content
-    async def upload_text():
-        return await async_client.upload.upload_text(
-            tenant_id="my-company",
-            sub_tenant_id="engineering",
-            content="Our API rate limits are 1000 requests per minute for premium accounts.",
-            id="api-docs-rate-limits",
-            tenant_metadata={"sub_tenant_id": "engineering"}
-        )
-    
-    # Upload document file
-    async def upload_file():
-        with open("company-handbook.pdf", 'rb') as file_obj:
-            file_data = ("company-handbook.pdf", file_obj)
-            return await async_client.upload.upload_document(
-                tenant_id="my-company",
-                file=file_data,
-                id="company-handbook.pdf"
-            )
-    ```
-  </Tab>
-</Tabs>
-
-### Step 3: Recall
-
-<Tabs>
-  <Tab title="TypeScript">
-    ```ts
-    // Semantic search with retrieval
-    const results = await client.search.recall({
-      query: "What are the API rate limits?",
-      tenant_id: "my-company",
-      sub_tenant_id: "engineering"
+      ]
     });
     ```
   </Tab>
   <Tab title="Python (Sync)">
     ```python
-    # Semantic search with retrieval
-    results = client.search.retrieve(
-        query="What are the API rate limits?",
-        tenant_id="my-company",
-        sub_tenant_id="engineering",
-        max_chunks=10
+    # ingest in your knowledge base
+    with open("a.pdf", 'rb') as f1, open("b.pdf", 'rb') as f2:
+        files = [
+            ("a.pdf", f1),
+            ("b.pdf", f2)
+        ]
+        upload_result = client.upload.knowledge(
+            tenant_id="tenant_123",
+            files=files,
+            file_metadata=[
+                {
+                    "id": "doc_a",
+                    "tenant_metadata": {"dept": "sales"},
+                    "document_metadata": {"author": "Alice"}
+                },
+                {
+                    "id": "doc_b",
+                    "tenant_metadata": {"dept": "marketing"},
+                    "document_metadata": {"author": "Bob"}
+                }
+            ]
+        )
+    ```
+  </Tab>
+  <Tab title="Python (Async)">
+    ```python
+    # ingest in your knowledge base
+    async def upload_knowledge():
+        with open("a.pdf", 'rb') as f1, open("b.pdf", 'rb') as f2:
+            files = [
+                ("a.pdf", f1),
+                ("b.pdf", f2)
+            ]
+            return await async_client.upload.knowledge(
+                tenant_id="tenant_123",
+                files=files,
+                file_metadata=[
+                    {
+                        "id": "doc_a",
+                        "tenant_metadata": {"dept": "sales"},
+                        "document_metadata": {"author": "Alice"}
+                    },
+                    {
+                        "id": "doc_b",
+                        "tenant_metadata": {"dept": "marketing"},
+                        "document_metadata": {"author": "Bob"}
+                    }
+                ]
+            )
+    ```
+  </Tab>
+</Tabs>
+
+> **For a more detailed explanation** of document upload, including supported file formats, processing pipeline, metadata handling, and advanced configuration options, refer to the [Ingest Knowledge](https://docs.usecortex.ai/api-reference/endpoint/add-knowledge-memories).
+
+
+#### User Memories
+
+Store user preferences, conversation history, and personalized context that evolves with every interaction.
+
+<Tabs>
+  <Tab title="TypeScript">
+    ```ts expandable
+    // Simple text memory
+    const result = await client.userMemory.add({
+      memories: [
+        {
+          text: "User prefers detailed explanations and dark mode",
+          infer: true,
+          user_name: "John"
+        }
+      ],
+      tenant_id: "tenant-01",
+      sub_tenant_id: "",
+      upsert: true
+    });
+
+    // Markdown content
+    const markdownResult = await client.userMemory.add({
+      memories: [
+        {
+          text: "# Meeting Notes\n\n## Key Points\n- Budget approved\n- Launch date: Q2",
+          is_markdown: true,
+          infer: false,
+          title: "Meeting Notes"
+        }
+      ],
+      tenant_id: "tenant-01",
+      sub_tenant_id: "",
+      upsert: true
+    });
+
+    // User-assistant pairs with inference
+    const conversationResult = await client.userMemory.add({
+      memories: [
+        {
+          user_assistant_pairs: [
+            { user: "What are my preferences?", assistant: "You prefer dark mode and detailed explanations." },
+            { user: "How do I like my reports?", assistant: "You prefer weekly summary reports with charts." }
+          ],
+          infer: true,
+          user_name: "John",
+          custom_instructions: "Extract user preferences"
+        }
+      ],
+      tenant_id: "tenant-01",
+      sub_tenant_id: "",
+      upsert: true
+    });
+    ```
+  </Tab>
+  <Tab title="Python (Sync)">
+    ```python expandable
+    # Simple text memory
+    result = client.user_memory.add(
+        memories=[
+            {
+                "text": "User prefers detailed explanations and dark mode",
+                "infer": True,
+                "user_name": "John"
+            }
+        ],
+        tenant_id="tenant-01",
+        sub_tenant_id="",
+        upsert=True
     )
-    
-    # List all sources
-    all_sources = client.sources.get_all(
-        tenant_id="my-company",
-        sub_tenant_id="engineering",
+
+    # Markdown content
+    markdown_result = client.user_memory.add(
+        memories=[
+            {
+                "text": "# Meeting Notes\n\n## Key Points\n- Budget approved",
+                "is_markdown": True,
+                "infer": False,
+                "title": "Meeting Notes"
+            }
+        ],
+        tenant_id="tenant-01",
+        sub_tenant_id="",
+        upsert=True
     )
-    
-    # Get specific sources by ID
-    specific_sources = client.sources.get_by_ids(
-        tenant_id="my-company",
-        sub_tenant_id="engineering",
-        ids=["api-docs-rate-limits", "company-handbook"]
+
+    # User-assistant pairs with inference
+    conversation_result = client.user_memory.add(
+        memories=[
+            {
+                "user_assistant_pairs": [
+                    {"user": "What are my preferences?", "assistant": "You prefer dark mode."},
+                    {"user": "How do I like reports?", "assistant": "Weekly summaries with charts."}
+                ],
+                "infer": True,
+                "user_name": "John",
+                "custom_instructions": "Extract user preferences"
+            }
+        ],
+        tenant_id="tenant-01",
+        sub_tenant_id="",
+        upsert=True
+    )
+    ```
+  </Tab>
+  <Tab title="Python (Async)">
+    ```python expandable
+    # Simple text memory
+    async def add_memories():
+        return await async_client.user_memory.add(
+            memories=[
+                {
+                    "text": "User prefers detailed explanations and dark mode",
+                    "infer": True,
+                    "user_name": "John"
+                }
+            ],
+            tenant_id="tenant-01",
+            sub_tenant_id="",
+            upsert=True
+        )
+    ```
+  </Tab>
+</Tabs>
+
+
+### Recall
+
+<Tabs>
+  <Tab title="TypeScript">
+    ```ts
+    // Search across memories/knowledge base
+    const results = await client.recall.fullRecall({
+      query: "Which mode does user prefer",
+      tenantId: "tenant_1234",
+      subTenantId: "sub_tenant_4567",
+      alpha: 0.8,
+      recencyBias: 0
+    });
+
+    // List all the data (memories + knowledge base)
+    const allSources = await client.data.listData({
+      tenant_id: "tenant_1234",
+      sub_tenant_id: "sub_tenant_4567"
+    });
+    ```
+  </Tab>
+  <Tab title="Python (Sync)">
+    ```python
+    # Semantic Recall
+    results = client.recall.full_recall(
+        query="Which mode does user prefer",
+        tenant_id="tenant_1234",
+        sub_tenant_id="sub_tenant_4567",
+        alpha=0.8,
+        recency_bias=0
+    )
+
+    # Get ingested data (memories + knowledge base)
+    all_sources = client.data.list_data(
+        tenant_id="tenant_1234",
+        sub_tenant_id="sub_tenant_4567"
     )
     ```
   </Tab>
   <Tab title="Python (Async)">
     ```python
-    # Semantic search with retrieval
-    results = await async_client.search.retrieve(
-        query="What are the API rate limits?",
-        tenant_id="my-company",
-        sub_tenant_id="engineering",
-        max_chunks=10
-    )
-    
-    # List all sources
-    all_sources = await async_client.sources.get_all(
-        tenant_id="my-company",
-        sub_tenant_id="engineering",
-    )
-    
-    # Get specific sources by ID
-    specific_sources = await async_client.sources.get_by_ids(
-        tenant_id="my-company",
-        sub_tenant_id="engineering",
-        ids=["api-docs-rate-limits", "company-handbook"]
-    )
+    # Semantic Recall
+    async def search_data():
+        results = await async_client.recall.full_recall(
+            query="Which mode does user prefer",
+            tenant_id="tenant_1234",
+            sub_tenant_id="sub_tenant_4567",
+            alpha=0.8,
+            recency_bias=0
+        )
+        return results
+
+    # Get ingested data (memories + knowledge base)
+    async def list_data():
+        all_sources = await async_client.data.list_data(
+            tenant_id="tenant_1234",
+            sub_tenant_id="sub_tenant_4567"
+        )
+        return all_sources
     ```
   </Tab>
 </Tabs>
@@ -277,29 +422,3 @@ Whether you're using **TypeScript**, **Python**, **VS Code**, **PyCharm**, or **
 3. **Press Cmd+Space (Mac) or Ctrl+Space (Windows/Linux)** → Get instant documentation
 
 This works universally because our SDKs are fully typed with comprehensive documentation.
-
-<Tabs>
-  <Tab title="TypeScript">
-    ```ts
-    // Start typing and your IDE will guide you through everything:
-    client.recall({
-      // - Cmd+Space here shows all parameters with documentation
-      query: "your search query",
-      tenant_id: "required-tenant-id"
-    })
-    ```
-  </Tab>
-  <Tab title="Python">
-    ```python
-    # Identical experience - your IDE shows everything:
-    client.recall(
-        # - Ctrl+Space here shows all parameters with type hints
-        query="your search query", 
-        tenant_id="required-tenant-id",
-        # Python IDE knows these are optional too:
-        max_chunks=10,
-        alpha=0.7
-    )
-    ```
-  </Tab>
-</Tabs>
